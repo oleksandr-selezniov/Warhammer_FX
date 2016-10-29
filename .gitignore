@@ -4,4 +4,6 @@ target
 
 /.project
 /installer/tmp
-/run/TargetPro
+
+out/
+src/test/
