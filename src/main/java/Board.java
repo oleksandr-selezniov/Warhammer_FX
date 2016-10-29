@@ -1,0 +1,311 @@
+import MusicPlayer.MusicPlayerLogic;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
+import java.io.File;
+import java.net.MalformedURLException;
+
+
+
+/**
+ * Created by Dmitriy on 20.10.2016.
+ */
+public class Board {
+    private static GridPane mainBattlefieldGP = generateCellBattleField(55, 25);
+    private String defaultBackgroundPath = "src\\main\\resources\\Background_1.jpg";
+    private static Scene scene;
+
+    public void createUI(Stage primaryStage){
+        primaryStage.setTitle("WarhammerFX Welcome");
+
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setMinHeight(Size.getSceneHeight());
+        anchorPane.setMinWidth(Size.getSceneWidth());
+
+        ImageView mainBackground = new ImageView();
+        mainBackground.setImage(getBackgroundImage());
+        mainBackground.setOpacity(0.9);
+        mainBackground.setFitWidth(Size.getSceneWidth());
+        mainBackground.setFitHeight(Size.getSceneHeight());
+        anchorPane.getChildren().add(mainBackground);
+        AnchorPane.setTopAnchor(mainBackground, 0.0);
+
+        BorderPane borderPane = new BorderPane();
+        borderPane.setMaxWidth(Size.getSceneWidth());
+        borderPane.setMaxHeight(Size.getSceneHeight()*0.915);
+
+        anchorPane.getChildren().add(borderPane);
+
+        ScrollPane scrollPane = new ScrollPane(mainBattlefieldGP);
+        scrollPane.setMinWidth(Size.getSceneWidth()*0.95);
+        scrollPane.setMinHeight(Size.getSceneHeight()*0.675);
+        scrollPane.setMaxWidth(Size.getSceneWidth()*0.95);
+        scrollPane.setMaxHeight(Size.getSceneHeight()*0.675);
+        borderPane.setPadding(new Insets(0,15,0,15));
+
+        borderPane.setCenter(scrollPane);
+        borderPane.setLeft(getScaleSlider());
+        borderPane.setTop(getMainTitle());
+        borderPane.setBottom(generateBottomMenu());
+
+        scene = new Scene(anchorPane, Size.getSceneWidth(), Size.getSceneHeight());
+        primaryStage.setScene(scene);
+        primaryStage.setMinHeight(Size.getSceneHeight());
+        primaryStage.setMinWidth(Size.getSceneWidth());
+        primaryStage.show();
+        BoardInitializer boardInit = new BoardInitializer();
+        boardInit.initializeBoard();
+    }
+
+    public HBox generateBottomMenu(){
+        HBox hBox = new HBox();
+        hBox.setMinWidth(Size.getSceneWidth()*0.96);
+        hBox.setMinHeight(Size.getSceneHeight()*0.25);
+        hBox.setMaxWidth(Size.getSceneWidth()*0.96);
+        hBox.setMaxHeight(Size.getSceneHeight()*0.25);
+
+        BorderPane borderPane = new BorderPane();
+        borderPane.setMinWidth(Size.getSceneWidth()*0.96);
+        borderPane.setMinHeight(Size.getSceneHeight()*0.25);
+        borderPane.setMaxWidth(Size.getSceneWidth()*0.96);
+        borderPane.setMaxHeight(Size.getSceneHeight()*0.25);
+        borderPane.setPadding(new Insets(3,0,3,0));
+
+
+        borderPane.setLeft(getLeftEarGP());
+        borderPane.setRight(getRightEarGP());
+        borderPane.setCenter(getCentralGP());
+
+        hBox.getChildren().add(borderPane);
+        return hBox;
+    }
+
+    private GridPane getLeftEarGP(){
+        GridPane leftEarGP = new GridPane();
+        leftEarGP.setGridLinesVisible(true);
+        leftEarGP.setMinWidth(Size.getSceneWidth()*0.3);
+        leftEarGP.setMinHeight(Size.getSceneHeight()*0.25);
+        leftEarGP.add(MusicPlayerLogic.getMusicPlayer(),0,0);
+
+        ImageView leftEarIV = new ImageView(BoardUtils.getImage("src\\main\\resources\\Gifs\\LastChancer.gif"));
+        leftEarIV.setFitWidth(Size.getSceneWidth()*0.183);
+        leftEarIV.setFitHeight(Size.getSceneHeight()*0.39);
+        ScrollPane scrollPane = new ScrollPane(leftEarIV);
+        scrollPane.setMinHeight(Size.getSceneHeight()*0.2);
+        scrollPane.setMinWidth(Size.getSceneWidth()*0.15);
+        leftEarGP.add(scrollPane, 1,0);
+
+        VBox leftVbox = new VBox();
+        leftVbox.setPadding(new Insets(5));
+        leftVbox.setAlignment(Pos.CENTER);
+        leftVbox.setFillWidth(true);
+        leftVbox.setMinHeight(Size.getSceneHeight()*0.25);
+        leftVbox.setMinWidth(Size.getSceneWidth()*0.15);
+        Button leftUpButton = new Button();
+        leftUpButton.setMinWidth(150);
+        leftUpButton.setMinHeight(40);
+        TextArea leftTextArea = new TextArea();
+        leftTextArea.setMaxWidth(150);
+        leftTextArea.setMaxHeight(100);
+        Button leftDownButton = new Button();
+        leftDownButton.setMinWidth(150);
+        leftDownButton.setMinHeight(40);
+        leftVbox.getChildren().addAll(leftUpButton,leftTextArea, leftDownButton);
+        leftEarGP.add(leftVbox, 2,0);
+
+        return leftEarGP;
+    }
+
+    private GridPane getRightEarGP(){
+        GridPane rightEarGP = new GridPane();
+        rightEarGP.setAlignment(Pos.CENTER_RIGHT);
+        rightEarGP.setGridLinesVisible(true);
+        rightEarGP.setMinWidth(Size.getSceneWidth()*0.3);
+        rightEarGP.setMinHeight(Size.getSceneHeight()*0.25);
+        VBox rightButtonVbox = new VBox();
+        rightButtonVbox.setMinWidth(100);
+        rightButtonVbox.setPadding(new Insets(10));
+
+        Button rightButton1 = new Button();
+        rightButton1.setMinWidth(70);
+        rightButton1.setMinHeight(20);
+
+        Button rightButton2 = new Button();
+        rightButton2.setMinWidth(70);
+        rightButton2.setMinHeight(20);
+
+        Button rightButton3 = new Button();
+        rightButton3.setMinWidth(70);
+        rightButton3.setMinHeight(20);
+
+        rightButtonVbox.getChildren().addAll(rightButton1, rightButton2, rightButton3);
+        rightEarGP.add(rightButtonVbox,2,0);
+        ImageView rightEarIV = new ImageView(BoardUtils.getImage("src\\main\\resources\\Gifs\\Orc.gif"));
+        rightEarIV.setFitWidth(Size.getSceneWidth()*0.183);
+        rightEarIV.setFitHeight(Size.getSceneHeight()*0.39);
+        ScrollPane scrollPane = new ScrollPane(rightEarIV);
+        scrollPane.setMinHeight(Size.getSceneHeight()*0.2);
+        scrollPane.setMinWidth(Size.getSceneWidth()*0.15);
+        rightEarGP.add(scrollPane, 1,0);
+
+        VBox rightVbox = new VBox();
+        rightVbox.setPadding(new Insets(5));
+        rightVbox.setAlignment(Pos.CENTER);
+        rightVbox.setFillWidth(true);
+        rightVbox.setMinHeight(Size.getSceneHeight()*0.25);
+        rightVbox.setMinWidth(Size.getSceneWidth()*0.15);
+        Button rightUpButton = new Button();
+        rightUpButton.setMinWidth(150);
+        rightUpButton.setMinHeight(40);
+        TextArea rightTextArea = new TextArea();
+        rightTextArea.setMaxWidth(150);
+        rightTextArea.setMaxHeight(100);
+        Button rightDownButton = new Button();
+        rightDownButton.setMinWidth(150);
+        rightDownButton.setMinHeight(40);
+        rightVbox.getChildren().addAll(rightUpButton, rightTextArea, rightDownButton);
+        rightEarGP.add(rightVbox, 0,0);
+
+
+        return rightEarGP;
+    }
+
+    public GridPane getCentralGP(){
+        GridPane mainGridPane = new GridPane();
+        mainGridPane.setAlignment(Pos.CENTER);
+        mainGridPane.setGridLinesVisible(true);
+        mainGridPane.setMaxHeight(Size.getSceneHeight()*0.25);
+        mainGridPane.setMaxWidth(Size.getSceneWidth()*0.1);
+        mainGridPane.setMinHeight(Size.getSceneHeight()*0.25);
+        mainGridPane.setMinWidth(Size.getSceneWidth()*0.1);
+        //mainGridPane.setPadding(new Insets(2));
+
+//        Label damage = new Label("damage points");
+
+
+        TextArea centerTextArea = new TextArea();
+        centerTextArea.setMinWidth(200);
+        mainGridPane.add(centerTextArea, 0,0);
+        //mainGridPane.add(leftVbox,0,0);
+        //mainGridPane.add(centerVbox,1,0);
+        //mainGridPane.add(rightVbox,2,0);
+        return mainGridPane;
+    }
+
+    public static Scene getScene(){
+        return scene;
+    }
+
+    public static GridPane getMainBattlefieldGP(){
+        return mainBattlefieldGP;
+    }
+
+    public static Label getDamagePanel(){
+        return (Label)scene.lookup("#damagePanel");
+    }
+
+    private HBox getMainTitle(){
+        HBox hbox = new HBox();
+        Label title = new Label("WARHAMMER GAME");
+        title.setPadding(new Insets(3, 3, 0, 500));
+        title.setAlignment(Pos.CENTER);
+        title.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
+        title.setTextFill(Color.LIGHTCORAL);
+        title.setEffect(new Bloom());
+        Label damagePanel = new Label("damagePanel");
+        damagePanel.setId("damagePanel");
+        damagePanel.setPadding(new Insets(3, 3, 0, 3));
+        damagePanel.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
+        damagePanel.setTextFill(Color.ORANGE);
+        damagePanel.setEffect(new Bloom());
+
+        hbox.getChildren().addAll(title, damagePanel);
+        return hbox;
+    }
+
+    private Image getBackgroundImage(){
+        String localUrl = null;
+        try {
+            File file = new File(defaultBackgroundPath);
+            localUrl = file.toURI().toURL().toString();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return new Image(localUrl, false);
+    }
+
+    private static GridPane generateCellBattleField( int length, int height){
+        GridPane gridPane = new GridPane();
+        gridPane.setPadding(new Insets(5,5,5,5));
+
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < height; j++) {
+                GameCell gameCell = new GameCell();
+                gameCell.setxCoord(i);
+                gameCell.setyCoord(j);
+                gameCell.setText(i + "-" + j);
+                gameCell.setId(i + "_" + j);
+                gridPane.add(gameCell, i, j);
+            }
+        }
+        gridPane.setGridLinesVisible(true);
+        return gridPane;
+    }
+
+    private Slider getScaleSlider(){
+        Slider slider = new Slider();
+        slider.setPrefWidth(10);
+        slider.setPrefHeight(120);
+        slider.setOrientation(Orientation.VERTICAL);
+        slider.setCursor(Cursor.HAND);
+        slider.setMin(0.175);
+        slider.setMax(3.0);
+        slider.setValue(1);
+        slider.setMajorTickUnit(0.1);
+        slider.setBlockIncrement(0.1);
+        slider.setShowTickMarks(true);
+        slider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                for(int i=0; i<getMainBattlefieldGP().getChildren().size();i++){
+                    Node node = getMainBattlefieldGP().getChildren().get(i);
+                    if(node instanceof GameCell){
+
+                        GameCell gc = (GameCell)node;
+                        gc.setSize(Size.getCellWidth()*newValue.doubleValue(), Size.getCellHeight()*newValue.doubleValue());
+
+                        if(gc.getUnit()!=null){
+                            gc.getGameCellImageView().setFitHeight(Size.getUnitHeight()*newValue.doubleValue());
+                            gc.getGameCellImageView().setFitWidth(Size.getUnitWidth()*newValue.doubleValue());
+                        }else{
+                            gc.getGameCellImageView().setFitWidth(Size.getCellWidth()*newValue.doubleValue());
+                            gc.getGameCellImageView().setFitHeight(Size.getCellHeight()*newValue.doubleValue());
+                        }
+                    }
+                }
+
+            }
+        });
+        return slider;
+    }
+}
+
+
+
+
+
