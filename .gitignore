@@ -1,7 +1,7 @@
 .idea
 target
 *.iml
-
+*.mp3
 /.project
 /installer/tmp
 
