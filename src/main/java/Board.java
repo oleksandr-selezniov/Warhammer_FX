@@ -183,7 +183,6 @@ public class Board {
         rightVbox.getChildren().addAll(rightUpButton, rightTextArea, rightDownButton);
         rightEarGP.add(rightVbox, 0,0);
 
-
         return rightEarGP;
     }
 
