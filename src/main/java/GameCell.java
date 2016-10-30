@@ -34,7 +34,7 @@ public class GameCell extends Button {
     private Boolean isInShootingRange = false;
     private Boolean isSafe = true;
     private Boolean isDangerous = false;
-    //private Boolean isSelected = false;
+    //private Boolean isSelected = false;?;lkjhgdsdf test
     private Unit unit;
 
     GameCell() {
