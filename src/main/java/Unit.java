@@ -1,3 +1,9 @@
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import java.io.File;
+import java.net.MalformedURLException;
+
 /**
  * Created by Dmitriy on 17.04.2016.
  */
@@ -44,6 +50,15 @@ public class Unit {
 
     public String getPicturePath() {
         return picturePath;
+    }
+
+    public Image getImage() {
+        String imageUrl = null;
+        try {
+            File file = new File(picturePath);
+            imageUrl = file.toURI().toURL().toString();
+        }catch (MalformedURLException e){e.printStackTrace();}
+        return new Image(imageUrl, false);
     }
 
     public void setPicturePath(String picturePath) {

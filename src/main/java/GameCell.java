@@ -89,7 +89,7 @@ public class GameCell extends Button {
 
                             if (unit.getHealth() <= 0) {
                                 unit = null;
-                                GameCell.this.setUnitImage("src\\main\\resources\\dead.jpg", 80, 80, 1);
+                                GameCell.this.setUnitImage("src\\main\\resources\\dead.jpg", 125, 125, 1);
                             }
                             changeTeamTurn();
                         }
@@ -110,6 +110,13 @@ public class GameCell extends Button {
                     Tooltip tooltip = new Tooltip(GameCell.this.getUnit().getInfo());
                     tooltip.setAutoHide(false);
                     GameCell.this.setTooltip(tooltip);
+                    if(GameCell.this.getUnit().getTeam()==1){
+                        Board.writeToTextArea("#leftTextArea", GameCell.this.getUnit().getInfo());
+                        Board.setImageToImageView("#leftImageView", GameCell.this.getUnit().getImage());
+                    }else{
+                        Board.writeToTextArea("#rightTextArea", GameCell.this.getUnit().getInfo());
+                        Board.setImageToImageView("#rightImageView", GameCell.this.getUnit().getImage());
+                    }
                 }
 
                 if (!(GameCell.this.getEffect() instanceof InnerShadow) && !(GameCell.this.getEffect() instanceof Lighting) && !(GameCell.this.getGraphic().getEffect() instanceof DropShadow)){
@@ -212,8 +219,14 @@ public class GameCell extends Button {
         }catch (MalformedURLException e){e.printStackTrace();}
         Image buttonImage = new Image(imageUrl, false);
         this.gameCellImageView.setImage(buttonImage);
-        this.gameCellImageView.setFitHeight(height);
-        this.gameCellImageView.setFitWidth(width);
+        if (Board.getScaleCoefficient() != null) {
+            this.gameCellImageView.setFitHeight(height*Board.getScaleCoefficient());
+            this.gameCellImageView.setFitWidth(width*Board.getScaleCoefficient());
+        }
+        else {
+            this.gameCellImageView.setFitHeight(height);
+            this.gameCellImageView.setFitWidth(width);
+        }
         this.gameCellImageView.setOpacity(opacity);
         this.setPadding(new Insets(1));
         this.setGraphic(gameCellImageView);

@@ -88,7 +88,6 @@ public class Board {
         borderPane.setMaxHeight(Size.getSceneHeight()*0.25);
         borderPane.setPadding(new Insets(3,0,3,0));
 
-
         borderPane.setLeft(getLeftEarGP());
         borderPane.setRight(getRightEarGP());
         borderPane.setCenter(getCentralGP());
@@ -104,9 +103,11 @@ public class Board {
         leftEarGP.setMinHeight(Size.getSceneHeight()*0.25);
         leftEarGP.add(MusicPlayerLogic.getMusicPlayer(),0,0);
 
-        ImageView leftEarIV = new ImageView(BoardUtils.getImage("src\\main\\resources\\Gifs\\LastChancer.gif"));
+        ImageView leftEarIV = new ImageView();
         leftEarIV.setFitWidth(Size.getSceneWidth()*0.183);
         leftEarIV.setFitHeight(Size.getSceneHeight()*0.39);
+        leftEarIV.setId("leftImageView");
+
         ScrollPane scrollPane = new ScrollPane(leftEarIV);
         scrollPane.setMinHeight(Size.getSceneHeight()*0.2);
         scrollPane.setMinWidth(Size.getSceneWidth()*0.15);
@@ -118,16 +119,20 @@ public class Board {
         leftVbox.setFillWidth(true);
         leftVbox.setMinHeight(Size.getSceneHeight()*0.25);
         leftVbox.setMinWidth(Size.getSceneWidth()*0.15);
-        Button leftUpButton = new Button();
-        leftUpButton.setMinWidth(150);
-        leftUpButton.setMinHeight(40);
+
+//        Button leftUpButton = new Button();
+//        leftUpButton.setMinWidth(150);
+//        leftUpButton.setMinHeight(40);
+
         TextArea leftTextArea = new TextArea();
         leftTextArea.setMaxWidth(150);
-        leftTextArea.setMaxHeight(100);
-        Button leftDownButton = new Button();
-        leftDownButton.setMinWidth(150);
-        leftDownButton.setMinHeight(40);
-        leftVbox.getChildren().addAll(leftUpButton,leftTextArea, leftDownButton);
+        leftTextArea.setMaxHeight(200);
+        leftTextArea.setId("leftTextArea");
+
+//        Button leftDownButton = new Button();
+//        leftDownButton.setMinWidth(150);
+//        leftDownButton.setMinHeight(40);
+        leftVbox.getChildren().addAll(leftTextArea);
         leftEarGP.add(leftVbox, 2,0);
 
         return leftEarGP;
@@ -157,9 +162,11 @@ public class Board {
 
         rightButtonVbox.getChildren().addAll(rightButton1, rightButton2, rightButton3);
         rightEarGP.add(rightButtonVbox,2,0);
-        ImageView rightEarIV = new ImageView(BoardUtils.getImage("src\\main\\resources\\Gifs\\Orc.gif"));
+        ImageView rightEarIV = new ImageView();
         rightEarIV.setFitWidth(Size.getSceneWidth()*0.183);
         rightEarIV.setFitHeight(Size.getSceneHeight()*0.39);
+        rightEarIV.setId("rightImageView");
+
         ScrollPane scrollPane = new ScrollPane(rightEarIV);
         scrollPane.setMinHeight(Size.getSceneHeight()*0.2);
         scrollPane.setMinWidth(Size.getSceneWidth()*0.15);
@@ -171,16 +178,21 @@ public class Board {
         rightVbox.setFillWidth(true);
         rightVbox.setMinHeight(Size.getSceneHeight()*0.25);
         rightVbox.setMinWidth(Size.getSceneWidth()*0.15);
-        Button rightUpButton = new Button();
-        rightUpButton.setMinWidth(150);
-        rightUpButton.setMinHeight(40);
+
+//        Button rightUpButton = new Button();
+//        rightUpButton.setMinWidth(150);
+//        rightUpButton.setMinHeight(40);
+
         TextArea rightTextArea = new TextArea();
         rightTextArea.setMaxWidth(150);
-        rightTextArea.setMaxHeight(100);
-        Button rightDownButton = new Button();
-        rightDownButton.setMinWidth(150);
-        rightDownButton.setMinHeight(40);
-        rightVbox.getChildren().addAll(rightUpButton, rightTextArea, rightDownButton);
+        rightTextArea.setMaxHeight(200);
+        rightTextArea.setId("rightTextArea");
+
+//        Button rightDownButton = new Button();
+//        rightDownButton.setMinWidth(150);
+//        rightDownButton.setMinHeight(40);
+        rightVbox.getChildren().addAll(rightTextArea);
+
         rightEarGP.add(rightVbox, 0,0);
 
         return rightEarGP;
@@ -194,17 +206,12 @@ public class Board {
         mainGridPane.setMaxWidth(Size.getSceneWidth()*0.1);
         mainGridPane.setMinHeight(Size.getSceneHeight()*0.25);
         mainGridPane.setMinWidth(Size.getSceneWidth()*0.1);
-        //mainGridPane.setPadding(new Insets(2));
-
-//        Label damage = new Label("damage points");
-
 
         TextArea centerTextArea = new TextArea();
         centerTextArea.setMinWidth(200);
+        centerTextArea.setId("centerTextArea");
         mainGridPane.add(centerTextArea, 0,0);
-        //mainGridPane.add(leftVbox,0,0);
-        //mainGridPane.add(centerVbox,1,0);
-        //mainGridPane.add(rightVbox,2,0);
+
         return mainGridPane;
     }
 
@@ -216,8 +223,14 @@ public class Board {
         return mainBattlefieldGP;
     }
 
-    public static Label getDamagePanel(){
-        return (Label)scene.lookup("#damagePanel");
+    public static void writeToTextArea(String id, String text){
+        TextArea textArea = (TextArea)scene.lookup(id);
+        textArea.setText(text);
+    }
+
+    public static void setImageToImageView(String id, Image image){
+        ImageView imageView = (ImageView) scene.lookup(id);
+        imageView.setImage(image);
     }
 
     private HBox getMainTitle(){
@@ -252,7 +265,7 @@ public class Board {
 
     private static GridPane generateCellBattleField( int length, int height){
         GridPane gridPane = new GridPane();
-        gridPane.setPadding(new Insets(5,5,5,5));
+        gridPane.setPadding(new Insets(5));
 
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < height; j++) {
