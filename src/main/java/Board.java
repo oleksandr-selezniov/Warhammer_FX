@@ -30,6 +30,7 @@ public class Board {
     private static GridPane mainBattlefieldGP = generateCellBattleField(55, 25);
     private String defaultBackgroundPath = "src\\main\\resources\\Background_1.jpg";
     private static Scene scene;
+    private static Double scaleCoefficient = 1.0;
 
     public void createUI(Stage primaryStage){
         primaryStage.setTitle("WarhammerFX Welcome");
@@ -288,7 +289,7 @@ public class Board {
 
                         GameCell gc = (GameCell)node;
                         gc.setSize(Size.getCellWidth()*newValue.doubleValue(), Size.getCellHeight()*newValue.doubleValue());
-
+                        setScaleCoefficient(newValue.doubleValue());
                         if(gc.getUnit()!=null){
                             gc.getGameCellImageView().setFitHeight(Size.getUnitHeight()*newValue.doubleValue());
                             gc.getGameCellImageView().setFitWidth(Size.getUnitWidth()*newValue.doubleValue());
@@ -302,6 +303,14 @@ public class Board {
             }
         });
         return slider;
+    }
+
+    public static Double getScaleCoefficient() {
+        return scaleCoefficient;
+    }
+
+    public static void setScaleCoefficient(Double scaleCoefficient) {
+        Board.scaleCoefficient = scaleCoefficient;
     }
 }
 

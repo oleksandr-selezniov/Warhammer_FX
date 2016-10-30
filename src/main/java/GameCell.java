@@ -150,8 +150,13 @@ public class GameCell extends Button {
         }catch (MalformedURLException e){e.printStackTrace();}
         Image buttonImage = new Image(imageUrl, false);
         this.gameCellImageView.setImage(buttonImage);
-        this.gameCellImageView.setFitHeight(Size.getCellHeight());
-        this.gameCellImageView.setFitWidth(Size.getCellWidth());
+        if(Board.getScaleCoefficient()!=null){
+            this.gameCellImageView.setFitHeight(Size.getCellHeight()*Board.getScaleCoefficient());
+            this.gameCellImageView.setFitWidth(Size.getCellWidth()*Board.getScaleCoefficient());
+        }else {
+            this.gameCellImageView.setFitHeight(Size.getCellHeight());
+            this.gameCellImageView.setFitWidth(Size.getCellWidth());
+        }
         this.gameCellImageView.setOpacity(0.5);
         this.setPadding(new Insets(1));
         this.setGraphic(gameCellImageView);
@@ -165,8 +170,14 @@ public class GameCell extends Button {
         }catch (MalformedURLException e){e.printStackTrace();}
         Image buttonImage = new Image(imageUrl, false);
         this.gameCellImageView.setImage(buttonImage);
-        this.gameCellImageView.setFitHeight(Size.getUnitHeight());
-        this.gameCellImageView.setFitWidth(Size.getUnitWidth());
+        if (Board.getScaleCoefficient() != null) {
+            this.gameCellImageView.setFitHeight(Size.getUnitHeight()*Board.getScaleCoefficient());
+            this.gameCellImageView.setFitWidth(Size.getUnitWidth()*Board.getScaleCoefficient());
+        }
+        else {
+            this.gameCellImageView.setFitHeight(Size.getUnitHeight());
+            this.gameCellImageView.setFitWidth(Size.getUnitWidth());
+        }
         this.gameCellImageView.setOpacity(1);
         this.setPadding(new Insets(2,2,5,2));
         this.setGraphic(gameCellImageView);
@@ -180,8 +191,14 @@ public class GameCell extends Button {
         }catch (MalformedURLException e){e.printStackTrace();}
         Image buttonImage = new Image(imageUrl, false);
         this.gameCellImageView.setImage(buttonImage);
-        this.gameCellImageView.setFitHeight(Size.getUnitHeight());
-        this.gameCellImageView.setFitWidth(Size.getUnitWidth());
+        if (Board.getScaleCoefficient() != null) {
+            this.gameCellImageView.setFitHeight(Size.getUnitHeight()*Board.getScaleCoefficient());
+            this.gameCellImageView.setFitWidth(Size.getUnitWidth()*Board.getScaleCoefficient());
+        }
+        else {
+            this.gameCellImageView.setFitHeight(Size.getUnitHeight());
+            this.gameCellImageView.setFitWidth(Size.getUnitWidth());
+        }
         this.gameCellImageView.setOpacity(0.8);
         this.setPadding(new Insets(2,2,5,2));
         this.setGraphic(gameCellImageView);
