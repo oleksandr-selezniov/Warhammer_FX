@@ -16,7 +16,7 @@ import static java.lang.Math.abs;
  */
 public class BoardUtils {
 
-    private static boolean isOnNeighbouringCell(GameCell gc1, GameCell gc2){
+    public static boolean isOnNeighbouringCell(GameCell gc1, GameCell gc2){
         int x1 = gc1.getxCoord();
         int y1 = gc1.getyCoord();
         int x2 = gc2.getxCoord();

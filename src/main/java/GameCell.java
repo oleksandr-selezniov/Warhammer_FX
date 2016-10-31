@@ -82,25 +82,73 @@ public class GameCell extends Button {
                     BoardUtils.abortFieldPassability();
                     //***************************ATTACK**********************************************
                     if (GameCell.this.isInShootingRange()) {
-                        if (unit.getHealth() > 0) {
-                            GameCell.this.getGraphic().setEffect(new SepiaTone());
-
-                            unit.setHealth(unit.getHealth() - temporaryUnit.getRangeDamage());
-
-                            if (unit.getHealth() <= 0) {
-                                unit = null;
-                                GameCell.this.setUnitImage("src\\main\\resources\\dead.jpg", 125, 125, 1);
-                            }
-                            changeTeamTurn();
-                        }
+                        performAttack(previousGameCell, GameCell.this);
                     }
                     //***************************ATTACK**********************************************
                     BoardUtils.abortShootingRange();
                     temporaryUnit = null;
                 }
-
             }
         });
+    }
+
+    public void performAttack(GameCell hunter_GC, GameCell victim_CG){
+        int meleeDamage=(int)(temporaryUnit.getCloseDamage()*unit.getArmor());
+        int rangeDamage=(int)(temporaryUnit.getRangeDamage()*unit.getArmor());
+
+        boolean isMeleeVulnerable = unit.getHealth()-meleeDamage<unit.getMaxHealth() && unit.getHealth()-meleeDamage!=unit.getHealth();
+        boolean isRangeVulnerable = unit.getHealth()-rangeDamage<unit.getMaxHealth() && unit.getHealth()-rangeDamage!=unit.getHealth();
+
+        if (unit.getHealth() > 0) {
+            victim_CG.getGraphic().setEffect(new SepiaTone());
+            if (BoardUtils.isOnNeighbouringCell(hunter_GC, victim_CG)) {
+                //close attack
+                if (isMeleeVulnerable) {
+                    unit.setHealth(unit.getHealth() - meleeDamage);
+                    Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
+                            + temporaryUnit.getName() + "\n"
+                            + "made " + (meleeDamage) + "\n"
+                            + "melee damage to " + "\n"
+                            + unit.getName() + "\n");
+                    changeTeamTurn();
+                } else {
+                    Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
+                            + temporaryUnit.getName() + "\n"
+                            + "can't even scratch" + "\n"
+                            + unit.getName() + "\n");
+                }
+            } else {
+                //Range damage
+                if (temporaryUnit.getAmmo() > 0) {
+                    if (isRangeVulnerable) {
+                        unit.setHealth(unit.getHealth() - rangeDamage);
+                        Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
+                                + temporaryUnit.getName() + "\n"
+                                + "made " + (rangeDamage) + "\n"
+                                + "range damage to " + "\n"
+                                + unit.getName() + "\n");
+                        temporaryUnit.setAmmo(temporaryUnit.getAmmo() - 1);
+                        changeTeamTurn();
+                    } else {
+                        Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
+                                + temporaryUnit.getName() + "\n"
+                                + "can't even scratch" + "\n"
+                                + unit.getName() + "\n");
+                    }
+                } else {
+                    Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
+                            + temporaryUnit.getName() + "\n"
+                            + "is out of ammunition!" + "\n");
+                }
+            }
+        }
+        if (unit.getHealth() <= 0) {
+            Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
+                    + unit.getName() + "\n"
+                    + "is dead" + "\n");
+            GameCell.this.setUnitImage("src\\main\\resources\\dead.jpg", 125, 125, 1);
+            unit = null;
+        }
     }
 
     public void mouseMovementMode(){

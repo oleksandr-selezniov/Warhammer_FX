@@ -1,4 +1,5 @@
 import MusicPlayer.MusicPlayerLogic;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -225,7 +226,15 @@ public class Board {
 
     public static void writeToTextArea(String id, String text){
         TextArea textArea = (TextArea)scene.lookup(id);
-        textArea.setText(text);
+        Platform.runLater(()->textArea.setText(text));
+        Platform.runLater(()->textArea.positionCaret(textArea.getText().length()));
+        Platform.runLater(()->textArea.setEditable(true));
+        Platform.runLater(()->textArea.setScrollTop(Double.MAX_VALUE));
+    }
+
+    public static String getTextFromTextArea(String id){
+        TextArea textArea = (TextArea)scene.lookup(id);
+        return textArea.getText();
     }
 
     public static void setImageToImageView(String id, Image image){

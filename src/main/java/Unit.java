@@ -16,7 +16,7 @@ public class Unit {
     private int health;
     private int morale;
     private int ammo;
-    private int armor;
+    private double armor;
     private int rangeDamage;
     private int closeDamage;
     private int walkRange;
@@ -24,7 +24,7 @@ public class Unit {
     private String picturePath;
     private int team;
 
-    Unit(String name, int health, int morale, int ammo, int armor, int closeDamage, int rangeDamage, int walkRange, int shotRange, int team, String picture){
+    Unit(String name, int health, int morale, int ammo, double armor, int closeDamage, int rangeDamage, int walkRange, int shotRange, int team, String picture){
         this.team = team;
         this.name = name;
         this.health = health;
@@ -96,11 +96,11 @@ public class Unit {
         this.ammo = ammo;
     }
 
-    public int getArmor() {
+    public double getArmor() {
         return armor;
     }
 
-    public void setArmor(int armor) {
+    public void setArmor(double armor) {
         this.armor = armor;
     }
 
