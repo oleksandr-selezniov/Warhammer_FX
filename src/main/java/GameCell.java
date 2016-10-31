@@ -145,7 +145,8 @@ public class GameCell extends Button {
         if (unit.getHealth() <= 0) {
             Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
                     + unit.getName() + "\n"
-                    + "is dead" + "\n");
+                    + "is killed by" + "\n"
+                    +temporaryUnit.getName()+"\n");
             GameCell.this.setUnitImage("src\\main\\resources\\dead.jpg", 125, 125, 1);
             unit = null;
         }
