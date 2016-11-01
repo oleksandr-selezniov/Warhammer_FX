@@ -109,13 +109,13 @@ public class GameCell extends Button {
                             + temporaryUnit.getName() + "\n"
                             + "made " + (meleeDamage) + "\n"
                             + "melee damage to " + "\n"
-                            + unit.getName() + "\n");
+                            + unit.getName() + "\n", true);
                     changeTeamTurn();
                 } else {
                     Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
                             + temporaryUnit.getName() + "\n"
                             + "can't even scratch" + "\n"
-                            + unit.getName() + "\n");
+                            + unit.getName() + "\n", true);
                 }
             } else {
                 //Range damage
@@ -126,19 +126,19 @@ public class GameCell extends Button {
                                 + temporaryUnit.getName() + "\n"
                                 + "made " + (rangeDamage) + "\n"
                                 + "range damage to " + "\n"
-                                + unit.getName() + "\n");
+                                + unit.getName() + "\n", true);
                         temporaryUnit.setAmmo(temporaryUnit.getAmmo() - 1);
                         changeTeamTurn();
                     } else {
                         Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
                                 + temporaryUnit.getName() + "\n"
                                 + "can't even scratch" + "\n"
-                                + unit.getName() + "\n");
+                                + unit.getName() + "\n", true);
                     }
                 } else {
                     Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
                             + temporaryUnit.getName() + "\n"
-                            + "is out of ammunition!" + "\n");
+                            + "is out of ammunition!" + "\n", true);
                 }
             }
         }
@@ -146,7 +146,7 @@ public class GameCell extends Button {
             Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
                     + unit.getName() + "\n"
                     + "is killed by" + "\n"
-                    +temporaryUnit.getName()+"\n");
+                    +temporaryUnit.getName()+"\n", true);
             GameCell.this.setUnitImage("src\\main\\resources\\dead.jpg", 125, 125, 1);
             unit = null;
         }
@@ -160,10 +160,10 @@ public class GameCell extends Button {
                     tooltip.setAutoHide(false);
                     GameCell.this.setTooltip(tooltip);
                     if(GameCell.this.getUnit().getTeam()==1){
-                        Board.writeToTextArea("#leftTextArea", GameCell.this.getUnit().getInfo());
+                        Board.writeToTextArea("#leftTextArea", GameCell.this.getUnit().getInfo(), false);
                         Board.setImageToImageView("#leftImageView", GameCell.this.getUnit().getImage());
                     }else{
-                        Board.writeToTextArea("#rightTextArea", GameCell.this.getUnit().getInfo());
+                        Board.writeToTextArea("#rightTextArea", GameCell.this.getUnit().getInfo(), false);
                         Board.setImageToImageView("#rightImageView", GameCell.this.getUnit().getImage());
                     }
                 }
@@ -277,7 +277,7 @@ public class GameCell extends Button {
             this.gameCellImageView.setFitWidth(width);
         }
         this.gameCellImageView.setOpacity(opacity);
-        this.setPadding(new Insets(1));
+        this.setPadding(new Insets(3,3,-80,-80));
         this.setGraphic(gameCellImageView);
     }
 

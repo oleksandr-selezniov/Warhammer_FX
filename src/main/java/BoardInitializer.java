@@ -31,6 +31,10 @@ public class BoardInitializer {
         gc6.setUnit(new Unit("Tallarn's Desert Raider",50,20,45,0.8,25,15,3,7,1,"src\\main\\resources\\Gifs\\Tallarn.gif"));
         gc6.setUnitImage(gc6.getUnit().getPicturePath());
 
+//        GameCell gc99 = getGameCell("#2_2");
+//        gc99.setUnit(new Unit("Leman Russ Tank",550,200,45,0.5,40,500,3,7,1,"src\\main\\resources\\Gifs\\LemanRuss.gif"));
+//        gc99.setUnitImage(gc99.getUnit().getPicturePath(), 200, 200, 1);
+
 
 
         GameCell gc7 = getGameCell("#9_0");

@@ -126,8 +126,8 @@ public class Board {
 //        leftUpButton.setMinHeight(40);
 
         TextArea leftTextArea = new TextArea();
-        leftTextArea.setMaxWidth(150);
-        leftTextArea.setMaxHeight(200);
+        leftTextArea.setMaxWidth(Size.getSceneWidth()*0.13);
+        leftTextArea.setMaxHeight(Size.getSceneHeight()*0.26);
         leftTextArea.setId("leftTextArea");
 
 //        Button leftDownButton = new Button();
@@ -180,18 +180,11 @@ public class Board {
         rightVbox.setMinHeight(Size.getSceneHeight()*0.25);
         rightVbox.setMinWidth(Size.getSceneWidth()*0.15);
 
-//        Button rightUpButton = new Button();
-//        rightUpButton.setMinWidth(150);
-//        rightUpButton.setMinHeight(40);
-
         TextArea rightTextArea = new TextArea();
-        rightTextArea.setMaxWidth(150);
-        rightTextArea.setMaxHeight(200);
+        rightTextArea.setMaxWidth(Size.getSceneWidth()*0.13);
+        rightTextArea.setMaxHeight(Size.getSceneHeight()*0.26);
         rightTextArea.setId("rightTextArea");
 
-//        Button rightDownButton = new Button();
-//        rightDownButton.setMinWidth(150);
-//        rightDownButton.setMinHeight(40);
         rightVbox.getChildren().addAll(rightTextArea);
 
         rightEarGP.add(rightVbox, 0,0);
@@ -209,7 +202,7 @@ public class Board {
         mainGridPane.setMinWidth(Size.getSceneWidth()*0.1);
 
         TextArea centerTextArea = new TextArea();
-        centerTextArea.setMinWidth(200);
+        centerTextArea.setMinWidth(Size.getSceneWidth()*0.153);
         centerTextArea.setId("centerTextArea");
         mainGridPane.add(centerTextArea, 0,0);
 
@@ -224,12 +217,14 @@ public class Board {
         return mainBattlefieldGP;
     }
 
-    public static void writeToTextArea(String id, String text){
+    public static void writeToTextArea(String id, String text, boolean scrollDowm){
         TextArea textArea = (TextArea)scene.lookup(id);
         Platform.runLater(()->textArea.setText(text));
+        Platform.runLater(()->textArea.setEditable(false));
+        if(scrollDowm){
         Platform.runLater(()->textArea.positionCaret(textArea.getText().length()));
-        Platform.runLater(()->textArea.setEditable(true));
         Platform.runLater(()->textArea.setScrollTop(Double.MAX_VALUE));
+        }
     }
 
     public static String getTextFromTextArea(String id){
