@@ -1,5 +1,6 @@
+package Units;
+
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -7,22 +8,24 @@ import java.net.MalformedURLException;
 /**
  * Created by Dmitriy on 17.04.2016.
  */
-public class Unit {
+public abstract class Unit {
 
-    private String name;
-    private int maxHealth;
-    private int maxMorale;
-    private int maxAmmo;
-    private int health;
-    private int morale;
-    private int ammo;
-    private double armor;
-    private int rangeDamage;
-    private int closeDamage;
-    private int walkRange;
-    private int shotRange;
-    private String picturePath;
-    private int team;
+    protected String name;
+    protected int maxHealth;
+    protected int maxMorale;
+    protected int maxAmmo;
+    protected int health;
+    protected int morale;
+    protected int ammo;
+    protected double armor;
+    protected int rangeDamage;
+    protected int closeDamage;
+    protected int walkRange;
+    protected int shotRange;
+    protected String picturePath;
+    protected int team;
+
+    public Unit(){}
 
     Unit(String name, int health, int morale, int ammo, double armor, int closeDamage, int rangeDamage, int walkRange, int shotRange, int team, String picture){
         this.team = team;

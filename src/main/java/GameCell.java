@@ -1,3 +1,4 @@
+import Units.Unit;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -34,10 +35,10 @@ public class GameCell extends Button {
     private Boolean isInShootingRange = false;
     private Boolean isSafe = true;
     private Boolean isDangerous = false;
-    //private Boolean isSelected = false;?;lkjhgdsdf test
     private Unit unit;
 
     GameCell() {
+        this.setPadding(new Insets(50));
         this.setSize(Size.getCellWidth(), Size.getCellHeight());
         this.setDefaultImage();
         this.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -187,7 +188,6 @@ public class GameCell extends Button {
         });
 
         this.setOnMouseExited(new EventHandler<MouseEvent>() {
-            //@Override
             public void handle(MouseEvent e) {
                 GameCell.this.setCursor(Cursor.DEFAULT);
                 if(!(GameCell.this.getGraphic().getEffect() instanceof DropShadow)){
@@ -277,7 +277,7 @@ public class GameCell extends Button {
             this.gameCellImageView.setFitWidth(width);
         }
         this.gameCellImageView.setOpacity(opacity);
-        this.setPadding(new Insets(3,3,-80,-80));
+        this.setPadding(new Insets(2));
         this.setGraphic(gameCellImageView);
     }
 

@@ -269,7 +269,11 @@ public class Board {
 
     private static GridPane generateCellBattleField( int length, int height){
         GridPane gridPane = new GridPane();
-        gridPane.setPadding(new Insets(5));
+        gridPane.setId("boardGC");
+        gridPane.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        gridPane.setPadding(new Insets(1));
+        gridPane.setVgap(0.5);
+        gridPane.setHgap(0.5);
 
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < height; j++) {
@@ -281,7 +285,6 @@ public class Board {
                 gridPane.add(gameCell, i, j);
             }
         }
-        gridPane.setGridLinesVisible(true);
         return gridPane;
     }
 
