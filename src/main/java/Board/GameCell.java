@@ -43,7 +43,7 @@ public class GameCell extends Button {
     GameCell() {
         this.setPadding(new Insets(50));
         this.setSize(Size.getCellWidth(), Size.getCellHeight());
-        this.setDefaultImage();
+        this.setDefaultImage(this);
         this.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         actionMode();
         mouseMovementMode();
@@ -74,7 +74,7 @@ public class GameCell extends Button {
                     }
                     isSelected = false;
                     if (!(previousGameCell.equals(GameCell.this))) {
-                        previousGameCell.setDefaultImage();
+                        previousGameCell.setDefaultImage(previousGameCell);
                         changeTeamTurn();
                     }
                     BoardUtils.abortFieldPassability();
@@ -203,7 +203,7 @@ public class GameCell extends Button {
         });
     }
 
-    public void setDefaultImage(){
+    public void setDefaultImage(GameCell gc){
         ImageView imageView = new ImageView();
         String imageUrl = null;
         try {
@@ -212,13 +212,8 @@ public class GameCell extends Button {
         }catch (MalformedURLException e){e.printStackTrace();}
         Image buttonImage = new Image(imageUrl, false);
         imageView.setImage(buttonImage);
-        if(Board.getScaleCoefficient()!=null){
-            imageView.setFitHeight(Size.getCellHeight()*Board.getScaleCoefficient());
-            imageView.setFitWidth(Size.getCellWidth()*Board.getScaleCoefficient());
-        }else {
-            imageView.setFitHeight(Size.getCellHeight());
-            imageView.setFitWidth(Size.getCellWidth());
-        }
+        imageView.fitHeightProperty().bindBidirectional(gc.minHeightProperty());          //(Size.getCellHeight()*Board.getScaleCoefficient());
+        imageView.fitWidthProperty().bindBidirectional(gc.minWidthProperty());            //Size.getCellWidth()*Board.getScaleCoefficient());
         imageView.setOpacity(0.5);
         this.setPadding(new Insets(1));
         this.setGraphic(imageView);

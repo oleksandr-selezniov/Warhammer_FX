@@ -316,8 +316,6 @@ public class Board {
                         if(gc.getUnit()!=null){
                             gc.setGraphic(gc.getUnit().getImageView(1.0));
                             gc.setPadding(gc.getUnit().getInsets());
-                        }else{
-                            gc.setDefaultImage();
                         }
                     }
                 }
