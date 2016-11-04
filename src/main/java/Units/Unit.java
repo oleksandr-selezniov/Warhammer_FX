@@ -26,6 +26,9 @@ public abstract class Unit {
     protected int shotRange;
     protected String picturePath;
     protected int team;
+    protected double heightCoeff;
+    protected double widthCoeff;
+    protected ImageView unitImageView;
 
     public Unit(){}
 
@@ -66,17 +69,7 @@ public abstract class Unit {
         return new Image(imageUrl, false);
     }
 
-    public ImageView getImageView() {
-        ImageView imageView = new ImageView();
-        String imageUrl = null;
-        try {
-            File file = new File(picturePath);
-            imageUrl = file.toURI().toURL().toString();
-        }catch (MalformedURLException e){e.printStackTrace();}
-        Image image = new Image(imageUrl, false);
-        imageView.setImage(image);
-        return imageView;
-    }
+    public abstract ImageView getImageView(Double opacity);
 
     public void setPicturePath(String picturePath) {
         this.picturePath = picturePath;
@@ -167,7 +160,31 @@ public abstract class Unit {
         return rangeDamage;
     }
 
+    public ImageView getUnitImageView() {
+        return unitImageView;
+    }
+
+    public void setUnitImageView(ImageView unitImageView) {
+        this.unitImageView = unitImageView;
+    }
+
     public abstract Insets getInsets();
+
+    public double getWidthCoeff() {
+        return widthCoeff;
+    }
+
+    public void setWidthCoeff(double widthCoeff) {
+        this.widthCoeff = widthCoeff;
+    }
+
+    public double getHeightCoeff() {
+        return heightCoeff;
+    }
+
+    public void setHeightCoeff(double heightCoeff) {
+        this.heightCoeff = heightCoeff;
+    }
 
     public String getInfo(){
         String unitInfo = "Name: "+name+"\n"+"Armor "+armor+"\n"+"Health "+health+"/"+maxHealth+"\n"+"Morale "+morale+

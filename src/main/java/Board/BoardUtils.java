@@ -1,17 +1,15 @@
+package Board;
+
 import Units.Vehicle;
-import javafx.application.Platform;
 import javafx.scene.Node;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static java.lang.Math.abs;
@@ -77,14 +75,9 @@ public class BoardUtils {
     public static void showShootingRange(){
         GridPane gridPane = Board.getMainBattlefieldGP();
         for (Node node : gridPane.getChildren()) {
-            if (node instanceof GameCell
-                    && ((GameCell) node).isInShootingRange() && ((GameCell) node).getUnit()==null) {
-                DropShadow dropShadow = new DropShadow();
-                dropShadow.setOffsetX(2.0f);
-                dropShadow.setOffsetY(4.0f);
-                dropShadow.setColor(Color.rgb(0, 200, 0, 1));
+            if (node instanceof GameCell && ((GameCell) node).isInShootingRange() && ((GameCell) node).getUnit()==null){
                 if((((GameCell) node).getUnit()==null)){
-                    ((GameCell) node).getGraphic().setEffect(dropShadow);
+                    node.setStyle("-fx-background-color: green");
                 }
             }
         }
@@ -115,20 +108,20 @@ public class BoardUtils {
         }
     }
 
-    public static ImageView getImageView(String imagePath, int width, int height, double opacity){
-        String imageUrl = null;
-        ImageView imageView = new ImageView();
-        try {
-            File file = new File(imagePath);
-            imageUrl = file.toURI().toURL().toString();
-        }catch (MalformedURLException e){e.printStackTrace();}
-        Image image = new Image(imageUrl, false);
-        imageView.setImage(image);
-        imageView.setFitHeight(height);
-        imageView.setFitWidth(width);
-        imageView.setOpacity(opacity);
-        return imageView;
-    }
+//    public static ImageView getImageView(String imagePath, int width, int height, double opacity){
+//        String imageUrl = null;
+//        ImageView imageView = new ImageView();
+//        try {
+//            File file = new File(imagePath);
+//            imageUrl = file.toURI().toURL().toString();
+//        }catch (MalformedURLException e){e.printStackTrace();}
+//        Image image = new Image(imageUrl, false);
+//        imageView.setImage(image);
+//        imageView.setFitHeight(height);
+//        imageView.setFitWidth(width);
+//        imageView.setOpacity(opacity);
+//        return imageView;
+//    }
 
     public static void calculateRanges(GameCell gameCell){
         BoardUtils.setWalkingArea(gameCell);

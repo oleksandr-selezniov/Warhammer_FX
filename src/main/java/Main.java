@@ -1,3 +1,4 @@
+import Board.Board;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

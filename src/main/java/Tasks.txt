@@ -2,7 +2,7 @@
 
 2) UI - Test on higher resolutions -> replace all hard-coded numbers with coefficients
 
-3) Refactor mouse listeners in GameCell (hard & risky)
+3) Refactor mouse listeners in Board.GameCell (hard & risky)
 
 4) Replace highlight for shooting range (was setEffect(new OuterShadow) needed Button filled with color)
 4)' Replace innerShadow to outerShadow if mouse on enemy unit (AFTER 4 is done)

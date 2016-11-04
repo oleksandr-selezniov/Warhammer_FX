@@ -1,3 +1,5 @@
+package Board;
+
 import MusicPlayer.MusicPlayerLogic;
 import Size.Size;
 import javafx.application.Platform;
@@ -300,7 +302,7 @@ public class Board {
         slider.setMax(3.0);
         slider.setValue(1);
         slider.setMajorTickUnit(0.1);
-        slider.setBlockIncrement(0.1);
+        slider.setBlockIncrement(0.5);
         slider.setShowTickMarks(true);
         slider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -312,15 +314,13 @@ public class Board {
                         gc.setSize(Size.getCellWidth()*newValue.doubleValue(), Size.getCellHeight()*newValue.doubleValue());
                         setScaleCoefficient(newValue.doubleValue());
                         if(gc.getUnit()!=null){
-                            gc.getGameCellImageView().setFitHeight(Size.getUnitHeight()*newValue.doubleValue());
-                            gc.getGameCellImageView().setFitWidth(Size.getUnitWidth()*newValue.doubleValue());
+                            gc.setGraphic(gc.getUnit().getImageView(1.0));
+                            gc.setPadding(gc.getUnit().getInsets());
                         }else{
-                            gc.getGameCellImageView().setFitWidth(Size.getCellWidth()*newValue.doubleValue());
-                            gc.getGameCellImageView().setFitHeight(Size.getCellHeight()*newValue.doubleValue());
+                            gc.setDefaultImage();
                         }
                     }
                 }
-
             }
         });
         return slider;
