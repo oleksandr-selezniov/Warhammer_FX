@@ -1,6 +1,8 @@
 package Units;
 
+import javafx.geometry.Insets;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -62,6 +64,18 @@ public abstract class Unit {
             imageUrl = file.toURI().toURL().toString();
         }catch (MalformedURLException e){e.printStackTrace();}
         return new Image(imageUrl, false);
+    }
+
+    public ImageView getImageView() {
+        ImageView imageView = new ImageView();
+        String imageUrl = null;
+        try {
+            File file = new File(picturePath);
+            imageUrl = file.toURI().toURL().toString();
+        }catch (MalformedURLException e){e.printStackTrace();}
+        Image image = new Image(imageUrl, false);
+        imageView.setImage(image);
+        return imageView;
     }
 
     public void setPicturePath(String picturePath) {
@@ -153,6 +167,7 @@ public abstract class Unit {
         return rangeDamage;
     }
 
+    public abstract Insets getInsets();
 
     public String getInfo(){
         String unitInfo = "Name: "+name+"\n"+"Armor "+armor+"\n"+"Health "+health+"/"+maxHealth+"\n"+"Morale "+morale+

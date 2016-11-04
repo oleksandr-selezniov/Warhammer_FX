@@ -1,3 +1,5 @@
+import Units.Vehicle;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.InnerShadow;
@@ -8,6 +10,9 @@ import javafx.scene.paint.Color;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import static java.lang.Math.abs;
 
@@ -139,5 +144,19 @@ public class BoardUtils {
             imageUrl = file.toURI().toURL().toString();
         }catch (MalformedURLException e){e.printStackTrace();}
         return new Image(imageUrl, false);
+    }
+
+    public static void refreshZOrder() {
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        ArrayList<Node> nodeList = gridPane.getChildren().stream().filter(p -> {
+            if (p instanceof GameCell) {
+                if (((GameCell) p).getUnit() != null && (((GameCell) p).getUnit() instanceof Vehicle)) {
+                    return true;
+                }
+            }
+            return false;
+        }).collect(Collectors.toCollection(ArrayList::new));
+
+        nodeList.stream().forEach(Node::toFront);
     }
 }

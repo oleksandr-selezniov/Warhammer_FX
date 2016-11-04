@@ -1,4 +1,5 @@
 import Units.LightInfantry;
+import Units.Vehicle;
 import javafx.scene.Scene;
 
 /**
@@ -32,9 +33,9 @@ public class BoardInitializer {
         gc6.setUnit(new LightInfantry("Tallarn", 1));
         gc6.setUnitImage(gc6.getUnit().getPicturePath());
 
-//        GameCell gc99 = getGameCell("#2_2");
-//        gc99.setUnit(new Vehicle("Leman_Russ", 1));
-//        gc99.setUnitImage(gc99.getUnit().getPicturePath(), 200, 200, 1);
+        GameCell gc99 = getGameCell("#2_2");
+        gc99.setUnit(new Vehicle("Leman_Russ", 1));
+        gc99.setUnitImage(gc99.getUnit().getPicturePath(), 200, 200, 1);
 
 
 

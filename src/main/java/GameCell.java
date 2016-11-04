@@ -1,3 +1,4 @@
+import Size.Size;
 import Units.Unit;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -235,7 +236,7 @@ public class GameCell extends Button {
             this.gameCellImageView.setFitWidth(Size.getUnitWidth());
         }
         this.gameCellImageView.setOpacity(1);
-        this.setPadding(new Insets(2,2,5,2));
+        this.setPadding(this.getUnit().getInsets());
         this.setGraphic(gameCellImageView);
     }
 
@@ -256,7 +257,7 @@ public class GameCell extends Button {
             this.gameCellImageView.setFitWidth(Size.getUnitWidth());
         }
         this.gameCellImageView.setOpacity(0.8);
-        this.setPadding(new Insets(2,2,5,2));
+        this.setPadding(this.getUnit().getInsets());
         this.setGraphic(gameCellImageView);
     }
 
@@ -277,7 +278,10 @@ public class GameCell extends Button {
             this.gameCellImageView.setFitWidth(width);
         }
         this.gameCellImageView.setOpacity(opacity);
-        this.setPadding(new Insets(2));
+        if(this.getUnit()!=null){
+            this.setPadding(this.getUnit().getInsets());
+        }else{
+            this.setPadding(new Insets(2));}
         this.setGraphic(gameCellImageView);
     }
 
@@ -353,11 +357,12 @@ public class GameCell extends Button {
     }
 
     private static void changeTeamTurn(){
-        if(teamTurnValue==1){
+        if(teamTurnValue == 1){
             teamTurnValue = 2;
         }else{
             teamTurnValue = 1;
         }
+        BoardUtils.refreshZOrder();
     }
 
     private boolean isTeamTurn(int team){

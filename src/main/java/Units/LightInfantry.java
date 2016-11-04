@@ -2,6 +2,7 @@ package Units;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
+import javafx.geometry.Insets;
 
 /**
  * Created by Dmitriy on 03.11.2016.
@@ -9,6 +10,7 @@ import java.util.ResourceBundle;
 public class LightInfantry extends Unit {
     private static Locale locale = new Locale("en", "US");
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("LightInfantry", locale);
+    private Insets insets = new Insets(2,2,2,2);
 
     public LightInfantry(String name, int team){
         this.team = team;
@@ -25,5 +27,10 @@ public class LightInfantry extends Unit {
         this.walkRange = Integer.parseInt(resourceBundle.getString(name+".walkRange"));
         this.shotRange = Integer.parseInt(resourceBundle.getString(name+".shotRange"));
         this.picturePath = resourceBundle.getString(name+".picturePath");
+    }
+
+    @Override
+    public javafx.geometry.Insets getInsets() {
+        return insets;
     }
 }

@@ -1,4 +1,5 @@
 import MusicPlayer.MusicPlayerLogic;
+import Size.Size;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -73,6 +74,7 @@ public class Board {
         primaryStage.show();
         BoardInitializer boardInit = new BoardInitializer();
         boardInit.initializeBoard();
+        BoardUtils.refreshZOrder();
     }
 
     public HBox generateBottomMenu(){
