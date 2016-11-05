@@ -285,7 +285,7 @@ public class GameCell extends Button {
         this.setMinWidth(width);
     }
 
-    private static void changeTeamTurn(){
+    public static void changeTeamTurn(){
         if(teamTurnValue == 1){
             teamTurnValue = 2;
         }else{

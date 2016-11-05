@@ -153,9 +153,11 @@ public class Board {
         rightButtonVbox.setMinWidth(100);
         rightButtonVbox.setPadding(new Insets(10));
 
-        Button rightButton1 = new Button();
-        rightButton1.setMinWidth(70);
-        rightButton1.setMinHeight(20);
+        Button endTurnButton = new Button("End Turn");
+        endTurnButton.setMinWidth(70);
+        endTurnButton.setMinHeight(20);
+        endTurnButton.setOnAction(p->GameCell.changeTeamTurn());
+
 
         Button rightButton2 = new Button();
         rightButton2.setMinWidth(70);
@@ -165,7 +167,7 @@ public class Board {
         rightButton3.setMinWidth(70);
         rightButton3.setMinHeight(20);
 
-        rightButtonVbox.getChildren().addAll(rightButton1, rightButton2, rightButton3);
+        rightButtonVbox.getChildren().addAll(endTurnButton, rightButton2, rightButton3);
         rightEarGP.add(rightButtonVbox,2,0);
         ImageView rightEarIV = new ImageView();
         rightEarIV.setFitWidth(Size.getSceneWidth()*0.183);

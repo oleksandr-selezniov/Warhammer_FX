@@ -28,83 +28,60 @@ public class BoardUtils {
     }
 
     private static boolean isReachable(int x1, int y1, int x2, int y2, int Range){
-        if(x1 - x2 < Range && y1 - y2 < Range){
-            if(x2 - x1 < Range && y2 - y1 < Range) {
-                return true;
-            }
-        }
-        return false;
+        return ((x1 - x2 < Range && y1 - y2 < Range)&&(x2 - x1 < Range && y2 - y1 < Range));
     }
 
     public static void showFieldPassability(){
         GridPane gridPane = Board.getMainBattlefieldGP();
-        for (Node node : gridPane.getChildren()) {
-            if (node instanceof GameCell
-                    && ((GameCell) node).isPassable() && ((GameCell) node).getUnit()==null) {
-                node.setEffect(new InnerShadow());
-            }
-        }
+        gridPane.getChildren().stream().filter(p->(p instanceof GameCell
+                && ((GameCell) p).isPassable() && ((GameCell) p).getUnit()==null))
+                .forEach(p->p.setEffect(new InnerShadow()));
     }
 
     public static void setWalkingArea(GameCell currentcell){
         int walkrange = currentcell.getUnit().getWalkRange();
         int x = currentcell.getxCoord();
         int y = currentcell.getyCoord();
-
         GridPane gridPane = Board.getMainBattlefieldGP();
-        for (Node node : gridPane.getChildren()) {
-            if (node instanceof GameCell &&
-                    isReachable( x, y, ((GameCell) node).getxCoord(), ((GameCell) node).getyCoord(), walkrange)){
-                ((GameCell) node).setPassable(true);
-            }
-        }
+        gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
+                isReachable( x,y,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), walkrange)))
+                .forEach(p->((GameCell) p).setPassable(true));
     }
 
     public static void abortFieldPassability(){
         GridPane gridPane = Board.getMainBattlefieldGP();
-        for (Node node : gridPane.getChildren()) {
-            if (node instanceof GameCell && ((GameCell) node).isPassable()) {
-                node.setEffect(null);
-                ((GameCell) node).setPassable(false);
-                showFieldPassability();
-            }
-        }
+        gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isPassable()))
+                .forEach(p->{
+                    p.setEffect(null);
+                    ((GameCell) p).setPassable(false);
+                    showFieldPassability();
+                });
     }
 
     public static void showShootingRange(){
         GridPane gridPane = Board.getMainBattlefieldGP();
-        for (Node node : gridPane.getChildren()) {
-            if (node instanceof GameCell && ((GameCell) node).isInShootingRange() && ((GameCell) node).getUnit()==null){
-                if((((GameCell) node).getUnit()==null)){
-                    node.setStyle("-fx-background-color: #00CC33");
-                }
-            }
-        }
+        gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isInShootingRange() && ((GameCell) p).getUnit()==null))
+                .forEach(p -> p.setStyle("-fx-background-color: #00CC33"));
     }
 
-    public static void setShootingArea(GameCell currentcell){
-        int shotRange = currentcell.getUnit().getShotRange();
-        int x = currentcell.getxCoord();
-        int y = currentcell.getyCoord();
-
+    public static void setShootingArea(GameCell currentCell){
+        int shotRange = currentCell.getUnit().getShotRange();
+        int x = currentCell.getxCoord();
+        int y = currentCell.getyCoord();
         GridPane gridPane = Board.getMainBattlefieldGP();
-        for (Node node : gridPane.getChildren()) {
-            if (node instanceof GameCell &&
-                    isReachable( x, y, ((GameCell) node).getxCoord(), ((GameCell) node).getyCoord(), shotRange)){
-                ((GameCell) node).setInShootingRange(true);
-            }
-        }
+        gridPane.getChildren().stream().filter(p->
+            (p instanceof GameCell && isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), shotRange)))
+                .forEach(p->((GameCell) p).setInShootingRange(true));
     }
 
     public static void abortShootingRange(){
         GridPane gridPane = Board.getMainBattlefieldGP();
-        for (Node node : gridPane.getChildren()) {
-            if (node instanceof GameCell && ((GameCell) node).isInShootingRange()) {
-                node.setStyle(null);
-                ((GameCell) node).setInShootingRange(false);
-                showShootingRange();
-            }
-        }
+        gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isInShootingRange()))
+                .forEach(p->{
+                    p.setStyle(null);
+                    ((GameCell) p).setInShootingRange(false);
+                    showShootingRange();
+                });
     }
 
     public static void calculateRanges(GameCell gameCell){
@@ -125,15 +102,9 @@ public class BoardUtils {
 
     public static void refreshZOrder() {
         GridPane gridPane = Board.getMainBattlefieldGP();
-        ArrayList<Node> nodeList = gridPane.getChildren().stream().filter(p -> {
-            if (p instanceof GameCell) {
-                if (((GameCell) p).getUnit() != null && (((GameCell) p).getUnit() instanceof Vehicle)) {
-                    return true;
-                }
-            }
-            return false;
-        }).collect(Collectors.toCollection(ArrayList::new));
-
-        nodeList.stream().forEach(Node::toFront);
+        ArrayList<Node> nodeList = gridPane.getChildren().stream().filter(p ->
+            (p instanceof GameCell && ((GameCell) p).getUnit() != null && (((GameCell) p).getUnit() instanceof Vehicle))
+        ).collect(Collectors.toCollection(ArrayList::new));
+        nodeList.forEach(Node::toFront);
     }
 }
