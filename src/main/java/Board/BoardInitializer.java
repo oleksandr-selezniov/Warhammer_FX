@@ -67,6 +67,13 @@ public class BoardInitializer {
         gc10.setUnit(new LightInfantry("Shoota_Boy", 2));
         gc10.setGraphic(gc10.getUnit().getImageView(1.0));
         gc10.setPadding(gc10.getUnit().getInsets());
+
+        GameCell gc90 = getGameCell("#7_3");
+        gc90.setUnit(new Vehicle("PartyVan", 2));
+        gc90.setGraphic(gc90.getUnit().getImageView(1.0));
+        gc90.setPadding(gc90.getUnit().getInsets());
+
+
     }
 
     private GameCell getGameCell(String id){

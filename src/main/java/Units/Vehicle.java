@@ -56,8 +56,8 @@ public class Vehicle extends Unit {
         imageView.setImage(image);
         imageView.setOpacity(opacity);
         if (Board.getScaleCoefficient() != null) {
-            imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff * Board.getScaleCoefficient());
-            imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff * Board.getScaleCoefficient());
+            imageView.setFitHeight(Size.getCellHeight() * this.heightCoeff * Board.getScaleCoefficient());
+            imageView.setFitWidth(Size.getCellWidth() * this.widthCoeff * Board.getScaleCoefficient());
         }
         else {
             imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff);
@@ -69,7 +69,7 @@ public class Vehicle extends Unit {
     @Override
     public javafx.geometry.Insets getInsets() {
         if(Board.getScaleCoefficient()!=null){
-            return new Insets(2,2,Size.getCellHeight()*Board.getScaleCoefficient()*0.64,2);
+            return new Insets(2,2,Size.getCellHeight()*Board.getScaleCoefficient()*0.64,-Size.getCellHeight()*Board.getScaleCoefficient()*0.4);
         }
         return new Insets(2,2,Size.getCellHeight()*0.64,2);
     }

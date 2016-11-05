@@ -302,7 +302,7 @@ public class Board {
         slider.setMax(3.0);
         slider.setValue(1);
         slider.setMajorTickUnit(0.1);
-        slider.setBlockIncrement(0.5);
+        slider.setBlockIncrement(0.1);
         slider.setShowTickMarks(true);
         slider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {

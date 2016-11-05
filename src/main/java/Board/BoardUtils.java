@@ -40,7 +40,7 @@ public class BoardUtils {
         GridPane gridPane = Board.getMainBattlefieldGP();
         for (Node node : gridPane.getChildren()) {
             if (node instanceof GameCell
-                    && ((GameCell) node).isPassable()) {
+                    && ((GameCell) node).isPassable() && ((GameCell) node).getUnit()==null) {
                 node.setEffect(new InnerShadow());
             }
         }
@@ -63,8 +63,7 @@ public class BoardUtils {
     public static void abortFieldPassability(){
         GridPane gridPane = Board.getMainBattlefieldGP();
         for (Node node : gridPane.getChildren()) {
-            if (node instanceof GameCell && ((GameCell) node).getUnit() == null
-                    && ((GameCell) node).isPassable()) {
+            if (node instanceof GameCell && ((GameCell) node).isPassable()) {
                 node.setEffect(null);
                 ((GameCell) node).setPassable(false);
                 showFieldPassability();
@@ -77,7 +76,7 @@ public class BoardUtils {
         for (Node node : gridPane.getChildren()) {
             if (node instanceof GameCell && ((GameCell) node).isInShootingRange() && ((GameCell) node).getUnit()==null){
                 if((((GameCell) node).getUnit()==null)){
-                    node.setStyle("-fx-background-color: green");
+                    node.setStyle("-fx-background-color: #00CC33");
                 }
             }
         }
@@ -101,27 +100,12 @@ public class BoardUtils {
         GridPane gridPane = Board.getMainBattlefieldGP();
         for (Node node : gridPane.getChildren()) {
             if (node instanceof GameCell && ((GameCell) node).isInShootingRange()) {
-                ((GameCell) node).getGraphic().setEffect(null);
+                node.setStyle(null);
                 ((GameCell) node).setInShootingRange(false);
                 showShootingRange();
             }
         }
     }
-
-//    public static ImageView getImageView(String imagePath, int width, int height, double opacity){
-//        String imageUrl = null;
-//        ImageView imageView = new ImageView();
-//        try {
-//            File file = new File(imagePath);
-//            imageUrl = file.toURI().toURL().toString();
-//        }catch (MalformedURLException e){e.printStackTrace();}
-//        Image image = new Image(imageUrl, false);
-//        imageView.setImage(image);
-//        imageView.setFitHeight(height);
-//        imageView.setFitWidth(width);
-//        imageView.setOpacity(opacity);
-//        return imageView;
-//    }
 
     public static void calculateRanges(GameCell gameCell){
         BoardUtils.setWalkingArea(gameCell);

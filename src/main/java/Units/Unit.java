@@ -32,23 +32,6 @@ public abstract class Unit {
 
     public Unit(){}
 
-    Unit(String name, int health, int morale, int ammo, double armor, int closeDamage, int rangeDamage, int walkRange, int shotRange, int team, String picture){
-        this.team = team;
-        this.name = name;
-        this.health = health;
-        this.maxHealth = health;
-        this.morale = morale;
-        this.maxMorale = morale;
-        this.ammo = ammo;
-        this.maxAmmo = ammo;
-        this.armor = armor;
-        this.rangeDamage = rangeDamage;
-        this.closeDamage = closeDamage;
-        this.walkRange = walkRange;
-        this.shotRange = shotRange;
-        this.picturePath = picture;
-    }
-
     public boolean isEnemyUnit(Unit unit){
         if(this.getTeam()!=unit.getTeam()){
             return true;

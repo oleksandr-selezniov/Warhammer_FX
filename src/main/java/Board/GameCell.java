@@ -30,7 +30,7 @@ public class GameCell extends Button {
     private static int teamTurnValue = 1;
 
     private String defaultCellImagePath = "src\\main\\resources\\cellBackground.jpg";
-    //private ImageView gameCellImageView = new ImageView();
+    private String deadCellImagePath = "src\\main\\resources\\dead.jpg";
     private String name = this.getText();
     private int xCoord;
     private int yCoord;
@@ -43,7 +43,7 @@ public class GameCell extends Button {
     GameCell() {
         this.setPadding(new Insets(50));
         this.setSize(Size.getCellWidth(), Size.getCellHeight());
-        this.setDefaultImage(this);
+        this.setDefaultImage(this, defaultCellImagePath);
         this.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         actionMode();
         mouseMovementMode();
@@ -59,7 +59,6 @@ public class GameCell extends Button {
                         temporaryUnit = unit;
                         BoardUtils.calculateRanges(GameCell.this);
                         GameCell.this.setGraphic(unit.getImageView(0.7));
-                        //setTransparentImage(unit.getPicturePath());
                         previousGameCell = GameCell.this;
                         unit = null;
                     }
@@ -68,18 +67,17 @@ public class GameCell extends Button {
                         unit = temporaryUnit;
                         GameCell.this.setGraphic(temporaryUnit.getImageView(1.0));
                         GameCell.this.setPadding(temporaryUnit.getInsets());
-                        //setUnitImage(temporaryUnit.getPicturePath());
                         previousGameCell.setEffect(null);
                         temporaryUnit = null;
                     }
                     isSelected = false;
                     if (!(previousGameCell.equals(GameCell.this))) {
-                        previousGameCell.setDefaultImage(previousGameCell);
+                        previousGameCell.setDefaultImage(previousGameCell, defaultCellImagePath);
+                        previousGameCell.setPadding(new Insets(1));
                         changeTeamTurn();
                     }
                     BoardUtils.abortFieldPassability();
                     BoardUtils.abortShootingRange();
-                    previousGameCell.setPadding(new Insets(1));
 
                 } else if (unit != null && temporaryUnit.isEnemyUnit(unit) && isTeamTurn(temporaryUnit.getTeam())) {
                     previousGameCell.setUnit(temporaryUnit);
@@ -153,7 +151,7 @@ public class GameCell extends Button {
                     + unit.getName() + "\n"
                     + "is killed by" + "\n"
                     +temporaryUnit.getName()+"\n", true);
-           // GameCell.this.setUnitImage("src\\main\\resources\\dead.jpg", 125, 125, 1);
+            GameCell.this.setDefaultImage(previousGameCell, deadCellImagePath);
             unit = null;
         }
     }
@@ -174,19 +172,18 @@ public class GameCell extends Button {
                     }
                 }
 
-                if (!(GameCell.this.getEffect() instanceof InnerShadow) && !(GameCell.this.getEffect() instanceof Lighting) && !(GameCell.this.getGraphic().getEffect() instanceof DropShadow)){
+                if (!(GameCell.this.getEffect() instanceof InnerShadow) && !(GameCell.this.getEffect() instanceof Lighting)){
                     GameCell.this.getGraphic().setEffect(new Glow());
                 }
                 if (temporaryUnit != null && GameCell.this.getUnit() != null){
                     if (GameCell.this.getUnit().isEnemyUnit(temporaryUnit)) {
                         Cursor c = new ImageCursor(BoardUtils.getImage("src\\main\\resources\\CursorChainsword.png"), 300,300);
                         GameCell.this.setCursor(c);
-                        InnerShadow innerShadow = new InnerShadow();
-                        innerShadow.setRadius(20);
-                        innerShadow.setOffsetX(4);
-                        innerShadow.setOffsetY(4);
-                        innerShadow.setColor(Color.rgb(255, 0, 0, 1));
-                        GameCell.this.getGraphic().setEffect(innerShadow);
+                        DropShadow dropShadow = new DropShadow();
+                        dropShadow.setOffsetX(3);
+                        dropShadow.setOffsetY(3);
+                        dropShadow.setColor(Color.rgb(255, 0, 0, 1));
+                        GameCell.this.getGraphic().setEffect(dropShadow);
                     }
                 }
             }
@@ -195,96 +192,27 @@ public class GameCell extends Button {
         this.setOnMouseExited(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
                 GameCell.this.setCursor(Cursor.DEFAULT);
-                if(!(GameCell.this.getGraphic().getEffect() instanceof DropShadow)){
-                    GameCell.this.getGraphic().setEffect(null);
-                }
+                GameCell.this.getGraphic().setEffect(null);
                 GameCell.this.setTooltip(null);
             }
         });
     }
 
-    public void setDefaultImage(GameCell gc){
+    public void setDefaultImage(GameCell gc, String path){
         ImageView imageView = new ImageView();
         String imageUrl = null;
         try {
-            File file = new File(defaultCellImagePath);
+            File file = new File(path);
             imageUrl = file.toURI().toURL().toString();
         }catch (MalformedURLException e){e.printStackTrace();}
         Image buttonImage = new Image(imageUrl, false);
         imageView.setImage(buttonImage);
-        imageView.fitHeightProperty().bindBidirectional(gc.minHeightProperty());          //(Size.getCellHeight()*Board.getScaleCoefficient());
-        imageView.fitWidthProperty().bindBidirectional(gc.minWidthProperty());            //Size.getCellWidth()*Board.getScaleCoefficient());
+        imageView.fitHeightProperty().bindBidirectional(gc.minHeightProperty());
+        imageView.fitWidthProperty().bindBidirectional(gc.minWidthProperty());
         imageView.setOpacity(0.5);
         this.setPadding(new Insets(1));
         this.setGraphic(imageView);
     }
-//
-//    public void setUnitImage(String imagePath){
-//        String imageUrl = null;
-//        try {
-//            File file = new File(imagePath);
-//            imageUrl = file.toURI().toURL().toString();
-//        }catch (MalformedURLException e){e.printStackTrace();}
-//        Image buttonImage = new Image(imageUrl, false);
-//        this.gameCellImageView.setImage(buttonImage);
-//        if (Board.Board.getScaleCoefficient() != null) {
-//            this.gameCellImageView.setFitHeight(Size.getUnitHeight()*Board.Board.getScaleCoefficient());
-//            this.gameCellImageView.setFitWidth(Size.getUnitWidth()*Board.Board.getScaleCoefficient());
-//        }
-//        else {
-//            this.gameCellImageView.setFitHeight(Size.getUnitHeight());
-//            this.gameCellImageView.setFitWidth(Size.getUnitWidth());
-//        }
-//        this.gameCellImageView.setOpacity(1);
-//        this.setPadding(this.getUnit().getInsets());
-//        this.setGraphic(gameCellImageView);
-//    }
-//
-//    public void setTransparentImage(String imagePath){
-//        String imageUrl = null;
-//        try {
-//            File file = new File(imagePath);
-//            imageUrl = file.toURI().toURL().toString();
-//        }catch (MalformedURLException e){e.printStackTrace();}
-//        Image buttonImage = new Image(imageUrl, false);
-//        this.gameCellImageView.setImage(buttonImage);
-//        if (Board.Board.getScaleCoefficient() != null) {
-//            this.gameCellImageView.setFitHeight(Size.getUnitHeight()*Board.Board.getScaleCoefficient());
-//            this.gameCellImageView.setFitWidth(Size.getUnitWidth()*Board.Board.getScaleCoefficient());
-//        }
-//        else {
-//            this.gameCellImageView.setFitHeight(Size.getUnitHeight());
-//            this.gameCellImageView.setFitWidth(Size.getUnitWidth());
-//        }
-//        this.gameCellImageView.setOpacity(0.8);
-//        this.setPadding(this.getUnit().getInsets());
-//        this.setGraphic(gameCellImageView);
-//    }
-//
-//    public void setUnitImage(String imagePath, int width, int height, double opacity){
-//        String imageUrl = null;
-//        ImageView imageView = this.getGameCellImageView();
-//        try {
-//            File file = new File(imagePath);
-//            imageUrl = file.toURI().toURL().toString();
-//        }catch (MalformedURLException e){e.printStackTrace();}
-//        Image buttonImage = new Image(imageUrl, false);
-//        this.gameCellImageView.setImage(buttonImage);
-//        if (Board.Board.getScaleCoefficient() != null) {
-//            this.gameCellImageView.setFitHeight(height*Board.Board.getScaleCoefficient());
-//            this.gameCellImageView.setFitWidth(width*Board.Board.getScaleCoefficient());
-//        }
-//        else {
-//            this.gameCellImageView.setFitHeight(height);
-//            this.gameCellImageView.setFitWidth(width);
-//        }
-//        this.gameCellImageView.setOpacity(opacity);
-//        if(this.getUnit()!=null){
-//            this.setPadding(this.getUnit().getInsets());
-//        }else{
-//            this.setPadding(new Insets(2));}
-//        this.setGraphic(gameCellImageView);
-//    }
 
     public String getName() {
         return name;
@@ -369,8 +297,4 @@ public class GameCell extends Button {
     private boolean isTeamTurn(int team){
         return (team == teamTurnValue);
     }
-
-//    public ImageView getGameCellImageView() {
-//        return gameCellImageView;
-//    }
 }
