@@ -37,7 +37,7 @@ public class BoardInitializer {
 
         placeOnBoard(9,3,new LightInfantry("Shoota_Boy", 2));
 
-        placeOnBoard(7,3,new Vehicle("PartyVan", 2));
+        placeOnBoard(5,3,new Vehicle("PartyVan", 2));
 
 
         BoardUtils.setActiveTeamUnits(1, true);

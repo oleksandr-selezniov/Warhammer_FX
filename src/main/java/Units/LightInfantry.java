@@ -29,7 +29,9 @@ public class LightInfantry extends Unit {
         this.ammo = Integer.parseInt(resourceBundle.getString(unitName+".ammo"));
         this.maxAmmo = ammo;
         this.armor = Double.parseDouble(resourceBundle.getString(unitName+".armor"));
-        this.rangeDamage = Integer.parseInt(resourceBundle.getString(unitName+".rangeDamage"));
+        this.minRangeDamage = Integer.parseInt(resourceBundle.getString(unitName+".minRangeDamage"));
+        this.maxRangeDamage = Integer.parseInt(resourceBundle.getString(unitName+".maxRangeDamage"));
+        this.accuracy = Double.parseDouble(resourceBundle.getString(unitName+".accuracy"));
         this.closeDamage = Integer.parseInt(resourceBundle.getString(unitName+".closeDamage"));
         this.walkRange = Integer.parseInt(resourceBundle.getString(unitName+".walkRange"));
         this.shotRange = Integer.parseInt(resourceBundle.getString(unitName+".shotRange"));
@@ -72,5 +74,47 @@ public class LightInfantry extends Unit {
     @Override
     public javafx.geometry.Insets getInsets() {
         return insets;
+    }
+
+    public void performCloseAttack(Unit victim){
+        victim.setHealth(victim.getHealth() - closeDamage);
+
+        Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
+                + this.getName() + "\n"
+                + "made " + (closeDamage) + "\n"
+                + "melee damage to " + "\n"
+                + victim.getName() + "\n", true);
+        this.setActive(false);
+    }
+
+    public void performRangeAttack(Unit victim){
+        int rangeDamage = getRangeDamage();
+        double chance = Math.random();
+        if (this.getAmmo() > 0) {
+            if(chance<accuracy) {
+                victim.setHealth(victim.getHealth() - rangeDamage);
+                Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
+                        + this.getName() + "\n"
+                        + "made " + (rangeDamage) + "\n"
+                        + "range damage to " + "\n"
+                        + victim.getName() + "\n", true);
+                this.setAmmo(this.getAmmo() - 1);
+                this.setActive(false);
+            }else{
+                Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
+                        + this.getName() + "\n"
+                        + "missed!" + "\n", true);
+                this.setAmmo(this.getAmmo() - 1);
+                this.setActive(false);
+            }
+        } else {
+            Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
+                    + this.getName() + "\n"
+                    + "is out of ammunition!" + "\n", true);
+        }
+    }
+
+    private int getRangeDamage(){
+        return minRangeDamage + (int)(Math.random() * ((maxRangeDamage - minRangeDamage) + 1));
     }
 }

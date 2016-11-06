@@ -20,7 +20,9 @@ public abstract class Unit {
     protected int morale;
     protected int ammo;
     protected double armor;
-    protected int rangeDamage;
+    protected int minRangeDamage;
+    protected int maxRangeDamage;
+    protected Double accuracy;
     protected int closeDamage;
     protected int walkRange;
     protected int shotRange;
@@ -140,8 +142,8 @@ public abstract class Unit {
         return maxAmmo;
     }
 
-    public int getRangeDamage() {
-        return rangeDamage;
+    public int getMinRangeDamage() {
+        return minRangeDamage;
     }
 
     public ImageView getUnitImageView() {
@@ -174,6 +176,26 @@ public abstract class Unit {
         return isActive;
     }
 
+    public abstract void performRangeAttack(Unit victim);
+
+    public abstract void performCloseAttack(Unit victim);
+
+    public int getMaxRangeDamage() {
+        return maxRangeDamage;
+    }
+
+    public void setMaxRangeDamage(int maxRangeDamage) {
+        this.maxRangeDamage = maxRangeDamage;
+    }
+
+    public Double getAccuracy() {
+        return accuracy;
+    }
+
+    public void setAccuracy(Double accuracy) {
+        this.accuracy = accuracy;
+    }
+
     public void setActive(boolean active) {
         isActive = active;
     }
@@ -181,7 +203,7 @@ public abstract class Unit {
     public String getInfo(){
         String unitInfo = "Name: "+name+"\n"+"Armor "+armor+"\n"+"Health "+health+"/"+maxHealth+"\n"+"Morale "+morale+
                 "/"+maxMorale+"\n"+"Ammo "+ammo+"/"+maxAmmo+"\n"+"Close Damage "+closeDamage+"\n"+ "Range Damage "+
-                rangeDamage+"\n"+"Walk range "+walkRange+"\n"+"ShotRange "+shotRange+"\n";
+                minRangeDamage +"-"+ maxRangeDamage +"\n"+"Walk range "+walkRange+"\n"+"ShotRange "+shotRange+"\n";
         return unitInfo;
     }
 }

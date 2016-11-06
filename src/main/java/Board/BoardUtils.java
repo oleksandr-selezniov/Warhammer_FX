@@ -58,6 +58,16 @@ public class BoardUtils {
                 });
     }
 
+    public static void abortShootingRange(){
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isInShootingRange()))
+                .forEach(p->{
+                    p.setStyle(null);
+                    ((GameCell) p).setInShootingRange(false);
+                    showShootingRange();
+                });
+    }
+
     public static void showShootingRange(){
         GridPane gridPane = Board.getMainBattlefieldGP();
         gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isInShootingRange() && ((GameCell) p).getUnit()==null))
@@ -72,16 +82,6 @@ public class BoardUtils {
         gridPane.getChildren().stream().filter(p->
             (p instanceof GameCell && isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), shotRange)))
                 .forEach(p->((GameCell) p).setInShootingRange(true));
-    }
-
-    public static void abortShootingRange(){
-        GridPane gridPane = Board.getMainBattlefieldGP();
-        gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isInShootingRange()))
-                .forEach(p->{
-                    p.setStyle(null);
-                    ((GameCell) p).setInShootingRange(false);
-                    showShootingRange();
-                });
     }
 
     public static void calculateRanges(GameCell gameCell){
@@ -125,5 +125,11 @@ public class BoardUtils {
         gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).getUnit() != null))
                 .filter(p->((GameCell)p).getUnit().getTeam()==team)
                 .forEach(p->((GameCell)p).getUnit().setActive(state));
+    }
+
+    public static void setDefaultOpacity(){
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).getUnit() != null))
+                .forEach(p->((GameCell)p).setGraphic(((GameCell) p).getUnit().getImageView(1.0)));
     }
 }

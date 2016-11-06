@@ -2,7 +2,6 @@ package Board;
 
 import Size.Size;
 import Units.Unit;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -83,14 +82,14 @@ public class GameCell extends Button {
 
                 } else if (unit != null && temporaryUnit.isEnemyUnit(unit) && isTeamTurn(temporaryUnit.getTeam())) {
                     previousGameCell.setUnit(temporaryUnit);
-                    previousGameCell.setGraphic(temporaryUnit.getImageView(1.0)); //setUnitImage(temporaryUnit.getPicturePath());
+                    previousGameCell.setGraphic(temporaryUnit.getImageView(1.0));
                     isSelected = false;
-                    BoardUtils.abortFieldPassability();
                     //***************************ATTACK**********************************************
                     if (GameCell.this.isInShootingRange()) {
                         performAttack(previousGameCell, GameCell.this);
                     }
                     //***************************ATTACK**********************************************
+                    BoardUtils.abortFieldPassability();
                     BoardUtils.abortShootingRange();
                     temporaryUnit = null;
                 }
@@ -99,55 +98,17 @@ public class GameCell extends Button {
     }
 
     public void performAttack(GameCell hunter_GC, GameCell victim_CG){
-        int meleeDamage=(int)(temporaryUnit.getCloseDamage()*unit.getArmor());
-        int rangeDamage=(int)(temporaryUnit.getRangeDamage()*unit.getArmor());
-
-        boolean isMeleeVulnerable = unit.getHealth()-meleeDamage<unit.getMaxHealth() && unit.getHealth()-meleeDamage!=unit.getHealth();
-        boolean isRangeVulnerable = unit.getHealth()-rangeDamage<unit.getMaxHealth() && unit.getHealth()-rangeDamage!=unit.getHealth();
 
         if (unit.getHealth() > 0) {
             victim_CG.getGraphic().setEffect(new SepiaTone());
             if (BoardUtils.isOnNeighbouringCell(hunter_GC, victim_CG)) {
                 //close attack
-                if (isMeleeVulnerable) {
-                    unit.setHealth(unit.getHealth() - meleeDamage);
-                    Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
-                            + temporaryUnit.getName() + "\n"
-                            + "made " + (meleeDamage) + "\n"
-                            + "melee damage to " + "\n"
-                            + unit.getName() + "\n", true);
-                    temporaryUnit.setActive(false);
-                    checkTeamTurn();
-                } else {
-                    Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
-                            + temporaryUnit.getName() + "\n"
-                            + "can't even scratch" + "\n"
-                            + unit.getName() + "\n", true);
-                }
+                temporaryUnit.performCloseAttack(unit);
+                checkTeamTurn();
             } else {
                 //Range damage
-                if (temporaryUnit.getAmmo() > 0) {
-                    if (isRangeVulnerable) {
-                        unit.setHealth(unit.getHealth() - rangeDamage);
-                        Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
-                                + temporaryUnit.getName() + "\n"
-                                + "made " + (rangeDamage) + "\n"
-                                + "range damage to " + "\n"
-                                + unit.getName() + "\n", true);
-                        temporaryUnit.setAmmo(temporaryUnit.getAmmo() - 1);
-                        temporaryUnit.setActive(false);
-                        checkTeamTurn();
-                    } else {
-                        Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
-                                + temporaryUnit.getName() + "\n"
-                                + "can't even scratch" + "\n"
-                                + unit.getName() + "\n", true);
-                    }
-                } else {
-                    Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
-                            + temporaryUnit.getName() + "\n"
-                            + "is out of ammunition!" + "\n", true);
-                }
+                    temporaryUnit.performRangeAttack(unit);
+                    checkTeamTurn();
             }
         }
         if (unit.getHealth() <= 0) {
@@ -177,8 +138,10 @@ public class GameCell extends Button {
                     }
                 }
 
-                if (!(GameCell.this.getEffect() instanceof InnerShadow) && !(GameCell.this.getEffect() instanceof Lighting)){
+                if (!(GameCell.this.getEffect() instanceof InnerShadow)){
                     GameCell.this.getGraphic().setEffect(new Glow());
+                if (GameCell.this.getUnit()!=null && !GameCell.this.getUnit().isActive() && GameCell.this.getUnit().getTeam()==teamTurnValue)
+                    GameCell.this.getGraphic().setEffect(new Lighting(new Light.Spot()));
                 }
                 if (temporaryUnit != null && GameCell.this.getUnit() != null){
                     if (GameCell.this.getUnit().isEnemyUnit(temporaryUnit)) {
