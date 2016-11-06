@@ -29,6 +29,7 @@ public abstract class Unit {
     protected double heightCoeff;
     protected double widthCoeff;
     protected ImageView unitImageView;
+    protected boolean isActive;
 
     public Unit(){}
 
@@ -167,6 +168,14 @@ public abstract class Unit {
 
     public void setHeightCoeff(double heightCoeff) {
         this.heightCoeff = heightCoeff;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     public String getInfo(){

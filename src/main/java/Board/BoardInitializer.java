@@ -73,6 +73,8 @@ public class BoardInitializer {
         gc90.setGraphic(gc90.getUnit().getImageView(1.0));
         gc90.setPadding(gc90.getUnit().getInsets());
 
+        BoardUtils.setActiveTeamUnits(1, true);
+        BoardUtils.setActiveTeamUnits(2, false);
 
     }
 

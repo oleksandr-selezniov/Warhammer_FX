@@ -156,7 +156,11 @@ public class Board {
         Button endTurnButton = new Button("End Turn");
         endTurnButton.setMinWidth(70);
         endTurnButton.setMinHeight(20);
-        endTurnButton.setOnAction(p->GameCell.changeTeamTurn());
+        endTurnButton.setOnAction(p-> {
+            BoardUtils.setActiveTeamUnits(GameCell.getTeamTurnValue(), false);
+            GameCell.changeTeamTurn();
+            BoardUtils.setActiveTeamUnits(GameCell.getTeamTurnValue(), true);
+        });
 
 
         Button rightButton2 = new Button();
@@ -225,11 +229,11 @@ public class Board {
 
     public static void writeToTextArea(String id, String text, boolean scrollDowm){
         TextArea textArea = (TextArea)scene.lookup(id);
-        Platform.runLater(()->textArea.setText(text));
-        Platform.runLater(()->textArea.setEditable(false));
+        textArea.setText(text);
+        textArea.setEditable(false);
         if(scrollDowm){
-        Platform.runLater(()->textArea.positionCaret(textArea.getText().length()));
-        Platform.runLater(()->textArea.setScrollTop(Double.MAX_VALUE));
+        textArea.positionCaret(textArea.getText().length());
+        textArea.setScrollTop(Double.MAX_VALUE);
         }
     }
 

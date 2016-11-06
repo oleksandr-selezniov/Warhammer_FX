@@ -107,4 +107,23 @@ public class BoardUtils {
         ).collect(Collectors.toCollection(ArrayList::new));
         nodeList.forEach(Node::toFront);
     }
+
+    public static int getTotalUnitNumber(int team){
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        return (int)(gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).getUnit() != null))
+                .filter(p->((GameCell)p).getUnit().getTeam()==team).count());
+    }
+
+    public static int getActiveUnitNumber(int team){
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        return (int)(gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).getUnit() != null))
+                .filter(p->((GameCell)p).getUnit().getTeam()==team && ((GameCell)p).getUnit().isActive()).count());
+    }
+
+    public static void setActiveTeamUnits(int team, boolean state){
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).getUnit() != null))
+                .filter(p->((GameCell)p).getUnit().getTeam()==team)
+                .forEach(p->((GameCell)p).getUnit().setActive(state));
+    }
 }

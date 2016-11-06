@@ -2,6 +2,7 @@ package Board;
 
 import Size.Size;
 import Units.Unit;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -28,7 +29,6 @@ public class GameCell extends Button {
     private static Unit temporaryUnit;
     private static boolean isSelected;
     private static int teamTurnValue = 1;
-
     private String defaultCellImagePath = "src\\main\\resources\\cellBackground.jpg";
     private String deadCellImagePath = "src\\main\\resources\\dead.jpg";
     private String name = this.getText();
@@ -54,7 +54,7 @@ public class GameCell extends Button {
             public void handle(MouseEvent e) {
 
                 if (!isSelected) {
-                    if (unit != null && isTeamTurn(unit.getTeam())) {
+                    if (unit != null && isTeamTurn(unit.getTeam()) && unit.isActive()) {
                         isSelected = true;
                         temporaryUnit = unit;
                         BoardUtils.calculateRanges(GameCell.this);
@@ -74,8 +74,10 @@ public class GameCell extends Button {
                     if (!(previousGameCell.equals(GameCell.this))) {
                         previousGameCell.setDefaultImage(previousGameCell, defaultCellImagePath);
                         previousGameCell.setPadding(new Insets(1));
-                        changeTeamTurn();
+                        unit.setActive(false);
+                        checkTeamTurn();
                     }
+                    BoardUtils.refreshZOrder();
                     BoardUtils.abortFieldPassability();
                     BoardUtils.abortShootingRange();
 
@@ -114,7 +116,8 @@ public class GameCell extends Button {
                             + "made " + (meleeDamage) + "\n"
                             + "melee damage to " + "\n"
                             + unit.getName() + "\n", true);
-                    changeTeamTurn();
+                    temporaryUnit.setActive(false);
+                    checkTeamTurn();
                 } else {
                     Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
                             + temporaryUnit.getName() + "\n"
@@ -132,7 +135,8 @@ public class GameCell extends Button {
                                 + "range damage to " + "\n"
                                 + unit.getName() + "\n", true);
                         temporaryUnit.setAmmo(temporaryUnit.getAmmo() - 1);
-                        changeTeamTurn();
+                        temporaryUnit.setActive(false);
+                        checkTeamTurn();
                     } else {
                         Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
                                 + temporaryUnit.getName() + "\n"
@@ -153,6 +157,7 @@ public class GameCell extends Button {
                     +temporaryUnit.getName()+"\n", true);
             GameCell.this.setDefaultImage(previousGameCell, deadCellImagePath);
             unit = null;
+            checkTeamTurn();
         }
     }
 
@@ -285,16 +290,32 @@ public class GameCell extends Button {
         this.setMinWidth(width);
     }
 
-    public static void changeTeamTurn(){
-        if(teamTurnValue == 1){
-            teamTurnValue = 2;
+    public static void checkTeamTurn(){
+        if(BoardUtils.getTotalUnitNumber(getEnemyTeam())<=0){
+            Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n TEAM " + teamTurnValue + " WINS!", true);
+            BoardUtils.setActiveTeamUnits(teamTurnValue, false);
         }else{
-            teamTurnValue = 1;
+            if(BoardUtils.getActiveUnitNumber(teamTurnValue) == 0) {
+                changeTeamTurn();
+                Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + " Now it's Team " + teamTurnValue + " turn\n", true);
+                BoardUtils.setActiveTeamUnits(teamTurnValue, true);
+            }
         }
-        BoardUtils.refreshZOrder();
+    }
+
+    public static void changeTeamTurn(){
+        teamTurnValue = teamTurnValue==1? 2:1 ;
+    }
+
+    public static int getEnemyTeam(){
+        return teamTurnValue==1? 2:1;
     }
 
     private boolean isTeamTurn(int team){
         return (team == teamTurnValue);
+    }
+
+    public static int getTeamTurnValue() {
+        return teamTurnValue;
     }
 }

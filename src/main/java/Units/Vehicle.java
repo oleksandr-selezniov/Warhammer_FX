@@ -34,6 +34,7 @@ public class Vehicle extends Unit {
         this.picturePath = resourceBundle.getString(unitName+".picturePath");
         this.heightCoeff = 1;
         this.widthCoeff = 1;
+        this.isActive = false;
         this.setUnitImageView(getImageView(1.0));
 
         try {
