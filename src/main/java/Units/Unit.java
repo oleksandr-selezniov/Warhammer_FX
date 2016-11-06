@@ -14,16 +14,15 @@ public abstract class Unit {
 
     protected String name;
     protected int maxHealth;
-    protected int maxMorale;
     protected int maxAmmo;
     protected int health;
-    protected int morale;
     protected int ammo;
     protected double armor;
     protected int minRangeDamage;
     protected int maxRangeDamage;
     protected Double accuracy;
-    protected int closeDamage;
+    protected int minCloseDamage;
+    protected int maxCloseDamage;
     protected int walkRange;
     protected int shotRange;
     protected String picturePath;
@@ -76,14 +75,6 @@ public abstract class Unit {
         this.health = health;
     }
 
-    public int getMorale() {
-        return morale;
-    }
-
-    public void setMorale(int morale) {
-        this.morale = morale;
-    }
-
     public int getAmmo() {
         return ammo;
     }
@@ -100,12 +91,12 @@ public abstract class Unit {
         this.armor = armor;
     }
 
-    public int getCloseDamage() {
-        return closeDamage;
+    public int getMinCloseDamage() {
+        return minCloseDamage;
     }
 
-    public void setCloseDamage(int closeDamage) {
-        this.closeDamage = closeDamage;
+    public void setMinCloseDamage(int minCloseDamage) {
+        this.minCloseDamage = minCloseDamage;
     }
 
     public int getWalkRange() {
@@ -133,10 +124,6 @@ public abstract class Unit {
     }
 
     public int getMaxHealth() {return maxHealth;}
-
-    public int getMaxMorale() {
-        return maxMorale;
-    }
 
     public int getMaxAmmo() {
         return maxAmmo;
@@ -200,10 +187,18 @@ public abstract class Unit {
         isActive = active;
     }
 
+    public int getMaxCloseDamage() {
+        return maxCloseDamage;
+    }
+
+    public void setMaxCloseDamage(int maxCloseDamage) {
+        this.maxCloseDamage = maxCloseDamage;
+    }
+
     public String getInfo(){
-        String unitInfo = "Name: "+name+"\n"+"Armor "+armor+"\n"+"Health "+health+"/"+maxHealth+"\n"+"Morale "+morale+
-                "/"+maxMorale+"\n"+"Ammo "+ammo+"/"+maxAmmo+"\n"+"Close Damage "+closeDamage+"\n"+ "Range Damage "+
-                minRangeDamage +"-"+ maxRangeDamage +"\n"+"Walk range "+walkRange+"\n"+"ShotRange "+shotRange+"\n";
+        String unitInfo = "Name: "+name+"\n"+"Armor "+armor+"\n"+"Health "+health+"/"+maxHealth+"\n"+"Accuracy "+accuracy+
+                "\n"+"Ammo "+ammo+"/"+maxAmmo+"\n"+"Close Damage "+ minCloseDamage +"-"+maxCloseDamage +"\n"
+                + "Range Damage "+ minRangeDamage +"-"+ maxRangeDamage +"\n"+"Walk range "+walkRange+"\n"+"ShotRange "+shotRange+"\n";
         return unitInfo;
     }
 }

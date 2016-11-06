@@ -10,6 +10,7 @@ import Board.Board;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import Board.BoardUtils;
 
 /**
  * Created by Dmitriy on 03.11.2016.
@@ -24,15 +25,14 @@ public class LightInfantry extends Unit {
         this.name = resourceBundle.getString(unitName+".name");
         this.health = Integer.parseInt(resourceBundle.getString(unitName+".health"));
         this.maxHealth = health;
-        this.morale = Integer.parseInt(resourceBundle.getString(unitName+".morale"));
-        this.maxMorale = morale;
         this.ammo = Integer.parseInt(resourceBundle.getString(unitName+".ammo"));
         this.maxAmmo = ammo;
         this.armor = Double.parseDouble(resourceBundle.getString(unitName+".armor"));
         this.minRangeDamage = Integer.parseInt(resourceBundle.getString(unitName+".minRangeDamage"));
         this.maxRangeDamage = Integer.parseInt(resourceBundle.getString(unitName+".maxRangeDamage"));
         this.accuracy = Double.parseDouble(resourceBundle.getString(unitName+".accuracy"));
-        this.closeDamage = Integer.parseInt(resourceBundle.getString(unitName+".closeDamage"));
+        this.minCloseDamage = Integer.parseInt(resourceBundle.getString(unitName+".minCloseDamage"));
+        this.maxCloseDamage = Integer.parseInt(resourceBundle.getString(unitName+".maxCloseDamage"));
         this.walkRange = Integer.parseInt(resourceBundle.getString(unitName+".walkRange"));
         this.shotRange = Integer.parseInt(resourceBundle.getString(unitName+".shotRange"));
         this.picturePath = resourceBundle.getString(unitName+".picturePath");
@@ -48,6 +48,7 @@ public class LightInfantry extends Unit {
             System.out.println("INFO: some resources were not present");
         }
     }
+
 
     @Override
     public ImageView getImageView(Double opacity){
@@ -77,13 +78,9 @@ public class LightInfantry extends Unit {
     }
 
     public void performCloseAttack(Unit victim){
+        int closeDamage = getCloseDamage();
         victim.setHealth(victim.getHealth() - closeDamage);
-
-        Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
-                + this.getName() + "\n"
-                + "made " + (closeDamage) + "\n"
-                + "melee damage to " + "\n"
-                + victim.getName() + "\n", true);
+        BoardUtils.writeCloseAttackLog(this, victim, closeDamage);
         this.setActive(false);
     }
 
@@ -93,28 +90,24 @@ public class LightInfantry extends Unit {
         if (this.getAmmo() > 0) {
             if(chance<accuracy) {
                 victim.setHealth(victim.getHealth() - rangeDamage);
-                Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
-                        + this.getName() + "\n"
-                        + "made " + (rangeDamage) + "\n"
-                        + "range damage to " + "\n"
-                        + victim.getName() + "\n", true);
+                BoardUtils.writeRangeAttackLog(this, victim, rangeDamage);
                 this.setAmmo(this.getAmmo() - 1);
                 this.setActive(false);
             }else{
-                Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
-                        + this.getName() + "\n"
-                        + "missed!" + "\n", true);
+                BoardUtils.writeMissedLog(this);
                 this.setAmmo(this.getAmmo() - 1);
                 this.setActive(false);
             }
         } else {
-            Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
-                    + this.getName() + "\n"
-                    + "is out of ammunition!" + "\n", true);
+            BoardUtils.writeOutOfAmmoLog(this);
         }
     }
 
     private int getRangeDamage(){
         return minRangeDamage + (int)(Math.random() * ((maxRangeDamage - minRangeDamage) + 1));
+    }
+
+    private int getCloseDamage(){
+        return minCloseDamage + (int)(Math.random() * ((maxCloseDamage - minCloseDamage) + 1));
     }
 }
