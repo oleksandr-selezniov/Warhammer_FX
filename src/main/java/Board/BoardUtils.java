@@ -1,11 +1,9 @@
 package Board;
 
-import Units.Unit;
 import Units.Vehicle;
 import javafx.scene.Node;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
 import java.io.File;
@@ -83,6 +81,22 @@ public class BoardUtils {
         gridPane.getChildren().stream().filter(p->
             (p instanceof GameCell && isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), shotRange)))
                 .forEach(p->((GameCell) p).setInShootingRange(true));
+    }
+
+    static void setArtilleryShootingArea(GameCell currentCell){
+        int shotRange = currentCell.getUnit().getShotRange();
+        int deadZone = 4; //currentCell.getUnit().getDeadZone();
+        int x = currentCell.getxCoord();
+        int y = currentCell.getyCoord();
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        gridPane.getChildren().stream().filter(p->
+                (p instanceof GameCell)).forEach(p->{
+            if(!isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), deadZone)){
+                if(isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), shotRange)){
+                    ((GameCell) p).setInShootingRange(true);
+                }
+            }
+        });
     }
 
     static void calculateRanges(GameCell gameCell){
