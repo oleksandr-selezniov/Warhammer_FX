@@ -12,38 +12,31 @@ import java.net.MalformedURLException;
  */
 public abstract class Unit {
 
-    protected String name;
-    protected int maxHealth;
-    protected int maxAmmo;
-    protected int health;
-    protected int ammo;
-    protected double armor;
-    protected int minRangeDamage;
-    protected int maxRangeDamage;
-    protected String  accuracy;
-    protected int minCloseDamage;
-    protected int maxCloseDamage;
-    protected int walkRange;
-    protected int shotRange;
-    protected String picturePath;
-    protected int team;
-    protected double heightCoeff;
-    protected double widthCoeff;
-    protected ImageView unitImageView;
-    protected boolean isActive;
-    protected String rangeEfficiency;
+    String name;
+    String accuracy;
+    String rangeEfficiency;
+    String picturePath;
+    int maxHealth;
+    int maxAmmo;
+    int health;
+    int ammo;
+    int minRangeDamage;
+    int maxRangeDamage;
+    int minCloseDamage;
+    int maxCloseDamage;
+    int walkRange;
+    int shotRange;
+    int team;
+    double armor;
+    double heightCoeff;
+    double widthCoeff;
+    boolean isActive;
+    private ImageView unitImageView;
 
     public Unit(){}
 
     public boolean isEnemyUnit(Unit unit){
-        if(this.getTeam()!=unit.getTeam()){
-            return true;
-        }
-        return false;
-    }
-
-    public String getPicturePath() {
-        return picturePath;
+        return this.getTeam() != unit.getTeam();
     }
 
     public Image getImage() {
@@ -55,11 +48,16 @@ public abstract class Unit {
         return new Image(imageUrl, false);
     }
 
+    public String getPicturePath() {
+        return picturePath;
+    }
+
     public abstract ImageView getImageView(Double opacity);
 
     public void setPicturePath(String picturePath) {
         this.picturePath = picturePath;
     }
+
     public String getName() {
         return name;
     }
@@ -235,9 +233,8 @@ public abstract class Unit {
     }
 
     public String getInfo(){
-        String unitInfo = "Name: "+name+"\n"+"Efficiency "+rangeEfficiency+"\n"+"Health "+health+"/"+maxHealth+"\n"+"Accuracy "+accuracy+
+        return "Name: "+name+"\n"+"Efficiency "+rangeEfficiency+"\n"+"Health "+health+"/"+maxHealth+"\n"+"Accuracy "+accuracy+
                 "\n"+"Ammo "+ammo+"/"+maxAmmo+"\n"+"Close Damage "+ minCloseDamage +"-"+maxCloseDamage +"\n"
                 + "Range Damage "+ minRangeDamage +"-"+ maxRangeDamage +"\n"+"Walk range "+walkRange+"\n"+"ShotRange "+shotRange+"\n";
-        return unitInfo;
     }
 }

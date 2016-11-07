@@ -79,7 +79,7 @@ public class Board {
         BoardUtils.refreshZOrder();
     }
 
-    public HBox generateBottomMenu(){
+    private HBox generateBottomMenu(){
         HBox hBox = new HBox();
         hBox.setMinWidth(Size.getSceneWidth()*0.96);
         hBox.setMinHeight(Size.getSceneHeight()*0.25);
@@ -92,7 +92,6 @@ public class Board {
         borderPane.setMaxWidth(Size.getSceneWidth()*0.96);
         borderPane.setMaxHeight(Size.getSceneHeight()*0.25);
         borderPane.setPadding(new Insets(3,0,3,0));
-
         borderPane.setLeft(getLeftEarGP());
         borderPane.setRight(getRightEarGP());
         borderPane.setCenter(getCentralGP());
@@ -142,6 +141,7 @@ public class Board {
         rightEarGP.setGridLinesVisible(true);
         rightEarGP.setMinWidth(Size.getSceneWidth()*0.3);
         rightEarGP.setMinHeight(Size.getSceneHeight()*0.25);
+
         VBox rightButtonVbox = new VBox();
         rightButtonVbox.setMinWidth(100);
         rightButtonVbox.setPadding(new Insets(10));
@@ -166,6 +166,7 @@ public class Board {
 
         rightButtonVbox.getChildren().addAll(endTurnButton, rightButton2, rightButton3);
         rightEarGP.add(rightButtonVbox,2,0);
+
         ImageView rightEarIV = new ImageView();
         rightEarIV.setFitWidth(Size.getSceneWidth()*0.183);
         rightEarIV.setFitHeight(Size.getSceneHeight()*0.39);
@@ -189,13 +190,11 @@ public class Board {
         rightTextArea.setId("rightTextArea");
 
         rightVbox.getChildren().addAll(rightTextArea);
-
         rightEarGP.add(rightVbox, 0,0);
-
         return rightEarGP;
     }
 
-    public GridPane getCentralGP(){
+    private GridPane getCentralGP(){
         GridPane mainGridPane = new GridPane();
         mainGridPane.setAlignment(Pos.CENTER);
         mainGridPane.setGridLinesVisible(true);
@@ -212,15 +211,15 @@ public class Board {
         return mainGridPane;
     }
 
-    public static Scene getScene(){
+    static Scene getScene(){
         return scene;
     }
 
-    public static GridPane getMainBattlefieldGP(){
+    static GridPane getMainBattlefieldGP(){
         return mainBattlefieldGP;
     }
 
-    public static void writeToTextArea(String id, String text, boolean scrollDowm){
+    static void writeToTextArea(String id, String text, boolean scrollDowm){
         TextArea textArea = (TextArea)scene.lookup(id);
         textArea.setText(text);
         textArea.setEditable(false);
@@ -230,12 +229,12 @@ public class Board {
         }
     }
 
-    public static String getTextFromTextArea(String id){
+    static String getTextFromTextArea(String id){
         TextArea textArea = (TextArea)scene.lookup(id);
         return textArea.getText();
     }
 
-    public static void setImageToImageView(String id, Image image){
+    static void setImageToImageView(String id, Image image){
         ImageView imageView = (ImageView) scene.lookup(id);
         imageView.setImage(image);
     }
@@ -248,6 +247,7 @@ public class Board {
         title.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         title.setTextFill(Color.LIGHTCORAL);
         title.setEffect(new Bloom());
+
         Label damagePanel = new Label("damagePanel");
         damagePanel.setId("damagePanel");
         damagePanel.setPadding(new Insets(3, 3, 0, 3));
@@ -323,11 +323,17 @@ public class Board {
         return slider;
     }
 
+    static void initializeBottomMenu(GameCell gameCell, String direction){
+        writeToTextArea("#"+direction+"TextArea", gameCell.getUnit().getInfo(), false);
+        setImageToImageView("#"+direction+"ImageView", gameCell.getUnit().getImage());
+
+    }
+
     public static Double getScaleCoefficient() {
         return scaleCoefficient;
     }
 
-    public static void setScaleCoefficient(Double scaleCoefficient) {
+    private static void setScaleCoefficient(Double scaleCoefficient) {
         Board.scaleCoefficient = scaleCoefficient;
     }
 }

@@ -20,6 +20,8 @@ import javafx.scene.paint.Color;
 import java.io.File;
 import java.net.MalformedURLException;
 
+import static Board.Board.initializeBottomMenu;
+
 /**
  * Created by Dmitriy on 18.10.2016.
  */
@@ -49,48 +51,46 @@ public class GameCell extends Button {
     }
 
     public void actionMode() {
-        this.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent e) {
+        this.setOnMouseClicked(e -> {
 
-                if (!isSelected) {
-                    if (unit != null && isTeamTurn(unit.getTeam()) && unit.isActive()) {
-                        isSelected = true;
-                        temporaryUnit = unit;
-                        BoardUtils.calculateRanges(GameCell.this);
-                        GameCell.this.setGraphic(unit.getImageView(0.7));
-                        previousGameCell = GameCell.this;
-                        unit = null;
-                    }
-                } else if (GameCell.this.isPassable() && unit == null) {
-                    if (temporaryUnit != null) {
-                        unit = temporaryUnit;
-                        GameCell.this.setGraphic(temporaryUnit.getImageView(1.0));
-                        GameCell.this.setPadding(temporaryUnit.getInsets());
-                        previousGameCell.setEffect(null);
-                        temporaryUnit = null;
-                    }
-                    isSelected = false;
-                    if (!(previousGameCell.equals(GameCell.this))) {
-                        previousGameCell.setDefaultImage(previousGameCell, defaultCellImagePath);
-                        previousGameCell.setPadding(new Insets(1));
-                        unit.setActive(false);
-                        checkTeamTurn();
-                    }
-                    BoardUtils.refreshZOrder();
-                    BoardUtils.abortFieldPassability();
-                    BoardUtils.abortShootingRange();
-
-                } else if (unit != null && temporaryUnit.isEnemyUnit(unit) && isTeamTurn(temporaryUnit.getTeam())) {
-                    previousGameCell.setUnit(temporaryUnit);
-                    previousGameCell.setGraphic(temporaryUnit.getImageView(1.0));
-                    isSelected = false;
-                    if (GameCell.this.isInShootingRange()) {
-                        performAttack(previousGameCell, GameCell.this);
-                    }
-                    BoardUtils.abortFieldPassability();
-                    BoardUtils.abortShootingRange();
+            if (!isSelected) {
+                if (unit != null && isTeamTurn(unit.getTeam()) && unit.isActive()) {
+                    isSelected = true;
+                    temporaryUnit = unit;
+                    BoardUtils.calculateRanges(GameCell.this);
+                    GameCell.this.setGraphic(unit.getImageView(0.7));
+                    previousGameCell = GameCell.this;
+                    unit = null;
+                }
+            } else if (GameCell.this.isPassable() && unit == null) {
+                if (temporaryUnit != null) {
+                    unit = temporaryUnit;
+                    GameCell.this.setGraphic(temporaryUnit.getImageView(1.0));
+                    GameCell.this.setPadding(temporaryUnit.getInsets());
+                    previousGameCell.setEffect(null);
                     temporaryUnit = null;
                 }
+                isSelected = false;
+                if (!(previousGameCell.equals(GameCell.this))) {
+                    previousGameCell.setDefaultImage(previousGameCell, defaultCellImagePath);
+                    previousGameCell.setPadding(new Insets(1));
+                    unit.setActive(false);
+                    checkTeamTurn();
+                }
+                BoardUtils.refreshZOrder();
+                BoardUtils.abortFieldPassability();
+                BoardUtils.abortShootingRange();
+
+            } else if (unit != null && temporaryUnit.isEnemyUnit(unit) && isTeamTurn(temporaryUnit.getTeam())) {
+                previousGameCell.setUnit(temporaryUnit);
+                previousGameCell.setGraphic(temporaryUnit.getImageView(1.0));
+                isSelected = false;
+                if (GameCell.this.isInShootingRange()) {
+                    performAttack(previousGameCell, GameCell.this);
+                }
+                BoardUtils.abortFieldPassability();
+                BoardUtils.abortShootingRange();
+                temporaryUnit = null;
             }
         });
     }
@@ -117,46 +117,33 @@ public class GameCell extends Button {
     }
 
     public void mouseMovementMode(){
-        this.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent e) {
-                if (GameCell.this.getUnit() != null) {
-                    Tooltip tooltip = new Tooltip(GameCell.this.getUnit().getInfo());
-                    tooltip.setAutoHide(false);
-                    GameCell.this.setTooltip(tooltip);
-                    if(GameCell.this.getUnit().getTeam()==1){
-                        Board.writeToTextArea("#leftTextArea", GameCell.this.getUnit().getInfo(), false);
-                        Board.setImageToImageView("#leftImageView", GameCell.this.getUnit().getImage());
-                    }else{
-                        Board.writeToTextArea("#rightTextArea", GameCell.this.getUnit().getInfo(), false);
-                        Board.setImageToImageView("#rightImageView", GameCell.this.getUnit().getImage());
-                    }
+        this.setOnMouseEntered(e -> {
+            if (GameCell.this.getUnit() != null) {
+                GameCell.this.setTooltip(getToolTip(GameCell.this));
+                if(GameCell.this.getUnit().getTeam()==1){
+                    initializeBottomMenu(GameCell.this, "left");
+                }else{
+                    initializeBottomMenu(GameCell.this, "right");
                 }
+            }
+            if (!(GameCell.this.getEffect() instanceof InnerShadow)){
+                GameCell.this.getGraphic().setEffect(new Glow());
 
-                if (!(GameCell.this.getEffect() instanceof InnerShadow)){
-                    GameCell.this.getGraphic().setEffect(new Glow());
-                if (GameCell.this.getUnit()!=null && !GameCell.this.getUnit().isActive() && GameCell.this.getUnit().getTeam()==teamTurnValue)
-                    GameCell.this.getGraphic().setEffect(new Lighting(new Light.Spot()));
-                }
-                if (temporaryUnit != null && GameCell.this.getUnit() != null){
-                    if (GameCell.this.getUnit().isEnemyUnit(temporaryUnit)) {
-                        Cursor c = new ImageCursor(BoardUtils.getImage("src\\main\\resources\\CursorChainsword.png"), 300,300);
-                        GameCell.this.setCursor(c);
-                        DropShadow dropShadow = new DropShadow();
-                        dropShadow.setOffsetX(3);
-                        dropShadow.setOffsetY(3);
-                        dropShadow.setColor(Color.rgb(255, 0, 0, 1));
-                        GameCell.this.getGraphic().setEffect(dropShadow);
-                    }
+                if (isAlreadyUsedCurrentTeamUnit())
+                    paintUnitWithBlack(GameCell.this);
+            }
+
+            if (temporaryUnit != null && GameCell.this.getUnit() != null){
+                if (GameCell.this.getUnit().isEnemyUnit(temporaryUnit)) {
+                    highlightEnemyUnit(GameCell.this);
                 }
             }
         });
 
-        this.setOnMouseExited(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent e) {
-                GameCell.this.setCursor(Cursor.DEFAULT);
-                GameCell.this.getGraphic().setEffect(null);
-                GameCell.this.setTooltip(null);
-            }
+        this.setOnMouseExited(e -> {
+            GameCell.this.setCursor(Cursor.DEFAULT);
+            GameCell.this.getGraphic().setEffect(null);
+            GameCell.this.setTooltip(null);
         });
     }
 
@@ -174,6 +161,66 @@ public class GameCell extends Button {
         imageView.setOpacity(0.5);
         this.setPadding(new Insets(1));
         this.setGraphic(imageView);
+    }
+
+    public void setSize(Double width, Double height){
+        this.setMaxHeight(height);
+        this.setMinHeight(height);
+        this.setMaxWidth(width);
+        this.setMinWidth(width);
+    }
+
+    public static void checkTeamTurn(){
+        if(BoardUtils.getTotalUnitNumber(getEnemyTeam())<=0){
+            Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n TEAM " + teamTurnValue + " WINS!", true);
+            BoardUtils.setActiveTeamUnits(teamTurnValue, false);
+        }else{
+            if(BoardUtils.getActiveUnitNumber(teamTurnValue) == 0) {
+                changeTeamTurn();
+                Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + " Now it's Team " + teamTurnValue + " turn\n", true);
+                BoardUtils.setActiveTeamUnits(teamTurnValue, true);
+            }
+        }
+    }
+
+    private static Tooltip getToolTip(GameCell gameCell){
+        Tooltip tooltip = new Tooltip(gameCell.getUnit().getInfo());
+        tooltip.setAutoHide(false);
+        return tooltip;
+    }
+
+    private boolean isAlreadyUsedCurrentTeamUnit(){
+        return (GameCell.this.getUnit()!=null && !GameCell.this.getUnit().isActive() && GameCell.this.getUnit().getTeam()==teamTurnValue);
+    }
+
+    private void highlightEnemyUnit(GameCell gameCell){
+        Cursor c = new ImageCursor(BoardUtils.getImage("src\\main\\resources\\CursorChainsword.png"), 300,300);
+        gameCell.setCursor(c);
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setOffsetX(3);
+        dropShadow.setOffsetY(3);
+        dropShadow.setColor(Color.rgb(255, 0, 0, 1));
+        gameCell.getGraphic().setEffect(dropShadow);
+    }
+
+    private void paintUnitWithBlack(GameCell gameCell){
+        gameCell.getGraphic().setEffect(new Lighting(new Light.Spot()));
+    }
+
+    public static void changeTeamTurn(){
+        teamTurnValue = teamTurnValue==1? 2:1 ;
+    }
+
+    public static int getEnemyTeam(){
+        return teamTurnValue==1? 2:1;
+    }
+
+    private boolean isTeamTurn(int team){
+        return (team == teamTurnValue);
+    }
+
+    public static int getTeamTurnValue() {
+        return teamTurnValue;
     }
 
     public String getName() {
@@ -238,41 +285,5 @@ public class GameCell extends Button {
 
     public void setUnit(Unit unit) {
         this.unit = unit;
-    }
-
-    public void setSize(Double width, Double height){
-        this.setMaxHeight(height);
-        this.setMinHeight(height);
-        this.setMaxWidth(width);
-        this.setMinWidth(width);
-    }
-
-    public static void checkTeamTurn(){
-        if(BoardUtils.getTotalUnitNumber(getEnemyTeam())<=0){
-            Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n TEAM " + teamTurnValue + " WINS!", true);
-            BoardUtils.setActiveTeamUnits(teamTurnValue, false);
-        }else{
-            if(BoardUtils.getActiveUnitNumber(teamTurnValue) == 0) {
-                changeTeamTurn();
-                Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + " Now it's Team " + teamTurnValue + " turn\n", true);
-                BoardUtils.setActiveTeamUnits(teamTurnValue, true);
-            }
-        }
-    }
-
-    public static void changeTeamTurn(){
-        teamTurnValue = teamTurnValue==1? 2:1 ;
-    }
-
-    public static int getEnemyTeam(){
-        return teamTurnValue==1? 2:1;
-    }
-
-    private boolean isTeamTurn(int team){
-        return (team == teamTurnValue);
-    }
-
-    public static int getTeamTurnValue() {
-        return teamTurnValue;
     }
 }

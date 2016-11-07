@@ -9,9 +9,9 @@ import javafx.scene.Scene;
  * Created by Dmitriy on 27.10.2016.
  */
 public class BoardInitializer {
-    Scene currentScene = Board.getScene();
+    private Scene currentScene = Board.getScene();
 
-    public void initializeBoard(){
+    void initializeBoard(){
 
         placeOnBoard(0,0,new LightInfantry("Penal_Trooper", 1));
 
@@ -38,7 +38,6 @@ public class BoardInitializer {
         placeOnBoard(9,3,new LightInfantry("Shoota_Boy", 2));
 
         placeOnBoard(5,3,new Vehicle("PartyVan", 2));
-
 
         BoardUtils.setActiveTeamUnits(1, true);
         BoardUtils.setActiveTeamUnits(2, false);

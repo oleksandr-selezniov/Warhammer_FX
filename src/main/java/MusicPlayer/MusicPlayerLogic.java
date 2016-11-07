@@ -33,11 +33,9 @@ public class MusicPlayerLogic {
         vBox.setAlignment(Pos.CENTER);
         vBox.setPadding(new Insets(5));
         mediaPlayer.setAutoPlay(true);
-        mediaPlayer.setOnEndOfMedia(new Runnable() {
-            public void run() {
-                mediaPlayer.seek(mediaPlayer.getStartTime());
-                mediaPlayer.play();
-            }
+        mediaPlayer.setOnEndOfMedia(() -> {
+            mediaPlayer.seek(mediaPlayer.getStartTime());
+            mediaPlayer.play();
         });
 
         Button next = getNextButton();
@@ -69,66 +67,53 @@ public class MusicPlayerLogic {
         Button play = new Button("Play");
         play.setMinWidth(50);
         play.setPadding(new Insets(5));
-        play.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-                mediaPlayer.play();
-            }
-        });
+        play.setOnAction(e -> mediaPlayer.play());
     return play;
     }
+
     private static Button getPauseButton(){
         Button pause =new Button("Pause");
         pause.setMinWidth(50);
         pause.setPadding(new Insets(5));
-        pause.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-                mediaPlayer.pause();
-            }
-        });
+        pause.setOnAction(e -> mediaPlayer.pause());
         return pause;
     }
+
     private static Button getNextButton(){
         Button next = new Button("Next");
         next.setMinWidth(50);
         next.setPadding(new Insets(5));
-        next.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-                mediaPlayer.dispose();
-                mediaPlayer = new MediaPlayer(getMedia("src\\main\\resources\\Music\\"+getNextFileN()+".mp3"));
+        next.setOnAction(e -> {
+            mediaPlayer.dispose();
+            mediaPlayer = new MediaPlayer(getMedia("src\\main\\resources\\Music\\"+getNextFileN()+".mp3"));
+            mediaPlayer.play();
+            mediaPlayer.setOnEndOfMedia(() -> {
+                mediaPlayer.seek(mediaPlayer.getStartTime());
                 mediaPlayer.play();
-                mediaPlayer.setOnEndOfMedia(new Runnable() {
-                    public void run() {
-                        mediaPlayer.seek(mediaPlayer.getStartTime());
-                        mediaPlayer.play();
-                    }
-                });
+            });
 
-            }
         });
         return next;
     }
+
     private static Button getPrevButton(){
         Button prev = new Button("Prev");
         prev.setMinWidth(50);
         prev.setPadding(new Insets(5));
-        prev.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-                mediaPlayer.dispose();
-                mediaPlayer = new MediaPlayer(getMedia("src\\main\\resources\\Music\\"+getPrevFileN()+".mp3"));
+        prev.setOnAction(e -> {
+            mediaPlayer.dispose();
+            mediaPlayer = new MediaPlayer(getMedia("src\\main\\resources\\Music\\"+getPrevFileN()+".mp3"));
+            mediaPlayer.play();
+            mediaPlayer.setOnEndOfMedia(() -> {
+                mediaPlayer.seek(mediaPlayer.getStartTime());
                 mediaPlayer.play();
-                mediaPlayer.setOnEndOfMedia(new Runnable() {
-                    public void run() {
-                        mediaPlayer.seek(mediaPlayer.getStartTime());
-                        mediaPlayer.play();
-                    }
-                });
+            });
 
-            }
         });
         return prev;
     }
 
-    public static Slider getVolSlider(){
+    private static Slider getVolSlider(){
         Slider slider = new Slider();
         slider.setPrefWidth(15);
         slider.setPrefHeight(30);
@@ -140,10 +125,8 @@ public class MusicPlayerLogic {
         slider.setMajorTickUnit(0.1);
         slider.setBlockIncrement(0.1);
         slider.setShowTickMarks(true);
-        slider.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                mediaPlayer.setVolume(newValue.doubleValue());
-            }
+        slider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            mediaPlayer.setVolume(newValue.doubleValue());
         });
         return slider;
     }
@@ -154,8 +137,7 @@ public class MusicPlayerLogic {
             File file = new File(path);
             mediaUrl = file.toURI().toURL().toString();
         }catch (Exception eq){eq.printStackTrace();}
-        Media media = new Media(mediaUrl);
-        return media;
+        return new Media(mediaUrl);
     }
 
 }
