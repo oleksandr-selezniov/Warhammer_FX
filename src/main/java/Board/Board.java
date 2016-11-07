@@ -31,8 +31,8 @@ import java.net.MalformedURLException;
  * Created by Dmitriy on 20.10.2016.
  */
 public class Board {
-    private static GridPane mainBattlefieldGP = generateCellBattleField(55, 25);
-    private String defaultBackgroundPath = "src\\main\\resources\\Background_1.jpg";
+    private static GridPane mainBattlefieldGP = generateCellBattleField(55, 22);
+    private String defaultBackgroundPath = "src\\main\\resources\\Backgrounds\\background_8.jpg";
     private static Scene scene;
     private static Double scaleCoefficient = 1.0;
 
@@ -125,7 +125,7 @@ public class Board {
         leftVbox.setMinWidth(Size.getSceneWidth()*0.15);
 
         TextArea leftTextArea = new TextArea();
-        leftTextArea.setMaxWidth(Size.getSceneWidth()*0.13);
+        leftTextArea.setMaxWidth(Size.getSceneWidth()*0.14);
         leftTextArea.setMaxHeight(Size.getSceneHeight()*0.26);
         leftTextArea.setId("leftTextArea");
 
@@ -185,7 +185,7 @@ public class Board {
         rightVbox.setMinWidth(Size.getSceneWidth()*0.15);
 
         TextArea rightTextArea = new TextArea();
-        rightTextArea.setMaxWidth(Size.getSceneWidth()*0.13);
+        rightTextArea.setMaxWidth(Size.getSceneWidth()*0.14);
         rightTextArea.setMaxHeight(Size.getSceneHeight()*0.26);
         rightTextArea.setId("rightTextArea");
 
@@ -241,7 +241,7 @@ public class Board {
 
     private HBox getMainTitle(){
         HBox hbox = new HBox();
-        Label title = new Label("WARHAMMER GAME");
+        Label title = new Label("ICEHAMMER GAME");
         title.setPadding(new Insets(3, 3, 0, 500));
         title.setAlignment(Pos.CENTER);
         title.setFont(Font.font("Verdana", FontWeight.BOLD, 15));

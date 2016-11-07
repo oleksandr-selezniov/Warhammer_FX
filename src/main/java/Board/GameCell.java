@@ -30,7 +30,7 @@ public class GameCell extends Button {
     private static Unit temporaryUnit;
     private static boolean isSelected;
     private static int teamTurnValue = 1;
-    private String defaultCellImagePath = "src\\main\\resources\\cellBackground.jpg";
+    private String defaultCellImagePath = "src\\main\\resources\\cellBackground\\"+generateRandomNumber(1,25)+".jpg";
     private String deadCellImagePath = "src\\main\\resources\\dead.jpg";
     private String name = this.getText();
     private int xCoord;
@@ -158,7 +158,7 @@ public class GameCell extends Button {
         imageView.setImage(buttonImage);
         imageView.fitHeightProperty().bindBidirectional(gc.minHeightProperty());
         imageView.fitWidthProperty().bindBidirectional(gc.minWidthProperty());
-        imageView.setOpacity(0.5);
+        imageView.setOpacity(0.6);
         this.setPadding(new Insets(1));
         this.setGraphic(imageView);
     }
@@ -205,6 +205,10 @@ public class GameCell extends Button {
 
     private void paintUnitWithBlack(GameCell gameCell){
         gameCell.getGraphic().setEffect(new Lighting(new Light.Spot()));
+    }
+
+    private int generateRandomNumber(int min, int max){
+        return min + (int)(Math.random() * ((max - min) + 1));
     }
 
     public static void changeTeamTurn(){
