@@ -10,6 +10,7 @@ import Size.Size;
 import Board.Board;
 import javafx.geometry.Insets;
 import Board.BoardUtils;
+import Board.LoggerUtils;
 
 /**
  * Created by Dmitriy on 03.11.2016.
@@ -29,7 +30,7 @@ public class HeavyInfantry extends Unit{
         this.armor = Double.parseDouble(resourceBundle.getString(unitName+".armor"));
         this.minRangeDamage = Integer.parseInt(resourceBundle.getString(unitName+".minRangeDamage"));
         this.maxRangeDamage = Integer.parseInt(resourceBundle.getString(unitName+".maxRangeDamage"));
-        this.accuracy = Double.parseDouble(resourceBundle.getString(unitName+".accuracy"));
+        this.accuracy = resourceBundle.getString(unitName+".accuracy");
         this.minCloseDamage = Integer.parseInt(resourceBundle.getString(unitName+".minCloseDamage"));
         this.maxCloseDamage = Integer.parseInt(resourceBundle.getString(unitName+".maxCloseDamage"));
         this.walkRange = Integer.parseInt(resourceBundle.getString(unitName+".walkRange"));
@@ -38,6 +39,7 @@ public class HeavyInfantry extends Unit{
         this.heightCoeff = 1;
         this.widthCoeff = 1;
         this.isActive = false;
+        this.rangeEfficiency = resourceBundle.getString(unitName+".rangeEfficiency");
         this.setUnitImageView(getImageView(1.0));
 
         try {
@@ -78,31 +80,41 @@ public class HeavyInfantry extends Unit{
     public void performCloseAttack(Unit victim){
         int closeDamage = getCloseDamage();
         victim.setHealth(victim.getHealth() - closeDamage);
-        BoardUtils.writeCloseAttackLog(this, victim, closeDamage);
+        LoggerUtils.writeCloseAttackLog(this, victim, closeDamage);
         this.setActive(false);
     }
 
     public void performRangeAttack(Unit victim){
-        int rangeDamage = getRangeDamage();
+        int rangeDamage = getRangeDamage(victim);
         double chance = Math.random();
         if (this.getAmmo() > 0) {
-            if(chance<accuracy) {
+            if(chance < getCurrentAccuracy(victim)) {
                 victim.setHealth(victim.getHealth() - rangeDamage);
-                BoardUtils.writeRangeAttackLog(this, victim, rangeDamage);
+                LoggerUtils.writeRangeAttackLog(this, victim, rangeDamage);
                 this.setAmmo(this.getAmmo() - 1);
                 this.setActive(false);
             }else{
-                BoardUtils.writeMissedLog(this);
+                LoggerUtils.writeMissedLog(this);
                 this.setAmmo(this.getAmmo() - 1);
                 this.setActive(false);
             }
         } else {
-            BoardUtils.writeOutOfAmmoLog(this);
+            LoggerUtils.writeOutOfAmmoLog(this);
         }
     }
 
-    private int getRangeDamage(){
-        return minRangeDamage + (int)(Math.random() * ((maxRangeDamage - minRangeDamage) + 1));
+    private int getRangeDamage(Unit victim){
+        double efficiency = getCurrentRangeEfficiency(victim);
+        int minActualDamage = minRangeDamage;
+        int maxActualDamage = maxRangeDamage;
+        if(efficiency>=1){
+            minActualDamage = (int)(minActualDamage*efficiency);
+            if (minActualDamage >= maxActualDamage){minActualDamage = maxActualDamage;}
+        }else{
+            maxActualDamage = (int)(maxActualDamage*efficiency);
+            if(maxActualDamage <= minActualDamage){maxActualDamage = minActualDamage;}
+        }
+        return minActualDamage + (int)(Math.random() * ((maxActualDamage - minActualDamage) + 1));
     }
 
     private int getCloseDamage(){

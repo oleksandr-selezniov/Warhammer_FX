@@ -20,7 +20,7 @@ public abstract class Unit {
     protected double armor;
     protected int minRangeDamage;
     protected int maxRangeDamage;
-    protected Double accuracy;
+    protected String  accuracy;
     protected int minCloseDamage;
     protected int maxCloseDamage;
     protected int walkRange;
@@ -31,6 +31,7 @@ public abstract class Unit {
     protected double widthCoeff;
     protected ImageView unitImageView;
     protected boolean isActive;
+    protected String rangeEfficiency;
 
     public Unit(){}
 
@@ -175,11 +176,11 @@ public abstract class Unit {
         this.maxRangeDamage = maxRangeDamage;
     }
 
-    public Double getAccuracy() {
+    public String getAccuracy() {
         return accuracy;
     }
 
-    public void setAccuracy(Double accuracy) {
+    public void setAccuracy(String accuracy) {
         this.accuracy = accuracy;
     }
 
@@ -195,8 +196,46 @@ public abstract class Unit {
         this.maxCloseDamage = maxCloseDamage;
     }
 
+    public String getRangeEfficiency() {
+        return rangeEfficiency;
+    }
+
+    public void setRangeEfficiency(String rangeEfficiency) {
+        this.rangeEfficiency = rangeEfficiency;
+    }
+
+    protected double getCurrentRangeEfficiency(Unit victim){
+        String effString = getRangeEfficiency();
+        String tokens = "/";
+        String[] splited = effString.split(tokens);
+
+        double LE = Double.parseDouble(splited[0]);
+        double HE = Double.parseDouble(splited[1]);
+        double VE = Double.parseDouble(splited[2]);
+
+        if(victim instanceof LightInfantry){return LE;}
+        if(victim instanceof HeavyInfantry){return HE;}
+        if(victim instanceof Vehicle){return VE;}
+        return 1;
+    }
+
+    protected double getCurrentAccuracy(Unit victim){
+        String effString = getAccuracy();
+        String tokens = "/";
+        String[] splited = effString.split(tokens);
+
+        double LA = Double.parseDouble(splited[0]);
+        double HA = Double.parseDouble(splited[1]);
+        double VA = Double.parseDouble(splited[2]);
+
+        if(victim instanceof LightInfantry){return LA;}
+        if(victim instanceof HeavyInfantry){return HA;}
+        if(victim instanceof Vehicle){return VA;}
+        return 0.5;
+    }
+
     public String getInfo(){
-        String unitInfo = "Name: "+name+"\n"+"Armor "+armor+"\n"+"Health "+health+"/"+maxHealth+"\n"+"Accuracy "+accuracy+
+        String unitInfo = "Name: "+name+"\n"+"Efficiency "+rangeEfficiency+"\n"+"Health "+health+"/"+maxHealth+"\n"+"Accuracy "+accuracy+
                 "\n"+"Ammo "+ammo+"/"+maxAmmo+"\n"+"Close Damage "+ minCloseDamage +"-"+maxCloseDamage +"\n"
                 + "Range Damage "+ minRangeDamage +"-"+ maxRangeDamage +"\n"+"Walk range "+walkRange+"\n"+"ShotRange "+shotRange+"\n";
         return unitInfo;

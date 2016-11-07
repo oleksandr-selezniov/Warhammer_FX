@@ -133,32 +133,4 @@ public class BoardUtils {
         gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).getUnit() != null))
                 .forEach(p->((GameCell)p).setGraphic(((GameCell) p).getUnit().getImageView(1.0)));
     }
-
-    public static void writeCloseAttackLog(Unit attacker, Unit victim, int closeDamage){
-        Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
-                + attacker.getName() + "\n"
-                + "made " + (closeDamage) + "\n"
-                + "melee damage to " + "\n"
-                + victim.getName() + "\n", true);
-    }
-
-    public static void writeRangeAttackLog(Unit attacker, Unit victim, int rangeDamage){
-        Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
-                + attacker.getName() + "\n"
-                + "made " + (rangeDamage) + "\n"
-                + "range damage to " + "\n"
-                + victim.getName() + "\n", true);
-    }
-
-    public static void writeMissedLog(Unit unit){
-        Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
-                + unit.getName() + "\n"
-                + "missed!" + "\n", true);
-    }
-
-    public static void writeOutOfAmmoLog(Unit unit){
-        Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
-                + unit.getName() + "\n"
-                + "is out of ammunition!" + "\n", true);
-    }
 }

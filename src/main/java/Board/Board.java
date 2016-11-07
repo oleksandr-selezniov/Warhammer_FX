@@ -125,18 +125,11 @@ public class Board {
         leftVbox.setMinHeight(Size.getSceneHeight()*0.25);
         leftVbox.setMinWidth(Size.getSceneWidth()*0.15);
 
-//        Button leftUpButton = new Button();
-//        leftUpButton.setMinWidth(150);
-//        leftUpButton.setMinHeight(40);
-
         TextArea leftTextArea = new TextArea();
         leftTextArea.setMaxWidth(Size.getSceneWidth()*0.13);
         leftTextArea.setMaxHeight(Size.getSceneHeight()*0.26);
         leftTextArea.setId("leftTextArea");
 
-//        Button leftDownButton = new Button();
-//        leftDownButton.setMinWidth(150);
-//        leftDownButton.setMinHeight(40);
         leftVbox.getChildren().addAll(leftTextArea);
         leftEarGP.add(leftVbox, 2,0);
 

@@ -84,11 +84,9 @@ public class GameCell extends Button {
                     previousGameCell.setUnit(temporaryUnit);
                     previousGameCell.setGraphic(temporaryUnit.getImageView(1.0));
                     isSelected = false;
-                    //***************************ATTACK**********************************************
                     if (GameCell.this.isInShootingRange()) {
                         performAttack(previousGameCell, GameCell.this);
                     }
-                    //***************************ATTACK**********************************************
                     BoardUtils.abortFieldPassability();
                     BoardUtils.abortShootingRange();
                     temporaryUnit = null;
@@ -101,21 +99,17 @@ public class GameCell extends Button {
 
         if (unit.getHealth() > 0) {
             victim_CG.getGraphic().setEffect(new SepiaTone());
+
             if (BoardUtils.isOnNeighbouringCell(hunter_GC, victim_CG)) {
-                //close attack
                 temporaryUnit.performCloseAttack(unit);
                 checkTeamTurn();
             } else {
-                //Range damage
                     temporaryUnit.performRangeAttack(unit);
                     checkTeamTurn();
             }
         }
         if (unit.getHealth() <= 0) {
-            Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
-                    + unit.getName() + "\n"
-                    + "is killed by" + "\n"
-                    +temporaryUnit.getName()+"\n", true);
+            LoggerUtils.writeDeadLog(temporaryUnit, unit);
             GameCell.this.setDefaultImage(previousGameCell, deadCellImagePath);
             unit = null;
             checkTeamTurn();
