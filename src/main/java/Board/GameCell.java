@@ -2,7 +2,6 @@ package Board;
 
 import Size.Size;
 import Units.Unit;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
@@ -11,7 +10,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.effect.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -32,9 +30,11 @@ public class GameCell extends Button {
     private static int teamTurnValue = 1;
     private String defaultCellImagePath = "src\\main\\resources\\cellBackground\\"+generateRandomNumber(1,25)+".jpg";
     private String deadCellImagePath = "src\\main\\resources\\dead.jpg";
+    private static String obstacleImagePath = "src\\main\\resources\\Obstacles\\hedgehog.jpg";
     private String name = this.getText();
     private int xCoord;
     private int yCoord;
+    private Boolean isBlocked = false;
     private Boolean isPassable = false;
     private Boolean isInShootingRange = false;
     private Boolean isSafe = true;
@@ -44,7 +44,7 @@ public class GameCell extends Button {
     GameCell() {
         this.setPadding(new Insets(50));
         this.setSize(Size.getCellWidth(), Size.getCellHeight());
-        this.setDefaultImage(this, defaultCellImagePath);
+        this.setCellImage(this, defaultCellImagePath, 0.6);
         this.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         actionMode();
         mouseMovementMode();
@@ -72,7 +72,7 @@ public class GameCell extends Button {
                 }
                 isSelected = false;
                 if (!(previousGameCell.equals(GameCell.this))) {
-                    previousGameCell.setDefaultImage(previousGameCell, defaultCellImagePath);
+                    previousGameCell.setCellImage(previousGameCell, defaultCellImagePath, 0.6);
                     previousGameCell.setPadding(new Insets(1));
                     unit.setActive(false);
                     checkTeamTurn();
@@ -110,7 +110,7 @@ public class GameCell extends Button {
         }
         if (unit.getHealth() <= 0) {
             LoggerUtils.writeDeadLog(temporaryUnit, unit);
-            GameCell.this.setDefaultImage(previousGameCell, deadCellImagePath);
+            GameCell.this.setCellImage(previousGameCell, deadCellImagePath, 0.6);
             unit = null;
             checkTeamTurn();
         }
@@ -147,7 +147,7 @@ public class GameCell extends Button {
         });
     }
 
-    public void setDefaultImage(GameCell gc, String path){
+    public void setCellImage(GameCell gc, String path, double opacity){
         ImageView imageView = new ImageView();
         String imageUrl = null;
         try {
@@ -158,7 +158,7 @@ public class GameCell extends Button {
         imageView.setImage(buttonImage);
         imageView.fitHeightProperty().bindBidirectional(gc.minHeightProperty());
         imageView.fitWidthProperty().bindBidirectional(gc.minWidthProperty());
-        imageView.setOpacity(0.6);
+        imageView.setOpacity(opacity);
         this.setPadding(new Insets(1));
         this.setGraphic(imageView);
     }
@@ -187,6 +187,22 @@ public class GameCell extends Button {
         Tooltip tooltip = new Tooltip(gameCell.getUnit().getInfo());
         tooltip.setAutoHide(false);
         return tooltip;
+    }
+
+    private static void placeObstacle(GameCell gameCell, String path){
+        gameCell.setBlocked(true);
+        gameCell.setCellImage(gameCell, path, 1);
+    }
+
+    static void generateObstacles(double density){
+        Board.getMainBattlefieldGP().getChildren().forEach(p->{
+            double chance = Math.random();
+            if(((GameCell)p).getUnit()==null && ((GameCell)p).getxCoord()>3 && ((GameCell)p).getyCoord()>2){
+                if(density > chance){
+                    placeObstacle(((GameCell)p), obstacleImagePath);
+                }
+            }
+        });
     }
 
     private boolean isAlreadyUsedCurrentTeamUnit(){
@@ -290,4 +306,14 @@ public class GameCell extends Button {
     public void setUnit(Unit unit) {
         this.unit = unit;
     }
+
+
+    public Boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(Boolean blocked) {
+        isBlocked = blocked;
+    }
+
 }

@@ -42,6 +42,8 @@ public class BoardInitializer {
         BoardUtils.setActiveTeamUnits(1, true);
         BoardUtils.setActiveTeamUnits(2, false);
 
+        GameCell.generateObstacles(0.1);
+
     }
 
     private GameCell getGameCell(String id){

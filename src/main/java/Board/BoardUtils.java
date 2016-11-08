@@ -43,13 +43,13 @@ public class BoardUtils {
         int y = currentcell.getyCoord();
         GridPane gridPane = Board.getMainBattlefieldGP();
         gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
-                isReachable( x,y,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), walkrange)))
+                isReachable( x,y,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), walkrange)) && !((GameCell) p).isBlocked())
                 .forEach(p->((GameCell) p).setPassable(true));
     }
 
     static void abortFieldPassability(){
         GridPane gridPane = Board.getMainBattlefieldGP();
-        gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isPassable()))
+        gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isPassable()) && !((GameCell) p).isBlocked())
                 .forEach(p->{
                     p.setEffect(null);
                     ((GameCell) p).setPassable(false);
