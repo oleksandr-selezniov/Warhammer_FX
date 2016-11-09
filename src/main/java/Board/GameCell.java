@@ -30,7 +30,7 @@ public class GameCell extends Button {
     private static int teamTurnValue = 1;
     private String defaultCellImagePath = "src\\main\\resources\\cellBackground\\"+generateRandomNumber(1,25)+".jpg";
     private String deadCellImagePath = "src\\main\\resources\\dead.jpg";
-    private static String obstacleImagePath = "src\\main\\resources\\Obstacles\\hedgehog.jpg";
+    private static String obstacleImagePath; //= "src\\main\\resources\\Obstacles\\"+generateRandomNumber(1,25)+".jpg";
     private String name = this.getText();
     private int xCoord;
     private int yCoord;
@@ -199,6 +199,7 @@ public class GameCell extends Button {
             double chance = Math.random();
             if(((GameCell)p).getUnit()==null && ((GameCell)p).getxCoord()>3 && ((GameCell)p).getyCoord()>2){
                 if(density > chance){
+                    obstacleImagePath = "src\\main\\resources\\Obstacles\\"+generateRandomNumber(1,25)+".jpg";
                     placeObstacle(((GameCell)p), obstacleImagePath);
                 }
             }
@@ -223,7 +224,7 @@ public class GameCell extends Button {
         gameCell.getGraphic().setEffect(new Lighting(new Light.Spot()));
     }
 
-    private int generateRandomNumber(int min, int max){
+    private static int generateRandomNumber(int min, int max){
         return min + (int)(Math.random() * ((max - min) + 1));
     }
 

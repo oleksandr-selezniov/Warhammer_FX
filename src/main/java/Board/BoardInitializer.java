@@ -1,5 +1,6 @@
 package Board;
 
+import Units.Artillery;
 import Units.LightInfantry;
 import Units.Unit;
 import Units.Vehicle;
@@ -26,6 +27,8 @@ public class BoardInitializer {
         placeOnBoard(0,5,new LightInfantry("Tallarn", 1));
 
         placeOnBoard(2,2,new Vehicle("Leman_Russ", 1));
+
+        placeOnBoard(2,4,new Artillery("Leman_Russ", 1));
 
 
 

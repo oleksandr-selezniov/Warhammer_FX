@@ -1,5 +1,6 @@
 package Board;
 
+import Units.Artillery;
 import Units.Vehicle;
 import javafx.scene.Node;
 import javafx.scene.effect.InnerShadow;
@@ -78,26 +79,39 @@ public class BoardUtils {
         int x = currentCell.getxCoord();
         int y = currentCell.getyCoord();
         GridPane gridPane = Board.getMainBattlefieldGP();
-        gridPane.getChildren().stream().filter(p->
-            (p instanceof GameCell && isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), shotRange)))
-                .forEach(p->((GameCell) p).setInShootingRange(true));
+
+        if(currentCell.getUnit() instanceof Artillery){
+            int deadZone =((Artillery)currentCell.getUnit()).getDeadZone();
+            gridPane.getChildren().stream().filter(p->
+                    (p instanceof GameCell)).forEach(p->{
+                if(!isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), deadZone)){
+                    if(isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), shotRange)){
+                        ((GameCell) p).setInShootingRange(true);
+                    }
+                }
+            });
+        }else{
+            gridPane.getChildren().stream().filter(p->
+                    (p instanceof GameCell && isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), shotRange)))
+                    .forEach(p->((GameCell) p).setInShootingRange(true));
+        }
     }
 
-    static void setArtilleryShootingArea(GameCell currentCell){
-        int shotRange = currentCell.getUnit().getShotRange();
-        int deadZone = 4; //currentCell.getUnit().getDeadZone();
-        int x = currentCell.getxCoord();
-        int y = currentCell.getyCoord();
-        GridPane gridPane = Board.getMainBattlefieldGP();
-        gridPane.getChildren().stream().filter(p->
-                (p instanceof GameCell)).forEach(p->{
-            if(!isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), deadZone)){
-                if(isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), shotRange)){
-                    ((GameCell) p).setInShootingRange(true);
-                }
-            }
-        });
-    }
+//    static void setArtilleryShootingArea(GameCell currentCell){
+//        int shotRange = currentCell.getUnit().getShotRange();
+//        int deadZone = 4; //currentCell.getUnit().getDeadZone();
+//        int x = currentCell.getxCoord();
+//        int y = currentCell.getyCoord();
+//        GridPane gridPane = Board.getMainBattlefieldGP();
+//        gridPane.getChildren().stream().filter(p->
+//                (p instanceof GameCell)).forEach(p->{
+//            if(!isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), deadZone)){
+//                if(isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), shotRange)){
+//                    ((GameCell) p).setInShootingRange(true);
+//                }
+//            }
+//        });
+//    }
 
     static void calculateRanges(GameCell gameCell){
         BoardUtils.setWalkingArea(gameCell);
@@ -118,7 +132,8 @@ public class BoardUtils {
     static void refreshZOrder() {
         GridPane gridPane = Board.getMainBattlefieldGP();
         ArrayList<Node> nodeList = gridPane.getChildren().stream().filter(p ->
-            (p instanceof GameCell && ((GameCell) p).getUnit() != null && (((GameCell) p).getUnit() instanceof Vehicle))
+            (p instanceof GameCell && ((GameCell) p).getUnit() != null
+                    && ((((GameCell) p).getUnit() instanceof Vehicle) || ((GameCell) p).getUnit() instanceof Artillery))
         ).collect(Collectors.toCollection(ArrayList::new));
         nodeList.forEach(Node::toFront);
     }
