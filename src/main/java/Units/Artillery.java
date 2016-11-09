@@ -76,9 +76,9 @@ public class Artillery extends Vehicle {
     @Override
     public Insets getInsets() {
         if(Board.getScaleCoefficient()!=null){
-            return new Insets(2,2,Size.getCellHeight()*Board.getScaleCoefficient()*0.64,-Size.getCellHeight()*Board.getScaleCoefficient()*0.4);
+            return new Insets(2,2,Size.getCellHeight()*Board.getScaleCoefficient()*0.5,-Size.getCellHeight()*Board.getScaleCoefficient()*0.4);
         }
-        return new Insets(2,2,Size.getCellHeight()*0.64,2);
+        return new Insets(2,2,Size.getCellHeight()*0.5,2);
     }
 
     public void performCloseAttack(Unit victim){
@@ -133,4 +133,10 @@ public class Artillery extends Vehicle {
         this.deadZone = deadZone;
     }
 
+    public String getInfo(){
+        return "Name: "+name+"\n"+"Efficiency "+rangeEfficiency+"\n"+"Health "+health+"/"+maxHealth+"\n"+"Accuracy "+accuracy+
+                "\n"+"Ammo "+ammo+"/"+maxAmmo+"\n"+"Close Damage "+ minCloseDamage +"-"+maxCloseDamage +"\n"
+                + "Range Damage "+ minRangeDamage +"-"+ maxRangeDamage +"\n"+"Walk range "+walkRange+"\n"+"ShotRange "+shotRange+"\n"+
+                "Dead Zone Range "+deadZone+"\n";
+    }
 }

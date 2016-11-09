@@ -24,7 +24,7 @@ public class BoardUtils {
         int y1 = gc1.getyCoord();
         int x2 = gc2.getxCoord();
         int y2 = gc2.getyCoord();
-        return ((x1==x2 && abs(y1-y2)==1)||(y1==y2 && abs(x1-x2)==1));
+        return ((x1==x2 && abs(y1-y2)<5)||(y1==y2 && abs(x1-x2)<5));
     }
 
     private static boolean isReachable(int x1, int y1, int x2, int y2, int Range){
@@ -53,7 +53,9 @@ public class BoardUtils {
         GridPane gridPane = Board.getMainBattlefieldGP();
         gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
                 isReachable( x,y,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), walkrange)) && !((GameCell) p).isBlocked())
-                .forEach(p->((GameCell) p).setPassable(true));
+                .forEach(p->{
+                    if (isOnNeighbouringCellPlusDiagonal(currentcell,((GameCell) p))){if(((GameCell) p).getUnit()==null) p.setStyle("-fx-background-color: #F08080");}
+                    ((GameCell) p).setPassable(true);});
     }
 
     static void abortFieldPassability(){
@@ -93,7 +95,7 @@ public class BoardUtils {
             int deadZone =((Artillery)currentCell.getUnit()).getDeadZone();
             gridPane.getChildren().stream().filter(p->
                     (p instanceof GameCell)).forEach(p->{
-                if (isOnNeighbouringCellPlusDiagonal(currentCell, ((GameCell) p))){p.setStyle("-fx-background-color: #F08080"); return;}
+                if (isOnNeighbouringCellPlusDiagonal(currentCell, ((GameCell) p))){if(((GameCell) p).getUnit()==null) return;}
                 if (isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), deadZone)) return;
                 if(isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), shotRange)){
                     ((GameCell) p).setInShootingRange(true);
@@ -103,7 +105,7 @@ public class BoardUtils {
             gridPane.getChildren().stream().filter(p ->
                     (p instanceof GameCell && isReachable(x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), shotRange)))
                     .forEach(p -> {
-                        if (isOnNeighbouringCellPlusDiagonal(currentCell, ((GameCell) p))){ p.setStyle("-fx-background-color: #F08080"); return;}
+                        if (isOnNeighbouringCellPlusDiagonal(currentCell, ((GameCell) p))){if(((GameCell) p).getUnit()==null) return;}
                         ((GameCell) p).setInShootingRange(true);
                     });
         }

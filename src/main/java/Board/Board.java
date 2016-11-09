@@ -299,7 +299,6 @@ public class Board {
         slider.setCursor(Cursor.HAND);
         slider.setMin(0.175);
         slider.setMax(3.0);
-        slider.setValue(1);
         slider.setMajorTickUnit(0.1);
         slider.setBlockIncrement(0.1);
         slider.setShowTickMarks(true);
@@ -320,6 +319,7 @@ public class Board {
                 }
             }
         });
+        slider.setValue(0.65);
         return slider;
     }
 

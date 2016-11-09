@@ -15,13 +15,13 @@ import Board.LoggerUtils;
 /**
  * Created by Glazyrin.D on 11/9/2016.
  */
-public class Animal extends LightInfantry {
+public class MeleeInfantry extends LightInfantry {
     private static Locale locale = new Locale("en", "US");
-    private static ResourceBundle resourceBundle = ResourceBundle.getBundle("Animals", locale);
+    private static ResourceBundle resourceBundle = ResourceBundle.getBundle("MeleeInfantry", locale);
     private Insets insets = new Insets(2,2,2,2);
     private String closeEfficiency;
 
-    public Animal(String unitName, int team){
+    public MeleeInfantry(String unitName, int team){
         this.team = team;
         this.name = resourceBundle.getString(unitName+".name");
         this.health = Integer.parseInt(resourceBundle.getString(unitName+".health"));
@@ -29,13 +29,9 @@ public class Animal extends LightInfantry {
         this.ammo = Integer.parseInt(resourceBundle.getString(unitName+".ammo"));
         this.maxAmmo = ammo;
         this.armor = Double.parseDouble(resourceBundle.getString(unitName+".armor"));
-//        this.minRangeDamage = Integer.parseInt(resourceBundle.getString(unitName+".minRangeDamage"));
-//        this.maxRangeDamage = Integer.parseInt(resourceBundle.getString(unitName+".maxRangeDamage"));
-//        this.accuracy = resourceBundle.getString(unitName+".accuracy");
         this.minCloseDamage = Integer.parseInt(resourceBundle.getString(unitName+".minCloseDamage"));
         this.maxCloseDamage = Integer.parseInt(resourceBundle.getString(unitName+".maxCloseDamage"));
         this.walkRange = Integer.parseInt(resourceBundle.getString(unitName+".walkRange"));
-//        this.shotRange = Integer.parseInt(resourceBundle.getString(unitName+".shotRange"));
         this.picturePath = resourceBundle.getString(unitName+".picturePath");
         this.heightCoeff = 1;
         this.widthCoeff = 1;
@@ -118,4 +114,8 @@ public class Animal extends LightInfantry {
         return closeEfficiency;
     }
 
+    public String getInfo(){
+        return "Name: "+name+"\n"+"Efficiency "+closeEfficiency+"\n"+"Health "+health+"/"+maxHealth+"\n"
+                +"Close Damage "+ minCloseDamage +"-"+maxCloseDamage +"\n"+"Walk range "+walkRange+"\n";
+    }
 }

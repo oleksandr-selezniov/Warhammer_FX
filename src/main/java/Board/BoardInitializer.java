@@ -1,9 +1,6 @@
 package Board;
 
-import Units.Artillery;
-import Units.LightInfantry;
-import Units.Unit;
-import Units.Vehicle;
+import Units.*;
 import javafx.scene.Scene;
 
 /**
@@ -28,7 +25,7 @@ public class BoardInitializer {
 
         placeOnBoard(2,2,new Vehicle("Leman_Russ", 1));
 
-        placeOnBoard(2,4,new Artillery("Leman_Russ", 1));
+        placeOnBoard(2,4,new Artillery("Taros_Basilisk", 1));
 
 
 
@@ -42,10 +39,13 @@ public class BoardInitializer {
 
         placeOnBoard(5,3,new Vehicle("PartyVan", 2));
 
+        placeOnBoard(9,4,new MeleeInfantry("Squig", 2));
+
+
         BoardUtils.setActiveTeamUnits(1, true);
         BoardUtils.setActiveTeamUnits(2, false);
 
-        GameCell.generateObstacles(0.1);
+        GameCell.generateObstacles(0.05);
 
     }
 

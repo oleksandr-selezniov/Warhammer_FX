@@ -1,7 +1,7 @@
 package Board;
 
 import Size.Size;
-import Units.Animal;
+import Units.MeleeInfantry;
 import Units.Unit;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -104,7 +104,7 @@ public class GameCell extends Button {
             if (BoardUtils.isOnNeighbouringCellPlusDiagonal(hunter_GC, victim_CG)) {
                 temporaryUnit.performCloseAttack(unit);
                 checkTeamTurn();
-            } else if(!(temporaryUnit instanceof Animal)){
+            } else if(!(temporaryUnit instanceof MeleeInfantry)){
                     temporaryUnit.performRangeAttack(unit);
                     checkTeamTurn();
             }
@@ -200,7 +200,7 @@ public class GameCell extends Button {
             double chance = Math.random();
             if(((GameCell)p).getUnit()==null && ((GameCell)p).getxCoord()>3 && ((GameCell)p).getyCoord()>2){
                 if(density > chance){
-                    obstacleImagePath = "src\\main\\resources\\Obstacles\\"+generateRandomNumber(1,21)+".jpg";
+                    obstacleImagePath = "src\\main\\resources\\Obstacles\\"+generateRandomNumber(1,19)+".jpg";
                     placeObstacle(((GameCell)p), obstacleImagePath);
                 }
             }
