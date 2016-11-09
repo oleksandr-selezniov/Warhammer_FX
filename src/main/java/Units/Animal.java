@@ -1,7 +1,6 @@
 package Units;
 
 import Board.Board;
-import Board.LoggerUtils;
 import Size.Size;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
@@ -11,16 +10,18 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import Board.LoggerUtils;
 
 /**
- * Created by Dmitriy on 02.11.2016.
+ * Created by Glazyrin.D on 11/9/2016.
  */
-public class Artillery extends Vehicle {
+public class Animal extends LightInfantry {
     private static Locale locale = new Locale("en", "US");
-    private static ResourceBundle resourceBundle = ResourceBundle.getBundle("Artillery", locale);
-    private int deadZone;
+    private static ResourceBundle resourceBundle = ResourceBundle.getBundle("Animals", locale);
+    private Insets insets = new Insets(2,2,2,2);
+    private String closeEfficiency;
 
-    public Artillery(String unitName, int team){
+    public Animal(String unitName, int team){
         this.team = team;
         this.name = resourceBundle.getString(unitName+".name");
         this.health = Integer.parseInt(resourceBundle.getString(unitName+".health"));
@@ -28,19 +29,18 @@ public class Artillery extends Vehicle {
         this.ammo = Integer.parseInt(resourceBundle.getString(unitName+".ammo"));
         this.maxAmmo = ammo;
         this.armor = Double.parseDouble(resourceBundle.getString(unitName+".armor"));
-        this.minRangeDamage = Integer.parseInt(resourceBundle.getString(unitName+".minRangeDamage"));
-        this.maxRangeDamage = Integer.parseInt(resourceBundle.getString(unitName+".maxRangeDamage"));
-        this.accuracy = resourceBundle.getString(unitName+".accuracy");
+//        this.minRangeDamage = Integer.parseInt(resourceBundle.getString(unitName+".minRangeDamage"));
+//        this.maxRangeDamage = Integer.parseInt(resourceBundle.getString(unitName+".maxRangeDamage"));
+//        this.accuracy = resourceBundle.getString(unitName+".accuracy");
         this.minCloseDamage = Integer.parseInt(resourceBundle.getString(unitName+".minCloseDamage"));
         this.maxCloseDamage = Integer.parseInt(resourceBundle.getString(unitName+".maxCloseDamage"));
         this.walkRange = Integer.parseInt(resourceBundle.getString(unitName+".walkRange"));
-        this.shotRange = Integer.parseInt(resourceBundle.getString(unitName+".shotRange"));
-        this.deadZone = Integer.parseInt(resourceBundle.getString(unitName+".deadZone"));
+//        this.shotRange = Integer.parseInt(resourceBundle.getString(unitName+".shotRange"));
         this.picturePath = resourceBundle.getString(unitName+".picturePath");
         this.heightCoeff = 1;
         this.widthCoeff = 1;
         this.isActive = false;
-        this.rangeEfficiency = resourceBundle.getString(unitName+".rangeEfficiency");
+        this.closeEfficiency = resourceBundle.getString(unitName+".closeEfficiency");
         this.setUnitImageView(getImageView(1.0));
 
         try {
@@ -63,8 +63,8 @@ public class Artillery extends Vehicle {
         imageView.setImage(image);
         imageView.setOpacity(opacity);
         if (Board.getScaleCoefficient() != null) {
-            imageView.setFitHeight(Size.getCellHeight() * this.heightCoeff * Board.getScaleCoefficient());
-            imageView.setFitWidth(Size.getCellWidth() * this.widthCoeff * Board.getScaleCoefficient());
+            imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff * Board.getScaleCoefficient());
+            imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff * Board.getScaleCoefficient());
         }
         else {
             imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff);
@@ -74,43 +74,21 @@ public class Artillery extends Vehicle {
     }
 
     @Override
-    public Insets getInsets() {
-        if(Board.getScaleCoefficient()!=null){
-            return new Insets(2,2,Size.getCellHeight()*Board.getScaleCoefficient()*0.64,-Size.getCellHeight()*Board.getScaleCoefficient()*0.4);
-        }
-        return new Insets(2,2,Size.getCellHeight()*0.64,2);
+    public javafx.geometry.Insets getInsets() {
+        return insets;
     }
 
     public void performCloseAttack(Unit victim){
-        int closeDamage = getCloseDamage();
+        int closeDamage = getCloseDamage(victim);
         victim.setHealth(victim.getHealth() - closeDamage);
         LoggerUtils.writeCloseAttackLog(this, victim, closeDamage);
         this.setActive(false);
     }
 
-    public void performRangeAttack(Unit victim){
-        int rangeDamage = getRangeDamage(victim);
-        double chance = Math.random();
-        if (this.getAmmo() > 0) {
-            if(chance < getCurrentAccuracy(victim)) {
-                victim.setHealth(victim.getHealth() - rangeDamage);
-                LoggerUtils.writeRangeAttackLog(this, victim, rangeDamage);
-                this.setAmmo(this.getAmmo() - 1);
-                this.setActive(false);
-            }else{
-                LoggerUtils.writeMissedLog(this);
-                this.setAmmo(this.getAmmo() - 1);
-                this.setActive(false);
-            }
-        } else {
-            LoggerUtils.writeOutOfAmmoLog(this);
-        }
-    }
-
-    private int getRangeDamage(Unit victim){
-        double efficiency = getCurrentRangeEfficiency(victim);
-        int minActualDamage = minRangeDamage;
-        int maxActualDamage = maxRangeDamage;
+    private int getCloseDamage(Unit victim){
+        double efficiency = getCurrentCloseEfficiency(victim);
+        int minActualDamage = minCloseDamage;
+        int maxActualDamage = maxCloseDamage;
         if(efficiency>=1){
             minActualDamage = (int)(minActualDamage*efficiency);
             if (minActualDamage >= maxActualDamage){minActualDamage = maxActualDamage;}
@@ -121,16 +99,23 @@ public class Artillery extends Vehicle {
         return minActualDamage + (int)(Math.random() * ((maxActualDamage - minActualDamage) + 1));
     }
 
-    private int getCloseDamage(){
-        return minCloseDamage + (int)(Math.random() * ((maxCloseDamage - minCloseDamage) + 1));
+    private double getCurrentCloseEfficiency(Unit victim){
+        String effString = getCloseEfficiency();
+        String tokens = "/";
+        String[] splited = effString.split(tokens);
+
+        double LE = Double.parseDouble(splited[0]);
+        double HE = Double.parseDouble(splited[1]);
+        double VE = Double.parseDouble(splited[2]);
+
+        if(victim instanceof LightInfantry){return LE;}
+        if(victim instanceof HeavyInfantry){return HE;}
+        if(victim instanceof Vehicle){return VE;}
+        return 1;
     }
 
-    public int getDeadZone() {
-        return deadZone;
-    }
-
-    public void setDeadZone(int deadZone) {
-        this.deadZone = deadZone;
+    private String getCloseEfficiency() {
+        return closeEfficiency;
     }
 
 }

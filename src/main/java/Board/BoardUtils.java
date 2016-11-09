@@ -31,6 +31,14 @@ public class BoardUtils {
         return ((x1 - x2 < Range && y1 - y2 < Range)&&(x2 - x1 < Range && y2 - y1 < Range));
     }
 
+    static boolean isOnNeighbouringCellPlusDiagonal(GameCell gc1, GameCell gc2){
+        int x1 = gc1.getxCoord();
+        int y1 = gc1.getyCoord();
+        int x2 = gc2.getxCoord();
+        int y2 = gc2.getyCoord();
+        return (((x1 - x2) < 2 && (y1 - y2) < 2)&&((x2 - x1) < 2 && (y2 - y1) < 2));
+    }
+
     static void showFieldPassability(){
         GridPane gridPane = Board.getMainBattlefieldGP();
         gridPane.getChildren().stream().filter(p->(p instanceof GameCell
@@ -52,6 +60,7 @@ public class BoardUtils {
         GridPane gridPane = Board.getMainBattlefieldGP();
         gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isPassable()) && !((GameCell) p).isBlocked())
                 .forEach(p->{
+                    p.setStyle(null);
                     p.setEffect(null);
                     ((GameCell) p).setPassable(false);
                     showFieldPassability();
@@ -84,34 +93,21 @@ public class BoardUtils {
             int deadZone =((Artillery)currentCell.getUnit()).getDeadZone();
             gridPane.getChildren().stream().filter(p->
                     (p instanceof GameCell)).forEach(p->{
-                if(!isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), deadZone)){
-                    if(isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), shotRange)){
-                        ((GameCell) p).setInShootingRange(true);
-                    }
+                if (isOnNeighbouringCellPlusDiagonal(currentCell, ((GameCell) p))){p.setStyle("-fx-background-color: #F08080"); return;}
+                if (isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), deadZone)) return;
+                if(isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), shotRange)){
+                    ((GameCell) p).setInShootingRange(true);
                 }
             });
-        }else{
-            gridPane.getChildren().stream().filter(p->
-                    (p instanceof GameCell && isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), shotRange)))
-                    .forEach(p->((GameCell) p).setInShootingRange(true));
+        }else {
+            gridPane.getChildren().stream().filter(p ->
+                    (p instanceof GameCell && isReachable(x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), shotRange)))
+                    .forEach(p -> {
+                        if (isOnNeighbouringCellPlusDiagonal(currentCell, ((GameCell) p))){ p.setStyle("-fx-background-color: #F08080"); return;}
+                        ((GameCell) p).setInShootingRange(true);
+                    });
         }
     }
-
-//    static void setArtilleryShootingArea(GameCell currentCell){
-//        int shotRange = currentCell.getUnit().getShotRange();
-//        int deadZone = 4; //currentCell.getUnit().getDeadZone();
-//        int x = currentCell.getxCoord();
-//        int y = currentCell.getyCoord();
-//        GridPane gridPane = Board.getMainBattlefieldGP();
-//        gridPane.getChildren().stream().filter(p->
-//                (p instanceof GameCell)).forEach(p->{
-//            if(!isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), deadZone)){
-//                if(isReachable( x, y, ((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), shotRange)){
-//                    ((GameCell) p).setInShootingRange(true);
-//                }
-//            }
-//        });
-//    }
 
     static void calculateRanges(GameCell gameCell){
         BoardUtils.setWalkingArea(gameCell);
@@ -133,7 +129,7 @@ public class BoardUtils {
         GridPane gridPane = Board.getMainBattlefieldGP();
         ArrayList<Node> nodeList = gridPane.getChildren().stream().filter(p ->
             (p instanceof GameCell && ((GameCell) p).getUnit() != null
-                    && ((((GameCell) p).getUnit() instanceof Vehicle) || ((GameCell) p).getUnit() instanceof Artillery))
+                    && ((((GameCell) p).getUnit() instanceof Vehicle)))
         ).collect(Collectors.toCollection(ArrayList::new));
         nodeList.forEach(Node::toFront);
     }

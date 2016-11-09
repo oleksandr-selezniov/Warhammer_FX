@@ -1,6 +1,7 @@
 package Board;
 
 import Size.Size;
+import Units.Animal;
 import Units.Unit;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -85,7 +86,7 @@ public class GameCell extends Button {
                 previousGameCell.setUnit(temporaryUnit);
                 previousGameCell.setGraphic(temporaryUnit.getImageView(1.0));
                 isSelected = false;
-                if (GameCell.this.isInShootingRange()) {
+                if (GameCell.this.isInShootingRange() || (BoardUtils.isOnNeighbouringCellPlusDiagonal(previousGameCell, GameCell.this))) {
                     performAttack(previousGameCell, GameCell.this);
                 }
                 BoardUtils.abortFieldPassability();
@@ -100,10 +101,10 @@ public class GameCell extends Button {
         if (unit.getHealth() > 0) {
             victim_CG.getGraphic().setEffect(new SepiaTone());
 
-            if (BoardUtils.isOnNeighbouringCell(hunter_GC, victim_CG)) {
+            if (BoardUtils.isOnNeighbouringCellPlusDiagonal(hunter_GC, victim_CG)) {
                 temporaryUnit.performCloseAttack(unit);
                 checkTeamTurn();
-            } else {
+            } else if(!(temporaryUnit instanceof Animal)){
                     temporaryUnit.performRangeAttack(unit);
                     checkTeamTurn();
             }
@@ -199,7 +200,7 @@ public class GameCell extends Button {
             double chance = Math.random();
             if(((GameCell)p).getUnit()==null && ((GameCell)p).getxCoord()>3 && ((GameCell)p).getyCoord()>2){
                 if(density > chance){
-                    obstacleImagePath = "src\\main\\resources\\Obstacles\\"+generateRandomNumber(1,25)+".jpg";
+                    obstacleImagePath = "src\\main\\resources\\Obstacles\\"+generateRandomNumber(1,21)+".jpg";
                     placeObstacle(((GameCell)p), obstacleImagePath);
                 }
             }

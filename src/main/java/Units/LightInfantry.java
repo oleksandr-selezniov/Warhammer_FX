@@ -20,6 +20,7 @@ public class LightInfantry extends Unit {
     private static Locale locale = new Locale("en", "US");
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("LightInfantry", locale);
     private Insets insets = new Insets(2,2,2,2);
+    public LightInfantry(){}
 
     public LightInfantry(String unitName, int team){
         this.team = team;

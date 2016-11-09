@@ -18,6 +18,7 @@ import Board.LoggerUtils;
 public class Vehicle extends Unit {
     private static Locale locale = new Locale("en", "US");
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("Vehicles", locale);
+    public Vehicle(){}
 
     public Vehicle(String unitName, int team){
         this.team = team;
