@@ -19,6 +19,7 @@ import javafx.scene.paint.Color;
 import java.io.File;
 import java.net.MalformedURLException;
 
+import static Board.Board.getScene;
 import static Board.Board.initializeBottomMenu;
 
 /**
@@ -40,6 +41,9 @@ public class GameCell extends Button {
     private Boolean isInShootingRange = false;
     private Boolean isSafe = true;
     private Boolean isDangerous = false;
+    private Boolean isStrategical = false;
+    private  boolean isActivated = false;
+    private int owner = 0;
     private Unit unit;
 
     GameCell() {
@@ -54,7 +58,7 @@ public class GameCell extends Button {
     public void actionMode() {
         this.setOnMouseClicked(e -> {
 
-            if (!isSelected) {
+            if (!isSelected) { // first step
                 if (unit != null && isTeamTurn(unit.getTeam()) && unit.isActive()) {
                     isSelected = true;
                     temporaryUnit = unit;
@@ -63,7 +67,7 @@ public class GameCell extends Button {
                     previousGameCell = GameCell.this;
                     unit = null;
                 }
-            } else if (GameCell.this.isPassable() && unit == null) {
+            } else if (GameCell.this.isPassable() && unit == null) { // second step
                 if (temporaryUnit != null) {
                     unit = temporaryUnit;
                     GameCell.this.setGraphic(temporaryUnit.getImageView(1.0));
@@ -82,7 +86,20 @@ public class GameCell extends Button {
                 BoardUtils.abortFieldPassability();
                 BoardUtils.abortShootingRange();
 
-            } else if (unit != null && temporaryUnit.isEnemyUnit(unit) && isTeamTurn(temporaryUnit.getTeam())) {
+            } else if (GameCell.this.isStrategical() && unit == null) { // activate strategical cell
+                temporaryUnit.setActive(false);
+                previousGameCell.setUnit(temporaryUnit);
+                previousGameCell.setGraphic(temporaryUnit.getImageView(1.0));
+                isSelected = false;
+                if (GameCell.this.getOwner() != temporaryUnit.getTeam()){
+                    GameCell.this.activate(temporaryUnit);
+                    checkTeamTurn();
+                }
+                BoardUtils.refreshZOrder();
+                BoardUtils.abortFieldPassability();
+                BoardUtils.abortShootingRange();
+
+            } else if (unit != null && temporaryUnit.isEnemyUnit(unit) && isTeamTurn(temporaryUnit.getTeam())) { // attack
                 previousGameCell.setUnit(temporaryUnit);
                 previousGameCell.setGraphic(temporaryUnit.getImageView(1.0));
                 isSelected = false;
@@ -131,12 +148,12 @@ public class GameCell extends Button {
                 GameCell.this.getGraphic().setEffect(new Glow());
 
                 if (isAlreadyUsedCurrentTeamUnit())
-                    paintUnitWithBlack(GameCell.this);
+                    paintUnitWithBlack();
             }
 
             if (temporaryUnit != null && GameCell.this.getUnit() != null){
                 if (GameCell.this.getUnit().isEnemyUnit(temporaryUnit)) {
-                    highlightEnemyUnit(GameCell.this);
+                    highlightEnemyUnit();
                 }
             }
         });
@@ -211,18 +228,35 @@ public class GameCell extends Button {
         return (GameCell.this.getUnit()!=null && !GameCell.this.getUnit().isActive() && GameCell.this.getUnit().getTeam()==teamTurnValue);
     }
 
-    private void highlightEnemyUnit(GameCell gameCell){
+    private void highlightEnemyUnit(){
         Cursor c = new ImageCursor(BoardUtils.getImage("src\\main\\resources\\CursorChainsword.png"), 300,300);
-        gameCell.setCursor(c);
+        this.setCursor(c);
         DropShadow dropShadow = new DropShadow();
         dropShadow.setOffsetX(3);
         dropShadow.setOffsetY(3);
         dropShadow.setColor(Color.rgb(255, 0, 0, 1));
-        gameCell.getGraphic().setEffect(dropShadow);
+        this.getGraphic().setEffect(dropShadow);
     }
 
-    private void paintUnitWithBlack(GameCell gameCell){
-        gameCell.getGraphic().setEffect(new Lighting(new Light.Spot()));
+    private void paintUnitWithBlack(){
+        this.getGraphic().setEffect(new Lighting(new Light.Spot()));
+    }
+
+    static void makeStrategical(int x, int y){
+        GameCell gameCell = (GameCell) Board.getScene().lookup("#" + x + "_" + y);
+        gameCell.setStrategical(true);
+        gameCell.setBlocked(true);
+        //gc.setCellImage();
+    }
+
+    void activate(Unit activator){
+        this.setActivated(true);
+        this.setOwner(activator.getTeam());
+        if(activator.getTeam() == 1){
+            this.setStyle("-fx-background-color: #00FF00");
+        }else{
+            this.setStyle("-fx-background-color: #FF0000");
+        }
     }
 
     private static int generateRandomNumber(int min, int max){
@@ -309,6 +343,29 @@ public class GameCell extends Button {
         this.unit = unit;
     }
 
+    public boolean isActivated() {
+        return isActivated;
+    }
+
+    public void setActivated(boolean activated) {
+        isActivated = activated;
+    }
+
+    public int getOwner() {
+        return owner;
+    }
+
+    public void setOwner(int owner) {
+        this.owner = owner;
+    }
+
+    public Boolean isStrategical() {
+        return isStrategical;
+    }
+
+    public void setStrategical(Boolean strategical) {
+        isStrategical = strategical;
+    }
 
     public Boolean isBlocked() {
         return isBlocked;

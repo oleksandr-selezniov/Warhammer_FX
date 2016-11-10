@@ -71,7 +71,7 @@ public class BoardUtils {
 
     static void abortShootingRange(){
         GridPane gridPane = Board.getMainBattlefieldGP();
-        gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isInShootingRange()))
+        gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isInShootingRange()) && !((GameCell) p).isBlocked())
                 .forEach(p->{
                     p.setStyle(null);
                     ((GameCell) p).setInShootingRange(false);

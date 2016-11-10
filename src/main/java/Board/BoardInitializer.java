@@ -46,6 +46,7 @@ public class BoardInitializer {
         BoardUtils.setActiveTeamUnits(2, false);
 
         GameCell.generateObstacles(0.05);
+        GameCell.makeStrategical(4,3);
 
     }
 
@@ -58,6 +59,5 @@ public class BoardInitializer {
         gameCell.setUnit(unit);
         gameCell.setGraphic(gameCell.getUnit().getImageView(1.0));
         gameCell.setPadding(gameCell.getUnit().getInsets());
-
     }
 }
