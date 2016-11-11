@@ -308,7 +308,7 @@ public class Board {
         slider.setOrientation(Orientation.VERTICAL);
         slider.setCursor(Cursor.HAND);
         slider.setMin(0.19);
-        slider.setMax(3.0);
+        slider.setMax(2.0);
         slider.setMajorTickUnit(0.1);
         slider.setBlockIncrement(0.1);
         slider.setShowTickMarks(true);
