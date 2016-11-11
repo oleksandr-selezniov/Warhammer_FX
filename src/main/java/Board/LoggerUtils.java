@@ -41,4 +41,8 @@ public class LoggerUtils {
                 + hunter.getName()+"\n", true);
     }
 
+    public static void writeWinLog(int winner){
+        Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n TEAM " + winner + " WINS!", true);
+    }
+
 }

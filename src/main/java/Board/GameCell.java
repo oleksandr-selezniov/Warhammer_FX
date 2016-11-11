@@ -52,7 +52,7 @@ public class GameCell extends Button {
     GameCell() {
         this.setPadding(new Insets(50));
         this.setSize(Size.getCellWidth(), Size.getCellHeight());
-        this.setCellImage(this, defaultCellImagePath, 0.6);
+        this.setCellImage(defaultCellImagePath, 0.6);
         this.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         actionMode();
         mouseMovementMode();
@@ -80,7 +80,7 @@ public class GameCell extends Button {
                 }
                 isSelected = false;
                 if (!(previousGameCell.equals(GameCell.this))) {
-                    previousGameCell.setCellImage(previousGameCell, defaultCellImagePath, 0.6);
+                    previousGameCell.setCellImage(defaultCellImagePath, 0.6);
                     previousGameCell.setPadding(new Insets(1));
                     unit.setActive(false);
                     checkTeamTurn();
@@ -133,7 +133,7 @@ public class GameCell extends Button {
         }
         if (unit.getHealth() <= 0) {
             LoggerUtils.writeDeadLog(temporaryUnit, unit);
-            GameCell.this.setCellImage(previousGameCell, deadCellImagePath, 0.6);
+            previousGameCell.setCellImage(deadCellImagePath, 0.6);
             unit = null;
             checkTeamTurn();
         }
@@ -170,7 +170,7 @@ public class GameCell extends Button {
         });
     }
 
-    public void setCellImage(GameCell gc, String path, double opacity){
+    public void setCellImage(String path, double opacity){
         ImageView imageView = new ImageView();
         String imageUrl = null;
         try {
@@ -179,8 +179,8 @@ public class GameCell extends Button {
         }catch (MalformedURLException e){e.printStackTrace();}
         Image buttonImage = new Image(imageUrl, false);
         imageView.setImage(buttonImage);
-        imageView.fitHeightProperty().bindBidirectional(gc.minHeightProperty());
-        imageView.fitWidthProperty().bindBidirectional(gc.minWidthProperty());
+        imageView.fitHeightProperty().bindBidirectional(this.minHeightProperty());
+        imageView.fitWidthProperty().bindBidirectional(this.minWidthProperty());
         imageView.setOpacity(opacity);
         this.setPadding(new Insets(1));
         this.setGraphic(imageView);
@@ -194,23 +194,17 @@ public class GameCell extends Button {
     }
 
     public static void checkTeamTurn(){
-
         if(getTeam1Score() >= BoardInitializer.getScoreLimit() | getTeam2Score() >=BoardInitializer.getScoreLimit()) {
             int winner = (getTeam1Score() >= BoardInitializer.getScoreLimit())? 1:2;
-            Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n TEAM " + winner + " WINS!", true);
-            BoardUtils.setActiveTeamUnits(1, false);
-            BoardUtils.setActiveTeamUnits(2, false);
-            Board.getScene().lookup("#end_turn").setDisable(true);
+            LoggerUtils.writeWinLog(winner);
+            endGame();
         }else{
             if(BoardUtils.getTotalUnitNumber(getEnemyTeam())<=0){
-                Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n TEAM " + teamTurnValue + " WINS!", true);
-                BoardUtils.setActiveTeamUnits(1, false);
-                BoardUtils.setActiveTeamUnits(2, false);
-                Board.getScene().lookup("#end_turn").setDisable(true);
+                endGame();
             }else {
                 if (BoardUtils.getActiveUnitNumber(teamTurnValue) == 0) {
                     changeTeamTurn();
-                    Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + " Now it's Team " + teamTurnValue + " turn\n", true);
+                    LoggerUtils.writeWinLog(teamTurnValue);
                     BoardUtils.setActiveTeamUnits(teamTurnValue, true);
                 }
             }
@@ -225,7 +219,7 @@ public class GameCell extends Button {
 
     private static void placeObstacle(GameCell gameCell, String path){
         gameCell.setBlocked(true);
-        gameCell.setCellImage(gameCell, path, 1);
+        gameCell.setCellImage(path, 1);
     }
 
     static void generateObstacles(double density){
@@ -263,7 +257,7 @@ public class GameCell extends Button {
         GameCell gameCell = (GameCell) Board.getScene().lookup("#" + x + "_" + y);
         gameCell.setStrategical(true);
         gameCell.setBlocked(true);
-        gameCell.setCellImage(gameCell, "src\\main\\resources\\strartegical_point.jpg", 1);
+        gameCell.setCellImage("src\\main\\resources\\strartegical_point.jpg", 1);
     }
 
     void activate(Unit activator){
@@ -285,6 +279,12 @@ public class GameCell extends Button {
         setTeam2Score(getStrategicalPoints(2));
         Board.setScore(getTeam1Score() + " : " + getTeam2Score());
         teamTurnValue = teamTurnValue==1? 2:1 ;
+    }
+
+    private static void endGame(){
+        BoardUtils.setActiveTeamUnits(1, false);
+        BoardUtils.setActiveTeamUnits(2, false);
+        Board.getScene().lookup("#end_turn").setDisable(true);
     }
 
     public static int getEnemyTeam(){
