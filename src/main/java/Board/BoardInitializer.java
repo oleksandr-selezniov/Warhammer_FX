@@ -8,6 +8,9 @@ import javafx.scene.Scene;
  */
 public class BoardInitializer {
     private Scene currentScene = Board.getScene();
+    private static int ScoreLimit = 100;
+    private static int team1Score;
+    private static int team2Score;
 
     void initializeBoard(){
 
@@ -45,8 +48,21 @@ public class BoardInitializer {
         BoardUtils.setActiveTeamUnits(1, true);
         BoardUtils.setActiveTeamUnits(2, false);
 
-        GameCell.generateObstacles(0.05);
-        GameCell.makeStrategical(4,3);
+        GameCell.generateObstacles(0.15);
+
+        GameCell.makeStrategical(5,1);
+        GameCell.makeStrategical(5,17);
+
+        GameCell.makeStrategical(14,9);
+
+        GameCell.makeStrategical(24,1);
+        GameCell.makeStrategical(24,9);
+        GameCell.makeStrategical(24,17);
+
+        GameCell.makeStrategical(34,9);
+
+        GameCell.makeStrategical(44,1);
+        GameCell.makeStrategical(44,17);
 
     }
 
@@ -59,5 +75,26 @@ public class BoardInitializer {
         gameCell.setUnit(unit);
         gameCell.setGraphic(gameCell.getUnit().getImageView(1.0));
         gameCell.setPadding(gameCell.getUnit().getInsets());
+    }
+
+
+    public static int getTeam1Score() {
+        return team1Score;
+    }
+
+    public static void setTeam1Score(int team1Score) {
+        BoardInitializer.team1Score = getTeam1Score() + team1Score;
+    }
+
+    public static int getTeam2Score() {
+        return team2Score;
+    }
+
+    public static void setTeam2Score(int team2Score) {
+        BoardInitializer.team2Score = getTeam2Score() + team2Score;
+    }
+
+    public static int getScoreLimit() {
+        return ScoreLimit;
     }
 }

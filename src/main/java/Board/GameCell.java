@@ -21,6 +21,9 @@ import java.net.MalformedURLException;
 
 import static Board.Board.getScene;
 import static Board.Board.initializeBottomMenu;
+import static Board.BoardInitializer.*;
+import static Board.BoardInitializer.getTeam1Score;
+import static Board.BoardUtils.getStrategicalPoints;
 
 /**
  * Created by Dmitriy on 18.10.2016.
@@ -87,13 +90,15 @@ public class GameCell extends Button {
                 BoardUtils.abortShootingRange();
 
             } else if (GameCell.this.isStrategical() && unit == null) { // activate strategical cell
-                temporaryUnit.setActive(false);
                 previousGameCell.setUnit(temporaryUnit);
                 previousGameCell.setGraphic(temporaryUnit.getImageView(1.0));
                 isSelected = false;
-                if (GameCell.this.getOwner() != temporaryUnit.getTeam()){
-                    GameCell.this.activate(temporaryUnit);
-                    checkTeamTurn();
+                if (BoardUtils.isOnNeighbouringCellPlusDiagonal(previousGameCell, GameCell.this)){
+                    if (GameCell.this.getOwner() != temporaryUnit.getTeam()){
+                        GameCell.this.activate(temporaryUnit);
+                        temporaryUnit.setActive(false);
+                        checkTeamTurn();
+                    }
                 }
                 BoardUtils.refreshZOrder();
                 BoardUtils.abortFieldPassability();
@@ -189,14 +194,25 @@ public class GameCell extends Button {
     }
 
     public static void checkTeamTurn(){
-        if(BoardUtils.getTotalUnitNumber(getEnemyTeam())<=0){
-            Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n TEAM " + teamTurnValue + " WINS!", true);
-            BoardUtils.setActiveTeamUnits(teamTurnValue, false);
+
+        if(getTeam1Score() >= BoardInitializer.getScoreLimit() | getTeam2Score() >=BoardInitializer.getScoreLimit()) {
+            int winner = (getTeam1Score() >= BoardInitializer.getScoreLimit())? 1:2;
+            Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n TEAM " + winner + " WINS!", true);
+            BoardUtils.setActiveTeamUnits(1, false);
+            BoardUtils.setActiveTeamUnits(2, false);
+            Board.getScene().lookup("#end_turn").setDisable(true);
         }else{
-            if(BoardUtils.getActiveUnitNumber(teamTurnValue) == 0) {
-                changeTeamTurn();
-                Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + " Now it's Team " + teamTurnValue + " turn\n", true);
-                BoardUtils.setActiveTeamUnits(teamTurnValue, true);
+            if(BoardUtils.getTotalUnitNumber(getEnemyTeam())<=0){
+                Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n TEAM " + teamTurnValue + " WINS!", true);
+                BoardUtils.setActiveTeamUnits(1, false);
+                BoardUtils.setActiveTeamUnits(2, false);
+                Board.getScene().lookup("#end_turn").setDisable(true);
+            }else {
+                if (BoardUtils.getActiveUnitNumber(teamTurnValue) == 0) {
+                    changeTeamTurn();
+                    Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + " Now it's Team " + teamTurnValue + " turn\n", true);
+                    BoardUtils.setActiveTeamUnits(teamTurnValue, true);
+                }
             }
         }
     }
@@ -215,9 +231,10 @@ public class GameCell extends Button {
     static void generateObstacles(double density){
         Board.getMainBattlefieldGP().getChildren().forEach(p->{
             double chance = Math.random();
-            if(((GameCell)p).getUnit()==null && ((GameCell)p).getxCoord()>3 && ((GameCell)p).getyCoord()>2){
+            if(((GameCell)p).getUnit()==null && !((GameCell)p).isBlocked() && ((GameCell)p).getxCoord()>2
+                    && ((GameCell)p).getyCoord()>2&& ((GameCell)p).getxCoord()<48 && ((GameCell)p).getyCoord()<18){
                 if(density > chance){
-                    obstacleImagePath = "src\\main\\resources\\Obstacles\\"+generateRandomNumber(1,19)+".jpg";
+                    obstacleImagePath = "src\\main\\resources\\Obstacles\\"+generateRandomNumber(1,8)+".jpg";
                     placeObstacle(((GameCell)p), obstacleImagePath);
                 }
             }
@@ -246,16 +263,16 @@ public class GameCell extends Button {
         GameCell gameCell = (GameCell) Board.getScene().lookup("#" + x + "_" + y);
         gameCell.setStrategical(true);
         gameCell.setBlocked(true);
-        //gc.setCellImage();
+        gameCell.setCellImage(gameCell, "src\\main\\resources\\strartegical_point.jpg", 1);
     }
 
     void activate(Unit activator){
         this.setActivated(true);
         this.setOwner(activator.getTeam());
-        if(activator.getTeam() == 1){
-            this.setStyle("-fx-background-color: #00FF00");
+        if(activator.getTeam() == 2){
+            this.setEffect(new Lighting()); //setStyle("-fx-background-color: #00FF00"); TROUBLE with styling. Research needed
         }else{
-            this.setStyle("-fx-background-color: #FF0000");
+            this.setEffect(new Bloom()); //setStyle("-fx-background-color: #FF0000");
         }
     }
 
@@ -264,6 +281,9 @@ public class GameCell extends Button {
     }
 
     public static void changeTeamTurn(){
+        setTeam1Score(getStrategicalPoints(1));
+        setTeam2Score(getStrategicalPoints(2));
+        Board.setScore(getTeam1Score() + " : " + getTeam2Score());
         teamTurnValue = teamTurnValue==1? 2:1 ;
     }
 
@@ -374,5 +394,4 @@ public class GameCell extends Button {
     public void setBlocked(Boolean blocked) {
         isBlocked = blocked;
     }
-
 }

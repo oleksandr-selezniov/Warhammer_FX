@@ -81,7 +81,7 @@ public class BoardUtils {
 
     static void showShootingRange(){
         GridPane gridPane = Board.getMainBattlefieldGP();
-        gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isInShootingRange() && ((GameCell) p).getUnit()==null))
+        gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isInShootingRange() && ((GameCell) p).getUnit()==null) && !((GameCell) p).isBlocked())
                 .forEach(p -> p.setStyle("-fx-background-color: #00CC33"));
     }
 
@@ -140,6 +140,12 @@ public class BoardUtils {
         GridPane gridPane = Board.getMainBattlefieldGP();
         return (int)(gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).getUnit() != null))
                 .filter(p->((GameCell)p).getUnit().getTeam()==team).count());
+    }
+
+    static int getStrategicalPoints(int team){
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        return (int)(gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).isStrategical()
+                && ((GameCell)p).getOwner() == team)).count());
     }
 
     static int getActiveUnitNumber(int team){

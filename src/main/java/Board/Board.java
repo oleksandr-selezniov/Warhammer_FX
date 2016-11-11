@@ -25,13 +25,14 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.net.MalformedURLException;
 
+import static Board.BoardInitializer.getScoreLimit;
 
 
 /**
  * Created by Dmitriy on 20.10.2016.
  */
 public class Board {
-    private static GridPane mainBattlefieldGP = generateCellBattleField(55, 22);
+    private static GridPane mainBattlefieldGP = generateCellBattleField(50, 20);
     private String defaultBackgroundPath = "src\\main\\resources\\Backgrounds\\background_8.jpg";
     private static Scene scene;
     private static Double scaleCoefficient = 1.0;
@@ -113,6 +114,7 @@ public class Board {
         leftEarIV.setId("leftImageView");
 
         ScrollPane scrollPane = new ScrollPane(leftEarIV);
+        scrollPane.setEffect(new InnerShadow());
         scrollPane.setMinHeight(Size.getSceneHeight()*0.2);
         scrollPane.setMinWidth(Size.getSceneWidth()*0.15);
         leftEarGP.add(scrollPane, 1,0);
@@ -147,9 +149,11 @@ public class Board {
         rightButtonVbox.setPadding(new Insets(10));
 
         Button endTurnButton = new Button("End Turn");
+        endTurnButton.setId("end_turn");
         endTurnButton.setMinWidth(70);
         endTurnButton.setMinHeight(20);
         endTurnButton.setOnAction(p-> {
+            GameCell.checkTeamTurn();
             BoardUtils.setActiveTeamUnits(GameCell.getTeamTurnValue(), false);
             GameCell.changeTeamTurn();
             BoardUtils.setActiveTeamUnits(GameCell.getTeamTurnValue(), true);
@@ -173,6 +177,7 @@ public class Board {
         rightEarIV.setId("rightImageView");
 
         ScrollPane scrollPane = new ScrollPane(rightEarIV);
+        scrollPane.setEffect(new InnerShadow());
         scrollPane.setMinHeight(Size.getSceneHeight()*0.2);
         scrollPane.setMinWidth(Size.getSceneWidth()*0.15);
         rightEarGP.add(scrollPane, 1,0);
@@ -248,8 +253,8 @@ public class Board {
         title.setTextFill(Color.LIGHTCORAL);
         title.setEffect(new Bloom());
 
-        Label damagePanel = new Label("damagePanel");
-        damagePanel.setId("damagePanel");
+        Label damagePanel = new Label("Score: ");
+        damagePanel.setId("score");
         damagePanel.setPadding(new Insets(3, 3, 0, 3));
         damagePanel.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         damagePanel.setTextFill(Color.ORANGE);
@@ -257,6 +262,11 @@ public class Board {
 
         hbox.getChildren().addAll(title, damagePanel);
         return hbox;
+    }
+
+    public static void setScore(String text){
+        Label score = (Label)scene.lookup("#score");
+        score.setText("Score: "+text + " Limit "+ getScoreLimit());
     }
 
     private Image getBackgroundImage(){
@@ -297,7 +307,7 @@ public class Board {
         slider.setPrefHeight(120);
         slider.setOrientation(Orientation.VERTICAL);
         slider.setCursor(Cursor.HAND);
-        slider.setMin(0.175);
+        slider.setMin(0.19);
         slider.setMax(3.0);
         slider.setMajorTickUnit(0.1);
         slider.setBlockIncrement(0.1);
