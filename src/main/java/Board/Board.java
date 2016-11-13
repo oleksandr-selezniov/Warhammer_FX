@@ -2,7 +2,6 @@ package Board;
 
 import MusicPlayer.MusicPlayerLogic;
 import Size.Size;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -323,7 +322,7 @@ public class Board {
                         setScaleCoefficient(newValue.doubleValue());
                         if(gc.getUnit()!=null){
                             gc.setGraphic(gc.getUnit().getImageView(1.0));
-                            gc.setPadding(gc.getUnit().getInsets());
+                            gc.setPadding(gc.getUnit().getInsetsY());
                         }
                     }
                 }

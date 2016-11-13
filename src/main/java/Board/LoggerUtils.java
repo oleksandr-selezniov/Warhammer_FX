@@ -42,7 +42,11 @@ public class LoggerUtils {
     }
 
     public static void writeWinLog(int winner){
-        Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n TEAM " + winner + " WINS!", true);
+        Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\nTEAM " + winner + " WINS!", true);
+    }
+
+    public static void writeTurnLog(int team){
+        Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\nTEAM'S " + team + " TURN", true);
     }
 
 }

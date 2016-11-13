@@ -140,7 +140,7 @@ public abstract class Unit {
         this.unitImageView = unitImageView;
     }
 
-    public abstract Insets getInsets();
+    public abstract Insets getInsetsY();
 
     public double getWidthCoeff() {
         return widthCoeff;

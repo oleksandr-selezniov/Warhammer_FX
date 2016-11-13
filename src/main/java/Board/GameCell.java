@@ -19,7 +19,6 @@ import javafx.scene.paint.Color;
 import java.io.File;
 import java.net.MalformedURLException;
 
-import static Board.Board.getScene;
 import static Board.Board.initializeBottomMenu;
 import static Board.BoardInitializer.*;
 import static Board.BoardInitializer.getTeam1Score;
@@ -74,7 +73,7 @@ public class GameCell extends Button {
                 if (temporaryUnit != null) {
                     unit = temporaryUnit;
                     GameCell.this.setGraphic(temporaryUnit.getImageView(1.0));
-                    GameCell.this.setPadding(temporaryUnit.getInsets());
+                    GameCell.this.setPadding(temporaryUnit.getInsetsY());
                     previousGameCell.setEffect(null);
                     temporaryUnit = null;
                 }
@@ -133,7 +132,7 @@ public class GameCell extends Button {
         }
         if (unit.getHealth() <= 0) {
             LoggerUtils.writeDeadLog(temporaryUnit, unit);
-            previousGameCell.setCellImage(deadCellImagePath, 0.6);
+            GameCell.this.setCellImage(deadCellImagePath, 0.6);
             unit = null;
             checkTeamTurn();
         }
@@ -204,7 +203,7 @@ public class GameCell extends Button {
             }else {
                 if (BoardUtils.getActiveUnitNumber(teamTurnValue) == 0) {
                     changeTeamTurn();
-                    LoggerUtils.writeWinLog(teamTurnValue);
+                    LoggerUtils.writeTurnLog(teamTurnValue);
                     BoardUtils.setActiveTeamUnits(teamTurnValue, true);
                 }
             }

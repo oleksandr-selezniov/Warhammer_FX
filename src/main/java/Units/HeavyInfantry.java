@@ -9,7 +9,6 @@ import java.util.ResourceBundle;
 import Size.Size;
 import Board.Board;
 import javafx.geometry.Insets;
-import Board.BoardUtils;
 import Board.LoggerUtils;
 
 /**
@@ -18,7 +17,7 @@ import Board.LoggerUtils;
 public class HeavyInfantry extends Unit{
     private static Locale locale = new Locale("en", "US");
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("HeavyInfantry", locale);
-    private Insets insets = new Insets(2,2,2,2);
+    private double insetsY = 1.0;
 
     public HeavyInfantry(String unitName, int team){
         this.team = team;
@@ -45,6 +44,7 @@ public class HeavyInfantry extends Unit{
         try {
             this.heightCoeff = Double.parseDouble(resourceBundle.getString(unitName+".height"));
             this.widthCoeff = Double.parseDouble(resourceBundle.getString(unitName+".width"));
+            this.insetsY = Double.parseDouble(resourceBundle.getString(unitName+".insetsY"));
         }catch (Exception e){
             System.out.println("INFO: some resources were not present");
         }
@@ -73,8 +73,11 @@ public class HeavyInfantry extends Unit{
     }
 
     @Override
-    public javafx.geometry.Insets getInsets() {
-        return insets;
+    public javafx.geometry.Insets getInsetsY() {
+        if(Board.getScaleCoefficient()!=null){
+            return new Insets(2,2,Board.getScaleCoefficient()* insetsY,2);
+        }
+        return new Insets(2,2,insetsY,2);
     }
 
     public void performCloseAttack(Unit victim){

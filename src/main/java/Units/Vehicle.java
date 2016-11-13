@@ -9,7 +9,6 @@ import Board.Board;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import Board.BoardUtils;
 import Board.LoggerUtils;
 
 /**
@@ -18,6 +17,8 @@ import Board.LoggerUtils;
 public class Vehicle extends Unit {
     private static Locale locale = new Locale("en", "US");
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("Vehicles", locale);
+    private double insetsY = 0.64;
+    private double insetsX = 0.4;
     public Vehicle(){}
 
     public Vehicle(String unitName, int team){
@@ -45,6 +46,8 @@ public class Vehicle extends Unit {
         try {
             this.heightCoeff = Double.parseDouble(resourceBundle.getString(unitName+".height"));
             this.widthCoeff = Double.parseDouble(resourceBundle.getString(unitName+".width"));
+            this.insetsY = Double.parseDouble(resourceBundle.getString(unitName+".insetsY"));
+            this.insetsX = Double.parseDouble(resourceBundle.getString(unitName+".insetsX"));
         }catch (Exception e){
             System.out.println("INFO: some resources were not present");
         }
@@ -66,18 +69,17 @@ public class Vehicle extends Unit {
             imageView.setFitWidth(Size.getCellWidth() * this.widthCoeff * Board.getScaleCoefficient());
         }
         else {
-            imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff);
-            imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff);
+            imageView.setFitHeight(Size.getCellHeight() * this.heightCoeff);
+            imageView.setFitWidth(Size.getCellHeight() * this.widthCoeff);
         }
         return imageView;
     }
 
-    @Override
-    public javafx.geometry.Insets getInsets() {
+    public javafx.geometry.Insets getInsetsY() {
         if(Board.getScaleCoefficient()!=null){
-            return new Insets(2,2,Size.getCellHeight()*Board.getScaleCoefficient()*0.64,-Size.getCellHeight()*Board.getScaleCoefficient()*0.4);
+            return new Insets(2,2,Size.getCellHeight()*Board.getScaleCoefficient()* insetsY,-Size.getCellHeight()*Board.getScaleCoefficient()*insetsX);
         }
-        return new Insets(2,2,Size.getCellHeight()*0.64,2);
+        return new Insets(2,2,Size.getCellHeight()* insetsY,2);
     }
 
     public void performCloseAttack(Unit victim){

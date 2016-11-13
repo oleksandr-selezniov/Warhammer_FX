@@ -130,8 +130,7 @@ public class BoardUtils {
     static void refreshZOrder() {
         GridPane gridPane = Board.getMainBattlefieldGP();
         ArrayList<Node> nodeList = gridPane.getChildren().stream().filter(p ->
-            (p instanceof GameCell && ((GameCell) p).getUnit() != null
-                    && ((((GameCell) p).getUnit() instanceof Vehicle)))
+            (p instanceof GameCell && ((GameCell) p).getUnit() != null)
         ).collect(Collectors.toCollection(ArrayList::new));
         nodeList.forEach(Node::toFront);
     }

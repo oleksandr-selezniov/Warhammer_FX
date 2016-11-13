@@ -20,29 +20,55 @@ public class BoardInitializer {
 
         placeOnBoard(0,2,new LightInfantry("Kasrkin", 1));
 
-        placeOnBoard(0,3,new LightInfantry("Brontian", 1));
+        placeOnBoard(0,3,new MeleeInfantry("Brontian", 1));
 
         placeOnBoard(0,4,new LightInfantry("Krieg", 1));
 
-        placeOnBoard(0,5,new LightInfantry("Tallarn", 1));
+        placeOnBoard(0,5,new MeleeInfantry("Tallarn", 1));
 
-        placeOnBoard(2,2,new Vehicle("Leman_Russ", 1));
+        placeOnBoard(0,6,new LightInfantry("Catachan_Flamer", 1));
+
+
+        placeOnBoard(2,1,new Vehicle("Leman_Russ", 1));
+
+        placeOnBoard(2,2,new Vehicle("LasChimaera", 1));
+
+        placeOnBoard(2,3,new Vehicle("Hellhound", 1));
 
         placeOnBoard(2,4,new Artillery("Taros_Basilisk", 1));
 
+        placeOnBoard(2,6,new Vehicle("Sentinel", 1));
 
 
-        placeOnBoard(9,0,new LightInfantry("Choppa_Boy", 2));
+        placeOnBoard(49,0,new MeleeInfantry("Grot", 2));
 
-        placeOnBoard(9,1,new LightInfantry("Fire_Boy", 2));
+        placeOnBoard(49,1,new HeavyInfantry("Fire_Boy", 2));
 
-        placeOnBoard(9,2,new LightInfantry("Nob", 2));
+        placeOnBoard(49,2,new HeavyInfantry("Nob", 2));
 
-        placeOnBoard(9,3,new LightInfantry("Shoota_Boy", 2));
+        placeOnBoard(49,3,new HeavyInfantry("Shoota_Boy", 2));
 
-        placeOnBoard(5,3,new Vehicle("PartyVan", 2));
+        placeOnBoard(49,4,new MeleeInfantry("Squig", 2));
 
-        placeOnBoard(9,4,new MeleeInfantry("Squig", 2));
+        placeOnBoard(49,5,new HeavyInfantry("Choppa_Boy", 2));
+
+        placeOnBoard(49,6,new MeleeInfantry("Armor_Boy", 2));
+
+        placeOnBoard(49,7,new MeleeInfantry("Slugga_Nob", 2));
+
+        placeOnBoard(49,8,new HeavyInfantry("Tank_Busta", 2));
+
+        placeOnBoard(49,9,new LightInfantry("Brain_Boy", 2));
+
+
+
+        placeOnBoard(47,1,new Vehicle("PartyVan", 2));
+
+        placeOnBoard(47,3,new Vehicle("Looted_Baneblade", 2));
+
+        placeOnBoard(47,5,new Vehicle("Speed_Boy", 2));
+
+        placeOnBoard(47,7,new Vehicle("Grot_Tank", 2));
 
 
         BoardUtils.setActiveTeamUnits(1, true);
@@ -74,7 +100,7 @@ public class BoardInitializer {
         GameCell gameCell = getGameCell("#"+X+"_"+Y);
         gameCell.setUnit(unit);
         gameCell.setGraphic(gameCell.getUnit().getImageView(1.0));
-        gameCell.setPadding(gameCell.getUnit().getInsets());
+        gameCell.setPadding(gameCell.getUnit().getInsetsY());
     }
 
 

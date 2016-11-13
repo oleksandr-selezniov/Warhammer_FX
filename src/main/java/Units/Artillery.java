@@ -19,6 +19,7 @@ public class Artillery extends Vehicle {
     private static Locale locale = new Locale("en", "US");
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("Artillery", locale);
     private int deadZone;
+    private Double insets = 0.3;
 
     public Artillery(String unitName, int team){
         this.team = team;
@@ -46,6 +47,7 @@ public class Artillery extends Vehicle {
         try {
             this.heightCoeff = Double.parseDouble(resourceBundle.getString(unitName+".height"));
             this.widthCoeff = Double.parseDouble(resourceBundle.getString(unitName+".width"));
+            this.insets = Double.parseDouble(resourceBundle.getString(unitName+".insets"));
         }catch (Exception e){
             System.out.println("INFO: some resources were not present");
         }
@@ -74,11 +76,11 @@ public class Artillery extends Vehicle {
     }
 
     @Override
-    public Insets getInsets() {
+    public javafx.geometry.Insets getInsetsY() {
         if(Board.getScaleCoefficient()!=null){
-            return new Insets(2,2,Size.getCellHeight()*Board.getScaleCoefficient()*0.5,-Size.getCellHeight()*Board.getScaleCoefficient()*0.4);
+            return new Insets(2,2,Size.getCellHeight()*Board.getScaleCoefficient()*insets,-Size.getCellHeight()*Board.getScaleCoefficient()*0.4);
         }
-        return new Insets(2,2,Size.getCellHeight()*0.5,2);
+        return new Insets(2,2,Size.getCellHeight()*insets,2);
     }
 
     public void performCloseAttack(Unit victim){

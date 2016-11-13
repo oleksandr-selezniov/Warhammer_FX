@@ -18,7 +18,7 @@ import Board.LoggerUtils;
 public class MeleeInfantry extends LightInfantry {
     private static Locale locale = new Locale("en", "US");
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("MeleeInfantry", locale);
-    private Insets insets = new Insets(2,2,2,2);
+    private double insetsY = 2.0;
     private String closeEfficiency;
 
     public MeleeInfantry(String unitName, int team){
@@ -26,7 +26,7 @@ public class MeleeInfantry extends LightInfantry {
         this.name = resourceBundle.getString(unitName+".name");
         this.health = Integer.parseInt(resourceBundle.getString(unitName+".health"));
         this.maxHealth = health;
-        this.ammo = Integer.parseInt(resourceBundle.getString(unitName+".ammo"));
+//        this.ammo = Integer.parseInt(resourceBundle.getString(unitName+".ammo"));
         this.maxAmmo = ammo;
         this.armor = Double.parseDouble(resourceBundle.getString(unitName+".armor"));
         this.minCloseDamage = Integer.parseInt(resourceBundle.getString(unitName+".minCloseDamage"));
@@ -42,6 +42,7 @@ public class MeleeInfantry extends LightInfantry {
         try {
             this.heightCoeff = Double.parseDouble(resourceBundle.getString(unitName+".height"));
             this.widthCoeff = Double.parseDouble(resourceBundle.getString(unitName+".width"));
+            this.insetsY = Double.parseDouble(resourceBundle.getString(unitName+".insetsY"));
         }catch (Exception e){
             System.out.println("INFO: some resources were not present");
         }
@@ -70,8 +71,11 @@ public class MeleeInfantry extends LightInfantry {
     }
 
     @Override
-    public javafx.geometry.Insets getInsets() {
-        return insets;
+    public javafx.geometry.Insets getInsetsY() {
+        if(Board.getScaleCoefficient()!=null){
+            return new Insets(2,2,Board.getScaleCoefficient()* insetsY,2);
+        }
+        return new Insets(2,2,insetsY,2);
     }
 
     public void performCloseAttack(Unit victim){
