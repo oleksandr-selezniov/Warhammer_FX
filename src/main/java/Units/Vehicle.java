@@ -17,8 +17,8 @@ import Board.LoggerUtils;
 public class Vehicle extends Unit {
     private static Locale locale = new Locale("en", "US");
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("Vehicles", locale);
-    private double insetsY = 0.64;
-    private double insetsX = 0.4;
+    private double insetsY = 80;
+    private double insetsX = 50;
     public Vehicle(){}
 
     public Vehicle(String unitName, int team){
@@ -77,9 +77,9 @@ public class Vehicle extends Unit {
 
     public javafx.geometry.Insets getInsetsY() {
         if(Board.getScaleCoefficient()!=null){
-            return new Insets(2,2,Size.getCellHeight()*Board.getScaleCoefficient()* insetsY,-Size.getCellHeight()*Board.getScaleCoefficient()*insetsX);
+            return new Insets(2,2,Board.getScaleCoefficient()* insetsY,-Board.getScaleCoefficient()*insetsX);
         }
-        return new Insets(2,2,Size.getCellHeight()* insetsY,2);
+        return new Insets(2,2,insetsY,2);
     }
 
     public void performCloseAttack(Unit victim){
