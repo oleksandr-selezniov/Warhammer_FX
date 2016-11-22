@@ -32,8 +32,8 @@ public class GameCell extends Button {
     private static Unit temporaryUnit;
     private static boolean isSelected;
     private static int teamTurnValue = 1;
-    private String defaultCellImagePath = "src\\main\\resources\\cellBackground\\"+generateRandomNumber(1,25)+".jpg";
-    private String deadCellImagePath = "src\\main\\resources\\dead.jpg";
+    private String defaultCellImagePath = System.getProperty("user.dir")+"\\Board\\cellBackground\\"+generateRandomNumber(1,25)+".jpg";
+    private String deadCellImagePath = System.getProperty("user.dir")+"\\Board\\dead.jpg";
     private static String obstacleImagePath; //= "src\\main\\resources\\Obstacles\\"+generateRandomNumber(1,25)+".jpg";
     private String name = this.getText();
     private int xCoord;
@@ -227,7 +227,7 @@ public class GameCell extends Button {
             if(((GameCell)p).getUnit()==null && !((GameCell)p).isBlocked() && ((GameCell)p).getxCoord()>2
                     && ((GameCell)p).getyCoord()>2&& ((GameCell)p).getxCoord()<48 && ((GameCell)p).getyCoord()<18){
                 if(density > chance){
-                    obstacleImagePath = "src\\main\\resources\\Obstacles\\"+generateRandomNumber(1,8)+".jpg";
+                    obstacleImagePath = System.getProperty("user.dir")+"\\Board\\obstacles\\"+generateRandomNumber(1,8)+".jpg";
                     placeObstacle(((GameCell)p), obstacleImagePath);
                 }
             }
@@ -239,7 +239,7 @@ public class GameCell extends Button {
     }
 
     private void highlightEnemyUnit(){
-        Cursor c = new ImageCursor(BoardUtils.getImage("src\\main\\resources\\CursorChainsword.png"), 300,300);
+        Cursor c = new ImageCursor(BoardUtils.getImage(System.getProperty("user.dir")+"\\Board\\CursorChainsword.png"), 300,300);
         this.setCursor(c);
         DropShadow dropShadow = new DropShadow();
         dropShadow.setOffsetX(3);
@@ -256,7 +256,7 @@ public class GameCell extends Button {
         GameCell gameCell = (GameCell) Board.getScene().lookup("#" + x + "_" + y);
         gameCell.setStrategical(true);
         gameCell.setBlocked(true);
-        gameCell.setCellImage("src\\main\\resources\\strartegical_point.jpg", 1);
+        gameCell.setCellImage(System.getProperty("user.dir")+"\\Board\\strartegical_point.jpg", 1);
     }
 
     void activate(Unit activator){

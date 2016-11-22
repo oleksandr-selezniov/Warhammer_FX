@@ -1,0 +1,1 @@
+javapackager.exe -createjar -nocss2bin -appclass Main -srcdir target/classes -outdir target/packager_jar -outfile Warhammer.jar -v -manifestAttrs "Specification-Version=1.0,Implementation-Version=404,Specification-Title=Warhammer"

@@ -22,7 +22,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import java.io.File;
+import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 import static Board.BoardInitializer.getScoreLimit;
 
@@ -32,7 +34,7 @@ import static Board.BoardInitializer.getScoreLimit;
  */
 public class Board {
     private static GridPane mainBattlefieldGP = generateCellBattleField(50, 20);
-    private String defaultBackgroundPath = "src\\main\\resources\\Backgrounds\\background_8.jpg";
+    private String defaultBackgroundPath = "Backgrounds\\background_8.jpg";
     private static Scene scene;
     private static Double scaleCoefficient = 1.0;
 
@@ -105,7 +107,7 @@ public class Board {
         leftEarGP.setGridLinesVisible(true);
         leftEarGP.setMinWidth(Size.getSceneWidth()*0.3);
         leftEarGP.setMinHeight(Size.getSceneHeight()*0.25);
-        leftEarGP.add(MusicPlayerLogic.getMusicPlayer(),0,0);
+        //leftEarGP.add(MusicPlayerLogic.getMusicPlayer(),0,0);
 
         ImageView leftEarIV = new ImageView();
         leftEarIV.setFitWidth(Size.getSceneWidth()*0.183);
@@ -269,14 +271,9 @@ public class Board {
     }
 
     private Image getBackgroundImage(){
-        String localUrl = null;
-        try {
-            File file = new File(defaultBackgroundPath);
-            localUrl = file.toURI().toURL().toString();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return new Image(localUrl, false);
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL urlToImage = classLoader.getResource(defaultBackgroundPath);
+        return new Image(urlToImage.toString(), false);
     }
 
     private static GridPane generateCellBattleField( int length, int height){

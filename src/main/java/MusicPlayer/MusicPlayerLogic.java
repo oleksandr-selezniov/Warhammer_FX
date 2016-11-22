@@ -24,7 +24,7 @@ import java.util.Random;
 public class MusicPlayerLogic {
     private static Random random = new Random();
     private static int fileNumber=random.nextInt(13);
-    private static MediaPlayer mediaPlayer = new MediaPlayer(getMedia("src\\main\\resources\\Music\\"+fileNumber+".mp3"));
+    private static MediaPlayer mediaPlayer; // = new MediaPlayer(getMedia(System.getProperty("user.dir")+"\\MusicPlayer\\Music\\"+fileNumber+".mp3"));
 
     public static HBox getMusicPlayer(){
         HBox hBox = new HBox();
@@ -85,7 +85,7 @@ public class MusicPlayerLogic {
         next.setPadding(new Insets(5));
         next.setOnAction(e -> {
             mediaPlayer.dispose();
-            mediaPlayer = new MediaPlayer(getMedia("src\\main\\resources\\Music\\"+getNextFileN()+".mp3"));
+            mediaPlayer = new MediaPlayer(getMedia(System.getProperty("user.dir")+"\\MusicPlayer\\Music\\"+getNextFileN()+".mp3"));
             mediaPlayer.play();
             mediaPlayer.setOnEndOfMedia(() -> {
                 mediaPlayer.seek(mediaPlayer.getStartTime());
@@ -102,7 +102,7 @@ public class MusicPlayerLogic {
         prev.setPadding(new Insets(5));
         prev.setOnAction(e -> {
             mediaPlayer.dispose();
-            mediaPlayer = new MediaPlayer(getMedia("src\\main\\resources\\Music\\"+getPrevFileN()+".mp3"));
+            mediaPlayer = new MediaPlayer(getMedia(System.getProperty("user.dir")+"\\MusicPlayer\\Music\\"+getPrevFileN()+".mp3"));
             mediaPlayer.play();
             mediaPlayer.setOnEndOfMedia(() -> {
                 mediaPlayer.seek(mediaPlayer.getStartTime());
