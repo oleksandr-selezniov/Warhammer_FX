@@ -2,8 +2,7 @@
 target
 *.iml
 *.mp3
-/.project
-/installer/tmp
-
 out/
 src/test/
+/deploy.cmd
+/pack.bat
