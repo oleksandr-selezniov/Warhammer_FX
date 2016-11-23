@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import Size.Size;
@@ -52,13 +53,10 @@ public class HeavyInfantry extends Unit{
 
     @Override
     public ImageView getImageView(Double opacity){
-        String imageUrl = null;
         ImageView imageView = new ImageView();
-        try {
-            File file = new File(this.picturePath);
-            imageUrl = file.toURI().toURL().toString();
-        }catch (MalformedURLException e){e.printStackTrace();}
-        Image image = new Image(imageUrl, false);
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL urlToImage = classLoader.getResource(this.picturePath);
+        Image image = new Image(urlToImage.toString(), false);
         imageView.setImage(image);
         imageView.setOpacity(opacity);
         if (Board.getScaleCoefficient() != null) {

@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 import static Board.Board.initializeBottomMenu;
 import static Board.BoardInitializer.*;
@@ -32,9 +33,9 @@ public class GameCell extends Button {
     private static Unit temporaryUnit;
     private static boolean isSelected;
     private static int teamTurnValue = 1;
-    private String defaultCellImagePath = System.getProperty("user.dir")+"\\Board\\cellBackground\\"+generateRandomNumber(1,25)+".jpg";
-    private String deadCellImagePath = System.getProperty("user.dir")+"\\Board\\dead.jpg";
-    private static String obstacleImagePath; //= "src\\main\\resources\\Obstacles\\"+generateRandomNumber(1,25)+".jpg";
+    private String defaultCellImagePath = "cellBackground/"+generateRandomNumber(1,25)+".jpg";
+    private String deadCellImagePath = "other/dead.jpg";
+    private static String obstacleImagePath;
     private String name = this.getText();
     private int xCoord;
     private int yCoord;
@@ -171,12 +172,9 @@ public class GameCell extends Button {
 
     public void setCellImage(String path, double opacity){
         ImageView imageView = new ImageView();
-        String imageUrl = null;
-        try {
-            File file = new File(path);
-            imageUrl = file.toURI().toURL().toString();
-        }catch (MalformedURLException e){e.printStackTrace();}
-        Image buttonImage = new Image(imageUrl, false);
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL urlToImage = classLoader.getResource(path);
+        Image buttonImage = new Image(urlToImage.toString(), false);
         imageView.setImage(buttonImage);
         imageView.fitHeightProperty().bindBidirectional(this.minHeightProperty());
         imageView.fitWidthProperty().bindBidirectional(this.minWidthProperty());
@@ -227,7 +225,7 @@ public class GameCell extends Button {
             if(((GameCell)p).getUnit()==null && !((GameCell)p).isBlocked() && ((GameCell)p).getxCoord()>2
                     && ((GameCell)p).getyCoord()>2&& ((GameCell)p).getxCoord()<48 && ((GameCell)p).getyCoord()<18){
                 if(density > chance){
-                    obstacleImagePath = System.getProperty("user.dir")+"\\Board\\obstacles\\"+generateRandomNumber(1,8)+".jpg";
+                    obstacleImagePath = "obstacles/"+generateRandomNumber(1,8)+".jpg";
                     placeObstacle(((GameCell)p), obstacleImagePath);
                 }
             }
@@ -239,7 +237,7 @@ public class GameCell extends Button {
     }
 
     private void highlightEnemyUnit(){
-        Cursor c = new ImageCursor(BoardUtils.getImage(System.getProperty("user.dir")+"\\Board\\CursorChainsword.png"), 300,300);
+        Cursor c = new ImageCursor(BoardUtils.getImage("other/CursorChainsword.png"), 300,300);
         this.setCursor(c);
         DropShadow dropShadow = new DropShadow();
         dropShadow.setOffsetX(3);
@@ -256,7 +254,7 @@ public class GameCell extends Button {
         GameCell gameCell = (GameCell) Board.getScene().lookup("#" + x + "_" + y);
         gameCell.setStrategical(true);
         gameCell.setBlocked(true);
-        gameCell.setCellImage(System.getProperty("user.dir")+"\\Board\\strartegical_point.jpg", 1);
+        gameCell.setCellImage("other/strartegical_point.jpg", 1);
     }
 
     void activate(Unit activator){

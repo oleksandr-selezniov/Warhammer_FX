@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by Dmitriy on 17.04.2016.
@@ -40,12 +41,9 @@ public abstract class Unit {
     }
 
     public Image getImage() {
-        String imageUrl = null;
-        try {
-            File file = new File(picturePath);
-            imageUrl = file.toURI().toURL().toString();
-        }catch (MalformedURLException e){e.printStackTrace();}
-        return new Image(imageUrl, false);
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL urlToImage = classLoader.getResource(this.picturePath);
+        return new Image(urlToImage.toString(), false);
     }
 
     public String getPicturePath() {

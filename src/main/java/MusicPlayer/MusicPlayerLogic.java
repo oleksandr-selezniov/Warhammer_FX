@@ -10,12 +10,14 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Random;
 
 /**
@@ -24,9 +26,12 @@ import java.util.Random;
 public class MusicPlayerLogic {
     private static Random random = new Random();
     private static int fileNumber=random.nextInt(13);
-    private static MediaPlayer mediaPlayer; // = new MediaPlayer(getMedia(System.getProperty("user.dir")+"\\MusicPlayer\\Music\\"+fileNumber+".mp3"));
+    private static MediaPlayer mediaPlayer;
 
     public static HBox getMusicPlayer(){
+        MusicPlayerLogic musicPlayer= new MusicPlayerLogic();
+        mediaPlayer = new MediaPlayer(musicPlayer.getMedia("music/"+fileNumber+".mp3"));
+
         HBox hBox = new HBox();
         VBox vBox = new VBox();
         vBox.setMaxWidth(100);
@@ -38,10 +43,10 @@ public class MusicPlayerLogic {
             mediaPlayer.play();
         });
 
-        Button next = getNextButton();
-        Button prev = getPrevButton();
-        Button pause = getPauseButton();
-        Button play = getPlayButton();
+        Button next = musicPlayer.getNextButton();
+        Button prev = musicPlayer.getPrevButton();
+        Button pause = musicPlayer.getPauseButton();
+        Button play = musicPlayer.getPlayButton();
         Slider volSlider = getVolSlider();
 
         vBox.getChildren().setAll(prev, play, pause, next);
@@ -49,21 +54,21 @@ public class MusicPlayerLogic {
         return hBox;
     }
 
-    private static int getNextFileN(){
+    private int getNextFileN(){
         if (fileNumber != 12){
             fileNumber = fileNumber+1;
         }
         return fileNumber;
     }
 
-    private static int getPrevFileN(){
+    private int getPrevFileN(){
         if (fileNumber != 0){
         fileNumber = fileNumber-1;
         }
         return fileNumber;
     }
 
-    private static Button getPlayButton(){
+    private Button getPlayButton(){
         Button play = new Button("Play");
         play.setMinWidth(50);
         play.setPadding(new Insets(5));
@@ -79,13 +84,13 @@ public class MusicPlayerLogic {
         return pause;
     }
 
-    private static Button getNextButton(){
+    private Button getNextButton(){
         Button next = new Button("Next");
         next.setMinWidth(50);
         next.setPadding(new Insets(5));
         next.setOnAction(e -> {
             mediaPlayer.dispose();
-            mediaPlayer = new MediaPlayer(getMedia(System.getProperty("user.dir")+"\\MusicPlayer\\Music\\"+getNextFileN()+".mp3"));
+            mediaPlayer = new MediaPlayer(getMedia("music/"+getNextFileN()+".mp3"));
             mediaPlayer.play();
             mediaPlayer.setOnEndOfMedia(() -> {
                 mediaPlayer.seek(mediaPlayer.getStartTime());
@@ -96,13 +101,13 @@ public class MusicPlayerLogic {
         return next;
     }
 
-    private static Button getPrevButton(){
+    private  Button getPrevButton(){
         Button prev = new Button("Prev");
         prev.setMinWidth(50);
         prev.setPadding(new Insets(5));
         prev.setOnAction(e -> {
             mediaPlayer.dispose();
-            mediaPlayer = new MediaPlayer(getMedia(System.getProperty("user.dir")+"\\MusicPlayer\\Music\\"+getPrevFileN()+".mp3"));
+            mediaPlayer = new MediaPlayer(getMedia("music/"+getPrevFileN()+".mp3"));
             mediaPlayer.play();
             mediaPlayer.setOnEndOfMedia(() -> {
                 mediaPlayer.seek(mediaPlayer.getStartTime());
@@ -131,13 +136,10 @@ public class MusicPlayerLogic {
         return slider;
     }
 
-    private static Media getMedia(String path){
-        String mediaUrl = null;
-        try {
-            File file = new File(path);
-            mediaUrl = file.toURI().toURL().toString();
-        }catch (Exception eq){eq.printStackTrace();}
-        return new Media(mediaUrl);
+    private Media getMedia(String path){
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL urlMusic = classLoader.getResource(path);
+        return new Media(urlMusic.toString());
     }
 
 }

@@ -34,7 +34,7 @@ import static Board.BoardInitializer.getScoreLimit;
  */
 public class Board {
     private static GridPane mainBattlefieldGP = generateCellBattleField(50, 20);
-    private String defaultBackgroundPath = "Backgrounds/background_8.jpg";
+    private String defaultBackgroundPath = "backgrounds/background_8.jpg";
     private static Scene scene;
     private static Double scaleCoefficient = 1.0;
 
@@ -107,7 +107,7 @@ public class Board {
         leftEarGP.setGridLinesVisible(true);
         leftEarGP.setMinWidth(Size.getSceneWidth()*0.3);
         leftEarGP.setMinHeight(Size.getSceneHeight()*0.25);
-        //leftEarGP.add(MusicPlayerLogic.getMusicPlayer(),0,0);
+        leftEarGP.add(MusicPlayerLogic.getMusicPlayer(),0,0);
 
         ImageView leftEarIV = new ImageView();
         leftEarIV.setFitWidth(Size.getSceneWidth()*0.183);
@@ -273,10 +273,7 @@ public class Board {
     private Image getBackgroundImage(){
         ClassLoader classLoader = getClass().getClassLoader();
         URL urlToImage = classLoader.getResource(defaultBackgroundPath);
-        System.out.println(urlToImage);
         return new Image(urlToImage.toString(), false);
-
-        //file:/C:/Users/Dmitriy/Desktop/projects/Warhammer-FX/target/classes/Backgrounds/background_8.jpg
     }
 
     private static GridPane generateCellBattleField( int length, int height){

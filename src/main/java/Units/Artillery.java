@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -38,7 +39,7 @@ public class Artillery extends Vehicle {
         this.walkRange = Integer.parseInt(resourceBundle.getString(unitName+".walkRange"));
         this.shotRange = Integer.parseInt(resourceBundle.getString(unitName+".shotRange"));
         this.deadZone = Integer.parseInt(resourceBundle.getString(unitName+".deadZone"));
-        this.picturePath = System.getProperty("user.dir")+resourceBundle.getString(unitName+".picturePath");
+        this.picturePath = resourceBundle.getString(unitName+".picturePath");
         this.heightCoeff = 1;
         this.widthCoeff = 1;
         this.isActive = false;
@@ -57,13 +58,10 @@ public class Artillery extends Vehicle {
 
     @Override
     public ImageView getImageView(Double opacity){
-        String imageUrl = null;
         ImageView imageView = new ImageView();
-        try {
-            File file = new File(this.picturePath);
-            imageUrl = file.toURI().toURL().toString();
-        }catch (MalformedURLException e){e.printStackTrace();}
-        Image image = new Image(imageUrl, false);
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL urlToImage = classLoader.getResource(this.picturePath);
+        Image image = new Image(urlToImage.toString(), false);
         imageView.setImage(image);
         imageView.setOpacity(opacity);
         if (Board.getScaleCoefficient() != null) {
