@@ -40,35 +40,35 @@ public class BoardInitializer {
         placeOnBoard(2,6,new Vehicle("Sentinel", 1));
 
 
-        placeOnBoard(49,0,new MeleeInfantry("Grot", 2));
+        placeOnBoard(39,0,new MeleeInfantry("Grot", 2));
 
-        placeOnBoard(49,1,new HeavyInfantry("Fire_Boy", 2));
+        placeOnBoard(39,1,new HeavyInfantry("Fire_Boy", 2));
 
-        placeOnBoard(49,2,new HeavyInfantry("Nob", 2));
+        placeOnBoard(39,2,new HeavyInfantry("Nob", 2));
 
-        placeOnBoard(49,3,new HeavyInfantry("Shoota_Boy", 2));
+        placeOnBoard(39,3,new HeavyInfantry("Shoota_Boy", 2));
 
-        placeOnBoard(49,4,new MeleeInfantry("Squig", 2));
+        placeOnBoard(39,4,new MeleeInfantry("Squig", 2));
 
-        placeOnBoard(49,5,new HeavyInfantry("Choppa_Boy", 2));
+        placeOnBoard(39,5,new HeavyInfantry("Choppa_Boy", 2));
 
-        placeOnBoard(49,6,new MeleeInfantry("Armor_Boy", 2));
+        placeOnBoard(39,6,new MeleeInfantry("Armor_Boy", 2));
 
-        placeOnBoard(49,7,new MeleeInfantry("Slugga_Nob", 2));
+        placeOnBoard(39,7,new MeleeInfantry("Slugga_Nob", 2));
 
-        placeOnBoard(49,8,new HeavyInfantry("Tank_Busta", 2));
+        placeOnBoard(39,8,new HeavyInfantry("Tank_Busta", 2));
 
-        placeOnBoard(49,9,new LightInfantry("Brain_Boy", 2));
+        placeOnBoard(39,9,new LightInfantry("Brain_Boy", 2));
 
 
 
-        placeOnBoard(47,1,new Vehicle("PartyVan", 2));
+        placeOnBoard(37,1,new Vehicle("PartyVan", 2));
 
-        placeOnBoard(47,3,new Vehicle("Looted_Baneblade", 2));
+        placeOnBoard(37,3,new Vehicle("Looted_Baneblade", 2));
 
-        placeOnBoard(47,5,new Vehicle("Speed_Boy", 2));
+        placeOnBoard(37,5,new Vehicle("Speed_Boy", 2));
 
-        placeOnBoard(47,7,new Vehicle("Grot_Tank", 2));
+        placeOnBoard(37,7,new Vehicle("Grot_Tank", 2));
 
 
         BoardUtils.setActiveTeamUnits(1, true);
@@ -79,16 +79,16 @@ public class BoardInitializer {
         GameCell.makeStrategical(5,1);
         GameCell.makeStrategical(5,17);
 
-        GameCell.makeStrategical(14,9);
+        //GameCell.makeStrategical(14,9);
 
-        GameCell.makeStrategical(24,1);
-        GameCell.makeStrategical(24,9);
-        GameCell.makeStrategical(24,17);
+        GameCell.makeStrategical(19,1);
+        GameCell.makeStrategical(19,9);
+        GameCell.makeStrategical(19,17);
 
-        GameCell.makeStrategical(34,9);
+        //GameCell.makeStrategical(34,9);
 
-        GameCell.makeStrategical(44,1);
-        GameCell.makeStrategical(44,17);
+        GameCell.makeStrategical(34,1);
+        GameCell.makeStrategical(34,17);
 
     }
 

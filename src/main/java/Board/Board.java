@@ -33,7 +33,7 @@ import static Board.BoardInitializer.getScoreLimit;
  * Created by Dmitriy on 20.10.2016.
  */
 public class Board {
-    private static GridPane mainBattlefieldGP = generateCellBattleField(50, 20);
+    private static GridPane mainBattlefieldGP = generateCellBattleField(40, 20);
     private String defaultBackgroundPath = "backgrounds/background_8.jpg";
     private static Scene scene;
     private static Double scaleCoefficient = 1.0;
