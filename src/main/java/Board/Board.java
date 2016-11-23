@@ -46,7 +46,7 @@ public class Board {
         anchorPane.setMinWidth(Size.getSceneWidth());
 
         ImageView mainBackground = new ImageView();
-        mainBackground.setImage(getBackgroundImage());
+        mainBackground.setImage(getImage(defaultBackgroundPath));
         mainBackground.setOpacity(0.9);
         mainBackground.setFitWidth(Size.getSceneWidth());
         mainBackground.setFitHeight(Size.getSceneHeight());
@@ -112,6 +112,7 @@ public class Board {
         ImageView leftEarIV = new ImageView();
         leftEarIV.setFitWidth(Size.getSceneWidth()*0.183);
         leftEarIV.setFitHeight(Size.getSceneHeight()*0.39);
+        leftEarIV.setImage(getImage("other/chaos.jpg"));
         leftEarIV.setId("leftImageView");
 
         ScrollPane scrollPane = new ScrollPane(leftEarIV);
@@ -175,6 +176,7 @@ public class Board {
         ImageView rightEarIV = new ImageView();
         rightEarIV.setFitWidth(Size.getSceneWidth()*0.183);
         rightEarIV.setFitHeight(Size.getSceneHeight()*0.39);
+        rightEarIV.setImage(getImage("other/chaos.jpg"));
         rightEarIV.setId("rightImageView");
 
         ScrollPane scrollPane = new ScrollPane(rightEarIV);
@@ -270,9 +272,9 @@ public class Board {
         score.setText("Score: "+text + " Limit "+ getScoreLimit());
     }
 
-    private Image getBackgroundImage(){
+    private Image getImage(String path){
         ClassLoader classLoader = getClass().getClassLoader();
-        URL urlToImage = classLoader.getResource(defaultBackgroundPath);
+        URL urlToImage = classLoader.getResource(path);
         return new Image(urlToImage.toString(), false);
     }
 

@@ -34,7 +34,7 @@ public class GameCell extends Button {
     private static boolean isSelected;
     private static int teamTurnValue = 1;
     private String defaultCellImagePath = "cellBackground/"+generateRandomNumber(1,25)+".jpg";
-    private String deadCellImagePath = "other/dead.jpg";
+    private static String deadCellImagePath = "other/dead.jpg";
     private static String obstacleImagePath;
     private String name = this.getText();
     private int xCoord;
@@ -390,5 +390,9 @@ public class GameCell extends Button {
 
     public void setBlocked(Boolean blocked) {
         isBlocked = blocked;
+    }
+
+    public static String getDeadCellImagePath() {
+        return deadCellImagePath;
     }
 }
