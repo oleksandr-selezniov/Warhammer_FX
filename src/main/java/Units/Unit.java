@@ -7,6 +7,8 @@ import javafx.scene.image.ImageView;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Dmitriy on 17.04.2016.
@@ -234,5 +236,11 @@ public abstract class Unit {
         return "Name: "+name+"\n"+"Efficiency "+rangeEfficiency+"\n"+"Health "+health+"/"+maxHealth+"\n"+"Accuracy "+accuracy+
                 "\n"+"Ammo "+ammo+"/"+maxAmmo+"\n"+"Close Damage "+ minCloseDamage +"-"+maxCloseDamage +"\n"
                 + "Range Damage "+ minRangeDamage +"-"+ maxRangeDamage +"\n"+"Walk range "+walkRange+"\n"+"ShotRange "+shotRange+"\n";
+    }
+
+    public static List getUnitNamesList(String race){
+        ArrayList<String> arrayList= new ArrayList<>();
+        //TODO: something here
+        return arrayList;
     }
 }

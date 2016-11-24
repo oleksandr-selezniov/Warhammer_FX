@@ -4,62 +4,58 @@ package Size;
  * Created by Dmitriy on 28.10.2016.
  */
 public class Size {
-    private static Double cellHeight = 125.0;
-    private static Double cellWidth = 125.0;
-    private static Double unitHeight = 120.0;
-    private static Double unitWidth = 80.0;
-    private static Double sceneWidth = 1366.0;
-    private static Double sceneHeight = 768.0;
-    private static Double maxSceneWidth = 1600.0;
-    private static Double maxSceneHeight = 900.0;
-    private static Double minSceneWidth = 800.0;
-    private static Double minSceneHeight = 600.0;
+    private static double cellHeight = 125.0;
+    private static double cellWidth = 125.0;
+    private static double unitHeight = 120.0;
+    private static double unitWidth = 80.0;
+    private static double sceneWidth = 0;
+    private static double sceneHeight = 0;
 
-    public static Double getSceneWidth() {
+    public static double getSceneWidth() {
         return sceneWidth;
     }
 
-    public static void setSceneWidth(Double sceneWidth) {
+    public static void setSceneWidth(double sceneWidth) {
         Size.sceneWidth = sceneWidth;
     }
 
-    public static Double getSceneHeight() {
+    public static double getSceneHeight() {
         return sceneHeight;
     }
 
-    public static void setSceneHeight(Double sceneHeight) {
+    public static void setSceneHeight(double sceneHeight) {
         Size.sceneHeight = sceneHeight;
     }
 
-    public static Double getUnitHeight() {
+    public static double getUnitHeight() {
         return unitHeight;
     }
 
-    public static void setUnitHeight(Double unitHeight) {
+    public static void setUnitHeight(double unitHeight) {
         Size.unitHeight = unitHeight;
     }
 
-    public static Double getUnitWidth() {
+    public static double getUnitWidth() {
         return unitWidth;
     }
 
-    public static void setUnitWidth(Double unitWidth) {
+    public static void setUnitWidth(double unitWidth) {
         Size.unitWidth = unitWidth;
     }
 
-    public static Double getCellHeight() {
+    public static double getCellHeight() {
         return cellHeight;
     }
 
-    public static void setCellHeight(Double cellHeight) {
+    public static void setCellHeight(double cellHeight) {
         Size.cellHeight = cellHeight;
     }
 
-    public static Double getCellWidth() {
+    public static double getCellWidth() {
         return cellWidth;
     }
 
-    public static void setCellWidth(Double cellWidth) {
+    public static void setCellWidth(double cellWidth) {
         Size.cellWidth = cellWidth;
     }
 

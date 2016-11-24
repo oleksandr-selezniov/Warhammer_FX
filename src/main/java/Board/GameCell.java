@@ -237,7 +237,7 @@ public class GameCell extends Button {
     }
 
     private void highlightEnemyUnit(){
-        Cursor c = new ImageCursor(BoardUtils.getImage("other/CursorChainsword.png"), 300,300);
+        Cursor c = new ImageCursor(new BoardUtils().getImage("other/CursorChainsword.png"), 300,300);
         this.setCursor(c);
         DropShadow dropShadow = new DropShadow();
         dropShadow.setOffsetX(3);

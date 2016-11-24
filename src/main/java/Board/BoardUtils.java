@@ -9,6 +9,7 @@ import javafx.scene.layout.GridPane;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -118,13 +119,10 @@ public class BoardUtils {
         BoardUtils.showShootingRange();
     }
 
-    static Image getImage(String imagePath){
-        String imageUrl = null;
-        try {
-            File file = new File(imagePath);
-            imageUrl = file.toURI().toURL().toString();
-        }catch (MalformedURLException e){e.printStackTrace();}
-        return new Image(imageUrl, false);
+    Image getImage(String imagePath){
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL urlToImage = classLoader.getResource(imagePath);
+        return new Image(urlToImage.toString(), false);
     }
 
     static void refreshZOrder() {

@@ -1,4 +1,5 @@
 import Board.Board;
+import Board.ChooseBoard;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -9,7 +10,8 @@ public class Main extends Application{
 
     @Override
     public void start(Stage primaryStage) {
-        Board mainUI = new Board();
+        //Board mainUI = new Board();
+        ChooseBoard mainUI = new ChooseBoard();
         mainUI.createUI(primaryStage);
 }
     public static void main(String[] args) {
