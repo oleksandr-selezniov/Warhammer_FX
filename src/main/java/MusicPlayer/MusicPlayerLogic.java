@@ -25,7 +25,7 @@ import java.util.Random;
  */
 public class MusicPlayerLogic {
     private static Random random = new Random();
-    private static int fileNumber=random.nextInt(13);
+    private static int fileNumber=1+random.nextInt(10);
     private static MediaPlayer mediaPlayer;
 
     public static HBox getMusicPlayer(){
@@ -55,14 +55,14 @@ public class MusicPlayerLogic {
     }
 
     private int getNextFileN(){
-        if (fileNumber != 12){
+        if (fileNumber != 11){
             fileNumber = fileNumber+1;
         }
         return fileNumber;
     }
 
     private int getPrevFileN(){
-        if (fileNumber != 0){
+        if (fileNumber != 1){
         fileNumber = fileNumber-1;
         }
         return fileNumber;
