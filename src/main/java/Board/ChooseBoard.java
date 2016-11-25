@@ -1,11 +1,15 @@
 package Board;
 
 import Size.Size;
+import Units.Unit;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -73,36 +77,31 @@ public class ChooseBoard {
     }
 
     private HBox getBottomPart(){
-        ObservableList<String> options =
-                FXCollections.observableArrayList(
-                        "Option 1",
-                        "Option 2",
-                        "Option 3"
-                );
-        ComboBox leftComboBox = new ComboBox(options);
+        ListView leftListView = new ListView();
+        leftListView.setMaxSize(200, 150);
+        leftListView.setId("leftListView");
+
+        ObservableList<String> humanUnitList = FXCollections.observableArrayList(Unit.getUnitNamesList("Humans"));
+        ComboBox leftComboBox = new ComboBox(humanUnitList);
+        leftComboBox.setValue("Human Units");
+
+
+
         leftComboBox.setMinWidth(200);
-        TextArea leftTextArea = new TextArea();
-        leftTextArea.setMaxWidth(200);
-        leftTextArea.setMaxHeight(200);
-        leftTextArea.setId("leftTextArea");
 
-        ObservableList<String> options2 =
-                FXCollections.observableArrayList(
-                        "Option 1",
-                        "Option 2",
-                        "Option 3"
-                );
-        ComboBox rightComboBox = new ComboBox(options2);
+        ObservableList<String> orkUnitList = FXCollections.observableArrayList(Unit.getUnitNamesList("Orks"));
+        ComboBox rightComboBox = new ComboBox(orkUnitList);
+        rightComboBox.setValue("Ork Units");
+
         rightComboBox.setMinWidth(200);
-        TextArea rightTextArea = new TextArea();
-        rightTextArea.setMaxWidth(200);
-        rightTextArea.setMaxHeight(200);
-        rightTextArea.setId("leftTextArea");
+        ListView rightListView = new ListView();
+        rightListView.setMaxSize(200, 150);
+        rightListView.setId("rightListView");
 
-        HBox hBox1 = new HBox(new VBox(leftComboBox, leftTextArea));
+        HBox hBox1 = new HBox(new VBox(leftComboBox, leftListView));
         hBox1.setPadding(new Insets(5));
 
-        HBox hBox2 = new HBox(new VBox(rightComboBox, rightTextArea));
+        HBox hBox2 = new HBox(new VBox(rightComboBox, rightListView));
         hBox2.setPadding(new Insets(5));
 
         HBox hbox = new HBox(hBox1, hBox2);

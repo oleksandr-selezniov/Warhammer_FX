@@ -7,8 +7,7 @@ import javafx.scene.image.ImageView;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Dmitriy on 17.04.2016.
@@ -240,7 +239,25 @@ public abstract class Unit {
 
     public static List getUnitNamesList(String race){
         ArrayList<String> arrayList= new ArrayList<>();
-        //TODO: something here
+
+        arrayList.addAll(getNameBySpeciality(race,"HeavyInfantry"));
+        arrayList.addAll(getNameBySpeciality(race,"LightInfantry"));
+        arrayList.addAll(getNameBySpeciality(race,"MeleeInfantry"));
+        arrayList.addAll(getNameBySpeciality(race,"Vehicle"));
+        arrayList.addAll(getNameBySpeciality(race,"Artillery"));
+
+        return arrayList;
+    }
+
+    private static List getNameBySpeciality(String race, String speciality){
+        ArrayList<String> arrayList= new ArrayList<>();
+        Locale locale = new Locale("en", "US");
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("RaceList", locale);
+        int i = 1;
+        while (resourceBundle.containsKey(race + "."+speciality+"."+i)){
+            arrayList.add(resourceBundle.getString(race + "."+speciality+"."+i));
+            i++;
+        }
         return arrayList;
     }
 }
