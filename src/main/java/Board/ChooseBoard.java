@@ -18,6 +18,8 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -28,6 +30,8 @@ public class ChooseBoard {
     private static Scene scene;
     int winHeight = 600;
     int winWidth = 600;
+    private static Map<String, Unit> humanUnitMap = Unit.getRaceUnitMap("Humans");
+    private static Map<String, Unit> orkUnitMap = Unit.getRaceUnitMap("Orks");
 
     public void createUI(Stage primaryStage){
         primaryStage.setTitle("WarhammerFX ChooseBoard");
@@ -80,20 +84,41 @@ public class ChooseBoard {
         ListView leftListView = new ListView();
         leftListView.setMaxSize(200, 150);
         leftListView.setId("leftListView");
+        ArrayList<String> arrayListH= new ArrayList<>();
+        arrayListH.addAll(humanUnitMap.keySet());
 
-        ObservableList<String> humanUnitList = FXCollections.observableArrayList(Unit.getUnitNamesList("Humans"));
-        ComboBox leftComboBox = new ComboBox(humanUnitList);
+        ObservableList<String> humanNameList = FXCollections.observableArrayList(arrayListH);
+        ComboBox leftComboBox = new ComboBox(humanNameList);
         leftComboBox.setValue("Human Units");
+        leftComboBox.valueProperty().addListener(new ChangeListener<String>() {
+            @Override public void changed(ObservableValue ov, String t, String t1) {
+                System.out.println(ov);
+                System.out.println(t);
+                System.out.println(t1);
 
+                ImageView imageView = (ImageView) scene.lookup("#centerImageView");
+                imageView.setImage(humanUnitMap.get(t1).getImage());
+            }
+        });
+        leftComboBox.setMaxWidth(200);
 
-
-        leftComboBox.setMinWidth(200);
-
-        ObservableList<String> orkUnitList = FXCollections.observableArrayList(Unit.getUnitNamesList("Orks"));
-        ComboBox rightComboBox = new ComboBox(orkUnitList);
+        ArrayList<String> arrayListO= new ArrayList<>();
+        arrayListO.addAll(orkUnitMap.keySet());
+        ObservableList<String> orkNameList = FXCollections.observableArrayList(arrayListO);
+        ComboBox rightComboBox = new ComboBox(orkNameList);
         rightComboBox.setValue("Ork Units");
+        rightComboBox.valueProperty().addListener(new ChangeListener<String>() {
+            @Override public void changed(ObservableValue ov, String t, String t1) {
+                System.out.println(ov);
+                System.out.println(t);
+                System.out.println(t1);
 
-        rightComboBox.setMinWidth(200);
+                ImageView imageView = (ImageView) scene.lookup("#centerImageView");
+                imageView.setImage(orkUnitMap.get(t1).getImage());
+            }
+        });
+        rightComboBox.setMaxWidth(200);
+
         ListView rightListView = new ListView();
         rightListView.setMaxSize(200, 150);
         rightListView.setId("rightListView");

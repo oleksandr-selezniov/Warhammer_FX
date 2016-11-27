@@ -4,8 +4,6 @@ import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
@@ -240,16 +238,16 @@ public abstract class Unit {
     public static List getUnitNamesList(String race){
         ArrayList<String> arrayList= new ArrayList<>();
 
-        arrayList.addAll(getNameBySpeciality(race,"HeavyInfantry"));
-        arrayList.addAll(getNameBySpeciality(race,"LightInfantry"));
-        arrayList.addAll(getNameBySpeciality(race,"MeleeInfantry"));
-        arrayList.addAll(getNameBySpeciality(race,"Vehicle"));
-        arrayList.addAll(getNameBySpeciality(race,"Artillery"));
+        arrayList.addAll(getNameListBySpeciality(race,"HeavyInfantry"));
+        arrayList.addAll(getNameListBySpeciality(race,"LightInfantry"));
+        arrayList.addAll(getNameListBySpeciality(race,"MeleeInfantry"));
+        arrayList.addAll(getNameListBySpeciality(race,"Vehicle"));
+        arrayList.addAll(getNameListBySpeciality(race,"Artillery"));
 
         return arrayList;
     }
 
-    private static List getNameBySpeciality(String race, String speciality){
+    private static ArrayList<String> getNameListBySpeciality(String race, String speciality){
         ArrayList<String> arrayList= new ArrayList<>();
         Locale locale = new Locale("en", "US");
         ResourceBundle resourceBundle = ResourceBundle.getBundle("RaceList", locale);
@@ -259,5 +257,32 @@ public abstract class Unit {
             i++;
         }
         return arrayList;
+    }
+
+    public static Map<String, Unit> getRaceUnitMap(String race){
+        int team = (race.equals("Humans")? 1:2);
+        Map<String, Unit> unitMap= new HashMap<>();
+
+        ArrayList<String> arrayListHI = getNameListBySpeciality(race,"HeavyInfantry");
+        arrayListHI.forEach(p->{
+            unitMap.put(p, new HeavyInfantry(p, team));
+        });
+        ArrayList<String> arrayListLI = getNameListBySpeciality(race,"LightInfantry");
+        arrayListLI.forEach(p->{
+            unitMap.put(p, new LightInfantry(p, team));
+        });
+        ArrayList<String> arrayListMI = getNameListBySpeciality(race,"MeleeInfantry");
+        arrayListMI.forEach(p->{
+            unitMap.put(p, new MeleeInfantry(p, team));
+        });
+        ArrayList<String> arrayListVE = getNameListBySpeciality(race,"Vehicle");
+        arrayListVE.forEach(p->{
+            unitMap.put(p, new Vehicle(p, team));
+        });
+        ArrayList<String> arrayListAR = getNameListBySpeciality(race,"Artillery");
+        arrayListAR.forEach(p->{
+            unitMap.put(p, new Artillery(p, team));
+        });
+        return unitMap;
     }
 }
