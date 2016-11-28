@@ -118,9 +118,12 @@ public class Board {
         leftEarIV.setId("leftImageView");
 
         ScrollPane scrollPane = new ScrollPane(leftEarIV);
+        scrollPane.setId("leftScrollPane");
         scrollPane.setEffect(new InnerShadow());
         scrollPane.setMinHeight(Size.getSceneHeight()*0.2);
         scrollPane.setMinWidth(Size.getSceneWidth()*0.15);
+        scrollPane.setMaxHeight(Size.getSceneHeight()*0.3);
+        scrollPane.setMaxWidth(Size.getSceneWidth()*0.2);
         leftEarGP.add(scrollPane, 1,0);
 
         VBox leftVbox = new VBox();
@@ -182,9 +185,12 @@ public class Board {
         rightEarIV.setId("rightImageView");
 
         ScrollPane scrollPane = new ScrollPane(rightEarIV);
+        scrollPane.setId("rightScrollPane");
         scrollPane.setEffect(new InnerShadow());
         scrollPane.setMinHeight(Size.getSceneHeight()*0.2);
         scrollPane.setMinWidth(Size.getSceneWidth()*0.15);
+        scrollPane.setMaxHeight(Size.getSceneHeight()*0.3);
+        scrollPane.setMaxWidth(Size.getSceneWidth()*0.2);
         rightEarGP.add(scrollPane, 1,0);
 
         VBox rightVbox = new VBox();
@@ -329,7 +335,12 @@ public class Board {
 
     static void initializeBottomMenu(GameCell gameCell, String direction){
         writeToTextArea("#"+direction+"TextArea", gameCell.getUnit().getInfo(), false);
-        setImageToImageView("#"+direction+"ImageView", gameCell.getUnit().getImage());
+
+
+        ScrollPane scrollPane = (ScrollPane)scene.lookup("#"+direction+"ScrollPane");
+        scrollPane.setContent(gameCell.getUnit().getImageView(1, 1.5));
+
+        //setImageToImageView("#"+direction+"ImageView", gameCell.getUnit().getImage());
 
     }
 

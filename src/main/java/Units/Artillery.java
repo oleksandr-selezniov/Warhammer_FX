@@ -57,25 +57,6 @@ public class Artillery extends Vehicle {
     }
 
     @Override
-    public ImageView getImageView(Double opacity){
-        ImageView imageView = new ImageView();
-        ClassLoader classLoader = getClass().getClassLoader();
-        URL urlToImage = classLoader.getResource(this.picturePath);
-        Image image = new Image(urlToImage.toString(), false);
-        imageView.setImage(image);
-        imageView.setOpacity(opacity);
-        if (Board.getScaleCoefficient() != null) {
-            imageView.setFitHeight(Size.getCellHeight() * this.heightCoeff * Board.getScaleCoefficient());
-            imageView.setFitWidth(Size.getCellWidth() * this.widthCoeff * Board.getScaleCoefficient());
-        }
-        else {
-            imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff);
-            imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff);
-        }
-        return imageView;
-    }
-
-    @Override
     public javafx.geometry.Insets getInsetsY() {
         if(Board.getScaleCoefficient()!=null){
             return new Insets(2,2,Board.getScaleCoefficient()* insetsY,-Size.getCellHeight()*Board.getScaleCoefficient()*0.4);

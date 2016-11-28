@@ -55,7 +55,7 @@ public class Vehicle extends Unit {
     }
 
     @Override
-    public ImageView getImageView(Double opacity){
+    public ImageView getImageView(double opacity){
         ImageView imageView = new ImageView();
         ClassLoader classLoader = getClass().getClassLoader();
         URL urlToImage = classLoader.getResource(this.picturePath);
@@ -70,6 +70,19 @@ public class Vehicle extends Unit {
             imageView.setFitHeight(Size.getCellHeight() * this.heightCoeff);
             imageView.setFitWidth(Size.getCellHeight() * this.widthCoeff);
         }
+        return imageView;
+    }
+
+    @Override
+    public ImageView getImageView(double opacity, double scaleCoeff){
+        ImageView imageView = new ImageView();
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL urlToImage = classLoader.getResource(this.picturePath);
+        Image image = new Image(urlToImage.toString(), false);
+        imageView.setImage(image);
+        imageView.setOpacity(opacity);
+        imageView.setFitHeight(Size.getCellHeight() * this.heightCoeff * scaleCoeff * 0.7);
+        imageView.setFitWidth(Size.getCellWidth() * this.widthCoeff * scaleCoeff * 0.7);
         return imageView;
     }
 

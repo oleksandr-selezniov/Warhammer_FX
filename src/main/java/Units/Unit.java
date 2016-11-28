@@ -1,5 +1,6 @@
 package Units;
 
+import Size.Size;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -49,7 +50,19 @@ public abstract class Unit {
         return picturePath;
     }
 
-    public abstract ImageView getImageView(Double opacity);
+    public abstract ImageView getImageView(double opacity);
+
+    public  ImageView getImageView(double opacity, double scaleCoeff){
+        ImageView imageView = new ImageView();
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL urlToImage = classLoader.getResource(this.picturePath);
+        Image image = new Image(urlToImage.toString(), false);
+        imageView.setImage(image);
+        imageView.setOpacity(opacity);
+        imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff * scaleCoeff);
+        imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff * scaleCoeff);
+        return imageView;
+    }
 
     public void setPicturePath(String picturePath) {
         this.picturePath = picturePath;

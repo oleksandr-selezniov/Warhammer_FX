@@ -1,6 +1,7 @@
 package Board;
 
 import Size.Size;
+import Units.LightInfantry;
 import Units.Unit;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -73,7 +74,8 @@ public class ChooseBoard {
         centerImageView.setImage(new BoardUtils().getImage("other/chaos.jpg"));
         centerImageView.setId("centerImageView");
 
-        VBox vbox = new VBox(centerImageView);
+        VBox vbox = new VBox();
+        vbox.setId("centerVbox");
         vbox.setMinWidth(winWidth);
         vbox.setMinHeight(winHeight*0.5);
         vbox.setAlignment(Pos.CENTER);
@@ -96,8 +98,9 @@ public class ChooseBoard {
                 System.out.println(t);
                 System.out.println(t1);
 
-                ImageView imageView = (ImageView) scene.lookup("#centerImageView");
-                imageView.setImage(humanUnitMap.get(t1).getImage());
+                VBox vbox = (VBox) scene.lookup("#centerVbox");
+                vbox.getChildren().clear();
+                vbox.getChildren().add(humanUnitMap.get(t1).getImageView(1, 1.8));
             }
         });
         leftComboBox.setMaxWidth(200);
@@ -113,8 +116,9 @@ public class ChooseBoard {
                 System.out.println(t);
                 System.out.println(t1);
 
-                ImageView imageView = (ImageView) scene.lookup("#centerImageView");
-                imageView.setImage(orkUnitMap.get(t1).getImage());
+                VBox vbox = (VBox) scene.lookup("#centerVbox");
+                vbox.getChildren().clear();
+                vbox.getChildren().add(orkUnitMap.get(t1).getImageView(1, 1.8));
             }
         });
         rightComboBox.setMaxWidth(200);

@@ -55,7 +55,7 @@ public class LightInfantry extends Unit {
 
 
     @Override
-    public ImageView getImageView(Double opacity){
+    public ImageView getImageView(double opacity){
         ImageView imageView = new ImageView();
         ClassLoader classLoader = getClass().getClassLoader();
         URL urlToImage = classLoader.getResource(this.picturePath);
