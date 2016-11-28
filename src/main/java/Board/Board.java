@@ -120,10 +120,10 @@ public class Board {
         ScrollPane scrollPane = new ScrollPane(leftEarIV);
         scrollPane.setId("leftScrollPane");
         scrollPane.setEffect(new InnerShadow());
-        scrollPane.setMinHeight(Size.getSceneHeight()*0.2);
-        scrollPane.setMinWidth(Size.getSceneWidth()*0.15);
-        scrollPane.setMaxHeight(Size.getSceneHeight()*0.3);
-        scrollPane.setMaxWidth(Size.getSceneWidth()*0.2);
+        scrollPane.setMinHeight(Size.getSceneHeight()*0.25);
+        scrollPane.setMinWidth(Size.getSceneWidth()*0.18);
+        scrollPane.setMaxHeight(Size.getSceneHeight()*0.25);
+        scrollPane.setMaxWidth(Size.getSceneWidth()*0.18);
         leftEarGP.add(scrollPane, 1,0);
 
         VBox leftVbox = new VBox();
@@ -187,10 +187,10 @@ public class Board {
         ScrollPane scrollPane = new ScrollPane(rightEarIV);
         scrollPane.setId("rightScrollPane");
         scrollPane.setEffect(new InnerShadow());
-        scrollPane.setMinHeight(Size.getSceneHeight()*0.2);
-        scrollPane.setMinWidth(Size.getSceneWidth()*0.15);
-        scrollPane.setMaxHeight(Size.getSceneHeight()*0.3);
-        scrollPane.setMaxWidth(Size.getSceneWidth()*0.2);
+        scrollPane.setMinHeight(Size.getSceneHeight()*0.25);
+        scrollPane.setMinWidth(Size.getSceneWidth()*0.18);
+        scrollPane.setMaxHeight(Size.getSceneHeight()*0.25);
+        scrollPane.setMaxWidth(Size.getSceneWidth()*0.18);
         rightEarGP.add(scrollPane, 1,0);
 
         VBox rightVbox = new VBox();
@@ -336,12 +336,17 @@ public class Board {
     static void initializeBottomMenu(GameCell gameCell, String direction){
         writeToTextArea("#"+direction+"TextArea", gameCell.getUnit().getInfo(), false);
 
-
+        HBox hbox = new HBox(gameCell.getUnit().getImageView(1, 1.1));
+        hbox.setMinWidth(Size.getSceneWidth()*0.18);
+        hbox.setMinHeight(Size.getSceneHeight()*0.25);
+        if(direction.equals("left")){
+            hbox.setStyle("-fx-background-color: linear-gradient(from 25% 100% to 100% 25%, #703D66, #99FFFF)");
+        }else{
+            hbox.setStyle("-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #99FFFF, #703D66)");
+        }
+        hbox.setAlignment(Pos.CENTER);
         ScrollPane scrollPane = (ScrollPane)scene.lookup("#"+direction+"ScrollPane");
-        scrollPane.setContent(gameCell.getUnit().getImageView(1, 1.5));
-
-        //setImageToImageView("#"+direction+"ImageView", gameCell.getUnit().getImage());
-
+        scrollPane.setContent(hbox);
     }
 
     public static Double getScaleCoefficient() {

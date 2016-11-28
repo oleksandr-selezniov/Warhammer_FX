@@ -78,6 +78,8 @@ public class ChooseBoard {
         vbox.setId("centerVbox");
         vbox.setMinWidth(winWidth);
         vbox.setMinHeight(winHeight*0.5);
+        vbox.setMaxWidth(winWidth);
+        vbox.setMaxHeight(winHeight*0.5);
         vbox.setAlignment(Pos.CENTER);
         return  vbox;
     }
