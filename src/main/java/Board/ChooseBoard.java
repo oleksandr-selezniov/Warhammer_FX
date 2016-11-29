@@ -29,10 +29,11 @@ import java.util.Map;
 public class ChooseBoard {
     private String defaultBackgroundPath = "backgrounds/background_7.jpg";
     private static Scene scene;
-    int winHeight = 600;
-    int winWidth = 600;
+    int winHeight = 700;
+    int winWidth = 800;
     private static Map<String, Unit> humanUnitMap = Unit.getRaceUnitMap("Humans");
     private static Map<String, Unit> orkUnitMap = Unit.getRaceUnitMap("Orks");
+    private Unit currentSelectedUnit;
 
     public void createUI(Stage primaryStage){
         primaryStage.setTitle("WarhammerFX ChooseBoard");
@@ -85,12 +86,55 @@ public class ChooseBoard {
     }
 
     private HBox getBottomPart(){
-        ListView leftListView = new ListView();
-        leftListView.setMaxSize(200, 150);
-        leftListView.setId("leftListView");
+
+        VBox leftVbox = new VBox();
+        leftVbox.setMinWidth(200);
+        leftVbox.setMaxWidth(200);
+        leftVbox.setAlignment(Pos.TOP_CENTER);
+        ScrollPane leftScrollPane = new ScrollPane(leftVbox);
+        leftScrollPane.setMaxSize(200, 200);
+        leftScrollPane.setMinSize(200, 200);
+        leftScrollPane.setId("leftScrollPane");
+
+        TextArea centerTextArea = new TextArea();
+        centerTextArea.setMaxSize(200, 200);
+        centerTextArea.setMinSize(200, 200);
+        centerTextArea.setId("centerTextArea");
+
+        VBox rightVbox = new VBox();
+        rightVbox.setMinWidth(200);
+        rightVbox.setMaxWidth(200);
+        rightVbox.setAlignment(Pos.TOP_CENTER);
+        ScrollPane rightScrollPane = new ScrollPane(rightVbox);
+        rightScrollPane.setMaxSize(200, 200);
+        rightScrollPane.setMinSize(200, 200);
+        rightScrollPane.setId("rightScrollPane");
+
+        Button selectButton = new Button("Select");
+        selectButton.setMinWidth(200);
+        selectButton.setOnAction(p->{
+
+            if(currentSelectedUnit.getTeam() == 1){
+                Button leftB = new Button(currentSelectedUnit.getName());
+                leftB.setMaxWidth(150);
+                leftB.setMinWidth(150);
+                leftB.setOnAction(s->{
+                    leftVbox.getChildren().remove(leftB);
+                });
+                leftVbox.getChildren().add(leftB);
+            }else{
+                Button rightB = new Button(currentSelectedUnit.getName());
+                rightB.setMaxWidth(150);
+                rightB.setMinWidth(150);
+                rightB.setOnAction(s->{
+                    rightVbox.getChildren().remove(rightB);
+                });
+                rightVbox.getChildren().add(rightB);
+            }
+        });
+
         ArrayList<String> arrayListH= new ArrayList<>();
         arrayListH.addAll(humanUnitMap.keySet());
-
         ObservableList<String> humanNameList = FXCollections.observableArrayList(arrayListH);
         ComboBox leftComboBox = new ComboBox(humanNameList);
         leftComboBox.setValue("Human Units");
@@ -103,6 +147,8 @@ public class ChooseBoard {
                 VBox vbox = (VBox) scene.lookup("#centerVbox");
                 vbox.getChildren().clear();
                 vbox.getChildren().add(humanUnitMap.get(t1).getImageView(1, 1.8));
+                centerTextArea.setText(humanUnitMap.get(t1).getInfo());
+                currentSelectedUnit = humanUnitMap.get(t1);
             }
         });
         leftComboBox.setMaxWidth(200);
@@ -121,21 +167,22 @@ public class ChooseBoard {
                 VBox vbox = (VBox) scene.lookup("#centerVbox");
                 vbox.getChildren().clear();
                 vbox.getChildren().add(orkUnitMap.get(t1).getImageView(1, 1.8));
+                centerTextArea.setText(orkUnitMap.get(t1).getInfo());
+                currentSelectedUnit = orkUnitMap.get(t1);
             }
         });
         rightComboBox.setMaxWidth(200);
 
-        ListView rightListView = new ListView();
-        rightListView.setMaxSize(200, 150);
-        rightListView.setId("rightListView");
-
-        HBox hBox1 = new HBox(new VBox(leftComboBox, leftListView));
+        HBox hBox1 = new HBox(new VBox(leftComboBox, leftScrollPane));
         hBox1.setPadding(new Insets(5));
 
-        HBox hBox2 = new HBox(new VBox(rightComboBox, rightListView));
+        HBox hBox2 = new HBox(new VBox(selectButton, centerTextArea));
         hBox2.setPadding(new Insets(5));
 
-        HBox hbox = new HBox(hBox1, hBox2);
+        HBox hBox3 = new HBox(new VBox(rightComboBox, rightScrollPane));
+        hBox3.setPadding(new Insets(5));
+
+        HBox hbox = new HBox(hBox1, hBox2, hBox3);
         hbox.setAlignment(Pos.CENTER);
 
         return  hbox;
