@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 
 
@@ -34,6 +35,8 @@ public class ChooseBoard {
     private static Map<String, Unit> humanUnitMap = Unit.getRaceUnitMap("Humans");
     private static Map<String, Unit> orkUnitMap = Unit.getRaceUnitMap("Orks");
     private Unit currentSelectedUnit;
+    private static ArrayList<Unit> currentHumanList = new ArrayList<>();
+    private static ArrayList<Unit> currentOrkList = new ArrayList<>();
 
     public void createUI(Stage primaryStage){
         primaryStage.setTitle("WarhammerFX ChooseBoard");
@@ -116,18 +119,22 @@ public class ChooseBoard {
 
             if(currentSelectedUnit.getTeam() == 1){
                 Button leftB = new Button(currentSelectedUnit.getName());
+                currentHumanList.add(currentSelectedUnit);
                 leftB.setMaxWidth(150);
                 leftB.setMinWidth(150);
                 leftB.setOnAction(s->{
                     leftVbox.getChildren().remove(leftB);
+                    currentHumanList.remove(currentHumanList.stream().filter(k->k.getName().equals(leftB.getText())).findFirst());
                 });
                 leftVbox.getChildren().add(leftB);
             }else{
                 Button rightB = new Button(currentSelectedUnit.getName());
+                currentOrkList.add(currentSelectedUnit);
                 rightB.setMaxWidth(150);
                 rightB.setMinWidth(150);
                 rightB.setOnAction(s->{
                     rightVbox.getChildren().remove(rightB);
+                    currentOrkList.remove(currentOrkList.stream().filter(k->k.getName().equals(rightB.getText())).findFirst());
                 });
                 rightVbox.getChildren().add(rightB);
             }
@@ -251,4 +258,13 @@ public class ChooseBoard {
 
         return hBox;
     }
+
+    public static  ArrayList<Unit> getCurrentHumanList() {
+        return currentHumanList;
+    }
+
+    public static ArrayList<Unit> getCurrentOrkList() {
+        return currentOrkList;
+    }
+
 }
