@@ -122,6 +122,10 @@ public class ChooseBoard {
                 currentHumanList.add(currentSelectedUnit);
                 leftB.setMaxWidth(150);
                 leftB.setMinWidth(150);
+                leftB.setMaxHeight(40);
+                leftB.setMinHeight(40);
+                leftB.setAlignment(Pos.BASELINE_LEFT);
+                leftB.setGraphic(currentSelectedUnit.getImageView(1, 0.25));
                 leftB.setOnAction(s->{
                     leftVbox.getChildren().remove(leftB);
                     Unit unit = currentHumanList.stream().filter(k->k.getName().equals(leftB.getText())).findFirst().orElse(null);
@@ -133,6 +137,10 @@ public class ChooseBoard {
                 currentOrkList.add(currentSelectedUnit);
                 rightB.setMaxWidth(150);
                 rightB.setMinWidth(150);
+                rightB.setMaxHeight(40);
+                rightB.setMinHeight(40);
+                rightB.setAlignment(Pos.BASELINE_LEFT);
+                rightB.setGraphic(currentSelectedUnit.getImageView(1, 0.25));
                 rightB.setOnAction(s->{
                     rightVbox.getChildren().remove(rightB);
                     Unit unit = currentOrkList.stream().filter(k->k.getName().equals(rightB.getText())).findFirst().orElse(null);
