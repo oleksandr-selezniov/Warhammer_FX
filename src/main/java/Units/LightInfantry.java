@@ -22,6 +22,7 @@ public class LightInfantry extends Unit {
     private double insetsY = 1.0;
     public LightInfantry(){}
 
+
     public LightInfantry(String unitName, int team){
         this.team = team;
         this.name = resourceBundle.getString(unitName+".name");
@@ -38,6 +39,7 @@ public class LightInfantry extends Unit {
         this.walkRange = Integer.parseInt(resourceBundle.getString(unitName+".walkRange"));
         this.shotRange = Integer.parseInt(resourceBundle.getString(unitName+".shotRange"));
         this.picturePath = resourceBundle.getString(unitName+".picturePath");
+        this.key = resourceBundle.getString(unitName+".key");
         this.heightCoeff = 1;
         this.widthCoeff = 1;
         this.isActive = false;

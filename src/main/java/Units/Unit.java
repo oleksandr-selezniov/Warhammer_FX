@@ -5,15 +5,17 @@ import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.*;
 
 /**
  * Created by Dmitriy on 17.04.2016.
  */
-public abstract class Unit {
+public abstract class Unit implements Serializable{
 
     String name;
+    String key;
     String accuracy;
     String rangeEfficiency;
     String picturePath;
@@ -210,6 +212,11 @@ public abstract class Unit {
 
     public void setRangeEfficiency(String rangeEfficiency) {
         this.rangeEfficiency = rangeEfficiency;
+    }
+
+
+    public String getKey() {
+        return key;
     }
 
     protected double getCurrentRangeEfficiency(Unit victim){

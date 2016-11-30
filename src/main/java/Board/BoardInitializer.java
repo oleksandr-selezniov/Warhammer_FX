@@ -3,6 +3,8 @@ package Board;
 import Units.*;
 import javafx.scene.Scene;
 
+import java.util.ArrayList;
+
 /**
  * Created by Dmitriy on 27.10.2016.
  */
@@ -13,20 +15,61 @@ public class BoardInitializer {
     private static int team2Score;
 
     void initializeBoard(){
-
         for(int i=0; i < ChooseBoard.getCurrentHumanList().size(); i++){
-            placeOnBoard(1,i,ChooseBoard.getCurrentHumanList().get(i));
+            Unit currentUnit = ChooseBoard.getCurrentHumanList().get(i);
+            Unit unit = null;
+
+            if(currentUnit instanceof MeleeInfantry){
+                unit = new MeleeInfantry(currentUnit.getKey(), currentUnit.getTeam());
+            }else
+            if(currentUnit instanceof Artillery){
+                unit = new Artillery(currentUnit.getKey(), currentUnit.getTeam());
+            }else
+            if(currentUnit instanceof LightInfantry){
+                unit = new LightInfantry(currentUnit.getKey(), currentUnit.getTeam());
+            }else
+            if(currentUnit instanceof HeavyInfantry){
+                unit = new HeavyInfantry(currentUnit.getKey(), currentUnit.getTeam());
+            }else
+            if(currentUnit instanceof Vehicle){
+                unit = new Vehicle(currentUnit.getKey(), currentUnit.getTeam());
+            }else{
+                System.out.println("Wrong Unit Type Detected");
+            }
+
+            placeOnBoard(1,i+1, unit);
         }
 
         for(int i=0; i < ChooseBoard.getCurrentOrkList().size(); i++){
-            placeOnBoard(38,i,ChooseBoard.getCurrentOrkList().get(i));
-        }
+            Unit currentUnit = ChooseBoard.getCurrentOrkList().get(i);
+            Unit unit = null;
 
-//        placeOnBoard(0,0,new LightInfantry("Penal_Trooper", 1));
+            if(currentUnit instanceof MeleeInfantry){
+                unit = new MeleeInfantry(currentUnit.getKey(), currentUnit.getTeam());
+            }else
+            if(currentUnit instanceof Artillery){
+                unit = new Artillery(currentUnit.getKey(), currentUnit.getTeam());
+            }else
+            if(currentUnit instanceof LightInfantry){
+                unit = new LightInfantry(currentUnit.getKey(), currentUnit.getTeam());
+            }else
+            if(currentUnit instanceof HeavyInfantry){
+                unit = new HeavyInfantry(currentUnit.getKey(), currentUnit.getTeam());
+            }else
+            if(currentUnit instanceof Vehicle){
+                unit = new Vehicle(currentUnit.getKey(), currentUnit.getTeam());
+            }else{
+                System.out.println("Wrong Unit Type Detected");
+            }
+
+            placeOnBoard(38,i+1,unit);
+        }
+//
+//        placeOnBoard(0,0,new LightInfantry("Assasin", 1));
 //
 //        placeOnBoard(0,1,new LightInfantry("Assasin", 1));
 //
-//        placeOnBoard(0,2,new LightInfantry("Kasrkin", 1));
+//        placeOnBoard(0,2,new LightInfantry("Assasin", 1));
 //
 //        placeOnBoard(0,3,new MeleeInfantry("Brontian", 1));
 //

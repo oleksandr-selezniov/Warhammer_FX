@@ -31,10 +31,10 @@ public class ChooseBoard {
     private String defaultBackgroundPath = "backgrounds/background_7.jpg";
     private static Scene scene;
     int winHeight = 700;
-    int winWidth = 800;
+    int winWidth = 750;
     private static Map<String, Unit> humanUnitMap = Unit.getRaceUnitMap("Humans");
     private static Map<String, Unit> orkUnitMap = Unit.getRaceUnitMap("Orks");
-    private Unit currentSelectedUnit;
+    private static Unit currentSelectedUnit;
     private static ArrayList<Unit> currentHumanList = new ArrayList<>();
     private static ArrayList<Unit> currentOrkList = new ArrayList<>();
 
@@ -154,12 +154,11 @@ public class ChooseBoard {
         arrayListH.addAll(humanUnitMap.keySet());
         ObservableList<String> humanNameList = FXCollections.observableArrayList(arrayListH);
         ComboBox leftComboBox = new ComboBox(humanNameList);
+        leftComboBox.setMaxWidth(200);
         leftComboBox.setValue("Human Units");
         leftComboBox.valueProperty().addListener(new ChangeListener<String>() {
             @Override public void changed(ObservableValue ov, String t, String t1) {
-                System.out.println(ov);
-                System.out.println(t);
-                System.out.println(t1);
+                System.out.println("["+t1 + " is Selected]");
 
                 VBox vbox = (VBox) scene.lookup("#centerVbox");
                 vbox.getChildren().clear();
@@ -168,18 +167,16 @@ public class ChooseBoard {
                 currentSelectedUnit = humanUnitMap.get(t1);
             }
         });
-        leftComboBox.setMaxWidth(200);
 
         ArrayList<String> arrayListO= new ArrayList<>();
         arrayListO.addAll(orkUnitMap.keySet());
         ObservableList<String> orkNameList = FXCollections.observableArrayList(arrayListO);
         ComboBox rightComboBox = new ComboBox(orkNameList);
+        rightComboBox.setMaxWidth(200);
         rightComboBox.setValue("Ork Units");
         rightComboBox.valueProperty().addListener(new ChangeListener<String>() {
             @Override public void changed(ObservableValue ov, String t, String t1) {
-                System.out.println(ov);
-                System.out.println(t);
-                System.out.println(t1);
+                System.out.println("["+t1 + " is Selected]");
 
                 VBox vbox = (VBox) scene.lookup("#centerVbox");
                 vbox.getChildren().clear();
@@ -188,7 +185,6 @@ public class ChooseBoard {
                 currentSelectedUnit = orkUnitMap.get(t1);
             }
         });
-        rightComboBox.setMaxWidth(200);
 
         HBox hBox1 = new HBox(new VBox(leftComboBox, leftScrollPane));
         hBox1.setPadding(new Insets(5));

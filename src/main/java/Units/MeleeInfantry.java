@@ -7,7 +7,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -34,6 +33,7 @@ public class MeleeInfantry extends LightInfantry {
         this.maxCloseDamage = Integer.parseInt(resourceBundle.getString(unitName+".maxCloseDamage"));
         this.walkRange = Integer.parseInt(resourceBundle.getString(unitName+".walkRange"));
         this.picturePath = resourceBundle.getString(unitName+".picturePath");
+        this.key = resourceBundle.getString(unitName+".key");
         this.heightCoeff = 1;
         this.widthCoeff = 1;
         this.isActive = false;
