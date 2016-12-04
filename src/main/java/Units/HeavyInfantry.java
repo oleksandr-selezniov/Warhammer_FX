@@ -37,6 +37,7 @@ public class HeavyInfantry extends Unit{
         this.shotRange = Integer.parseInt(resourceBundle.getString(unitName+".shotRange"));
         this.picturePath = resourceBundle.getString(unitName+".picturePath");
         this.key = resourceBundle.getString(unitName+".key");
+        this.cost = Integer.parseInt(resourceBundle.getString(unitName+".cost"));
         this.heightCoeff = 1;
         this.widthCoeff = 1;
         this.isActive = false;

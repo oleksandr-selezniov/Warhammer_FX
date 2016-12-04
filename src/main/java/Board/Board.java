@@ -33,12 +33,14 @@ import static Board.BoardInitializer.getScoreLimit;
  * Created by Dmitriy on 20.10.2016.
  */
 public class Board {
-    private static GridPane mainBattlefieldGP = generateCellBattleField(40, 20);
+    private static int boardHeight = 20;
+    private static int boardWidth = 40;
+    private static GridPane mainBattlefieldGP;
     private String defaultBackgroundPath = "backgrounds/background_8.jpg";
     private static Scene scene;
     private static Double scaleCoefficient = 1.0;
 
-    public void createUI(Stage primaryStage){
+    void createUI(Stage primaryStage){
         primaryStage.setTitle("WarhammerFX Welcome");
 
         AnchorPane anchorPane = new AnchorPane();
@@ -280,7 +282,7 @@ public class Board {
         score.setText("Score: "+text + " Limit "+ getScoreLimit());
     }
 
-    private static GridPane generateCellBattleField( int length, int height){
+    static GridPane generateCellBattleField( int length, int height){
         GridPane gridPane = new GridPane();
         gridPane.setId("boardGC");
         gridPane.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -355,6 +357,27 @@ public class Board {
 
     private static void setScaleCoefficient(Double scaleCoefficient) {
         Board.scaleCoefficient = scaleCoefficient;
+    }
+
+
+    public static int getBoardHeight() {
+        return boardHeight;
+    }
+
+    public static void setBoardHeight(int boardHeight) {
+        Board.boardHeight = boardHeight;
+    }
+
+    public static int getBoardWidth() {
+        return boardWidth;
+    }
+
+    public static void setBoardWidth(int boardWidth) {
+        Board.boardWidth = boardWidth;
+    }
+
+    public static void setMainBattlefieldGP(GridPane mainBattlefieldGP) {
+        Board.mainBattlefieldGP = mainBattlefieldGP;
     }
 }
 

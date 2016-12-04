@@ -222,8 +222,10 @@ public class GameCell extends Button {
     static void generateObstacles(double density){
         Board.getMainBattlefieldGP().getChildren().forEach(p->{
             double chance = Math.random();
-            if(((GameCell)p).getUnit()==null && !((GameCell)p).isBlocked() && ((GameCell)p).getxCoord()>2
-                    && ((GameCell)p).getyCoord()>2&& ((GameCell)p).getxCoord()<48 && ((GameCell)p).getyCoord()<18){
+            if(((GameCell)p).getUnit()==null && !((GameCell)p).isBlocked()
+                    && ((GameCell)p).getxCoord()>1 && ((GameCell)p).getyCoord()>1
+                    && ((GameCell)p).getxCoord()<(Board.getBoardWidth()-2)
+                    && ((GameCell)p).getyCoord()<(Board.getBoardHeight()-2)){
                 if(density > chance){
                     obstacleImagePath = "obstacles/"+generateRandomNumber(1,8)+".jpg";
                     placeObstacle(((GameCell)p), obstacleImagePath);

@@ -30,6 +30,7 @@ public abstract class Unit implements Serializable{
     int walkRange;
     int shotRange;
     int team;
+    int cost;
     double armor;
     double heightCoeff;
     double widthCoeff;
@@ -215,6 +216,15 @@ public abstract class Unit implements Serializable{
     }
 
 
+    public int getCost() {
+        return cost;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
+
     public String getKey() {
         return key;
     }
@@ -252,7 +262,8 @@ public abstract class Unit implements Serializable{
     public String getInfo(){
         return "Name: "+name+"\n"+"Efficiency "+rangeEfficiency+"\n"+"Health "+health+"/"+maxHealth+"\n"+"Accuracy "+accuracy+
                 "\n"+"Ammo "+ammo+"/"+maxAmmo+"\n"+"Close Damage "+ minCloseDamage +"-"+maxCloseDamage +"\n"
-                + "Range Damage "+ minRangeDamage +"-"+ maxRangeDamage +"\n"+"Walk range "+walkRange+"\n"+"ShotRange "+shotRange+"\n";
+                + "Range Damage "+ minRangeDamage +"-"+ maxRangeDamage +"\n"+"Walk range "+walkRange+"\n"+"ShotRange "+shotRange+"\n"
+                + "Cost: " +cost;
     }
 
     public static List getUnitNamesList(String race){

@@ -3,14 +3,13 @@ package Board;
 import Units.*;
 import javafx.scene.Scene;
 
-import java.util.ArrayList;
-
 /**
  * Created by Dmitriy on 27.10.2016.
  */
 public class BoardInitializer {
     private Scene currentScene = Board.getScene();
-    private static int ScoreLimit = 100;
+    private static int scoreLimit = 100;
+    private static int armyLimit = 400;
     private static int team1Score;
     private static int team2Score;
 
@@ -62,7 +61,7 @@ public class BoardInitializer {
                 System.out.println("Wrong Unit Type Detected");
             }
 
-            placeOnBoard(38,i+1,unit);
+            placeOnBoard(Board.getBoardWidth()-2,i+1,unit);
         }
 //
 //        placeOnBoard(0,0,new LightInfantry("Assasin", 1));
@@ -140,7 +139,6 @@ public class BoardInitializer {
 
         GameCell.makeStrategical(34,1);
         GameCell.makeStrategical(34,17);
-
     }
 
     private GameCell getGameCell(String id){
@@ -172,6 +170,15 @@ public class BoardInitializer {
     }
 
     public static int getScoreLimit() {
-        return ScoreLimit;
+        return scoreLimit;
     }
+
+    public static int getArmyLimit() {
+        return armyLimit;
+    }
+
+    public static void setArmyLimit(int armyLimit) {
+        BoardInitializer.armyLimit = armyLimit;
+    }
+
 }

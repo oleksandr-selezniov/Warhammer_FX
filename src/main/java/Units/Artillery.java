@@ -41,6 +41,7 @@ public class Artillery extends Vehicle {
         this.deadZone = Integer.parseInt(resourceBundle.getString(unitName+".deadZone"));
         this.picturePath = resourceBundle.getString(unitName+".picturePath");
         this.key = resourceBundle.getString(unitName+".key");
+        this.cost = Integer.parseInt(resourceBundle.getString(unitName+".cost"));
         this.heightCoeff = 1;
         this.widthCoeff = 1;
         this.isActive = false;
@@ -121,6 +122,6 @@ public class Artillery extends Vehicle {
         return "Name: "+name+"\n"+"Efficiency "+rangeEfficiency+"\n"+"Health "+health+"/"+maxHealth+"\n"+"Accuracy "+accuracy+
                 "\n"+"Ammo "+ammo+"/"+maxAmmo+"\n"+"Close Damage "+ minCloseDamage +"-"+maxCloseDamage +"\n"
                 + "Range Damage "+ minRangeDamage +"-"+ maxRangeDamage +"\n"+"Walk range "+walkRange+"\n"+"ShotRange "+shotRange+"\n"+
-                "Dead Zone Range "+deadZone+"\n";
+                "Dead Zone Range "+deadZone+"\n"+ "Cost: " +cost;
     }
 }

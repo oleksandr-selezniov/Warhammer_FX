@@ -16,12 +16,18 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+
+import static Board.Board.*;
+import static Board.BoardInitializer.getArmyLimit;
 
 
 /**
@@ -32,6 +38,8 @@ public class ChooseBoard {
     private static Scene scene;
     int winHeight = 700;
     int winWidth = 750;
+    int teamOneTotalCost = 0;
+    int teamTwoTotalCost = 0;
     private static Map<String, Unit> humanUnitMap = Unit.getRaceUnitMap("Humans");
     private static Map<String, Unit> orkUnitMap = Unit.getRaceUnitMap("Orks");
     private static Unit currentSelectedUnit;
@@ -58,7 +66,7 @@ public class ChooseBoard {
         borderPane.setMaxHeight(winHeight);
         borderPane.setCenter(getCenterPart());
         borderPane.setBottom(getBottomPart());
-        borderPane.setTop(getTopPart());
+ //       borderPane.setTop(getTopPart());
 
         anchorPane.getChildren().add(borderPane);
 
@@ -75,10 +83,9 @@ public class ChooseBoard {
         ImageView centerImageView = new ImageView();
         centerImageView.setFitWidth(winWidth* 0.7);
         centerImageView.setFitHeight(winHeight* 0.5);
-        centerImageView.setImage(new BoardUtils().getImage("other/chaos.jpg"));
-        centerImageView.setId("centerImageView");
+        centerImageView.setImage(new BoardUtils().getImage("other/Logo.png"));
 
-        VBox vbox = new VBox();
+        VBox vbox = new VBox(centerImageView);
         vbox.setId("centerVbox");
         vbox.setMinWidth(winWidth);
         vbox.setMinHeight(winHeight*0.5);
@@ -93,6 +100,7 @@ public class ChooseBoard {
         VBox leftVbox = new VBox();
         leftVbox.setMinWidth(200);
         leftVbox.setMaxWidth(200);
+        leftVbox.setId("leftUnitVbox");
         leftVbox.setAlignment(Pos.TOP_CENTER);
         ScrollPane leftScrollPane = new ScrollPane(leftVbox);
         leftScrollPane.setMaxSize(200, 200);
@@ -107,6 +115,7 @@ public class ChooseBoard {
         VBox rightVbox = new VBox();
         rightVbox.setMinWidth(200);
         rightVbox.setMaxWidth(200);
+        rightVbox.setId("rightUnitVbox");
         rightVbox.setAlignment(Pos.TOP_CENTER);
         ScrollPane rightScrollPane = new ScrollPane(rightVbox);
         rightScrollPane.setMaxSize(200, 200);
@@ -118,35 +127,57 @@ public class ChooseBoard {
         selectButton.setOnAction(p->{
 
             if(currentSelectedUnit.getTeam() == 1){
-                Button leftB = new Button(currentSelectedUnit.getName());
-                currentHumanList.add(currentSelectedUnit);
-                leftB.setMaxWidth(150);
-                leftB.setMinWidth(150);
-                leftB.setMaxHeight(40);
-                leftB.setMinHeight(40);
-                leftB.setAlignment(Pos.BASELINE_LEFT);
-                leftB.setGraphic(currentSelectedUnit.getImageView(1, 0.25));
-                leftB.setOnAction(s->{
-                    leftVbox.getChildren().remove(leftB);
-                    Unit unit = currentHumanList.stream().filter(k->k.getName().equals(leftB.getText())).findFirst().orElse(null);
-                    currentHumanList.remove(unit);
-                });
-                leftVbox.getChildren().add(leftB);
+                if(getTeamOneTotalCost() < getArmyLimit() && (getTeamOneTotalCost()+currentSelectedUnit.getCost())<=getArmyLimit()) {
+                    Button leftB = new Button(currentSelectedUnit.getName());
+                    currentHumanList.add(currentSelectedUnit);
+                    setTeamOneTotalCost(getTeamOneTotalCost() + currentSelectedUnit.getCost());
+
+                    leftB.setMaxWidth(150);
+                    leftB.setMinWidth(150);
+                    leftB.setMaxHeight(40);
+                    leftB.setMinHeight(40);
+                    leftB.setAlignment(Pos.BASELINE_LEFT);
+                    leftB.setGraphic(currentSelectedUnit.getImageView(1, 0.25));
+                    leftB.setOnAction(s -> {
+                        leftVbox.getChildren().remove(leftB);
+                        Unit unit = currentHumanList.stream().filter(k -> k.getName().equals(leftB.getText())).findFirst().orElse(null);
+                        setTeamOneTotalCost(getTeamOneTotalCost() - unit.getCost());
+                        currentHumanList.remove(unit);
+                    });
+                    leftVbox.getChildren().add(leftB);
+                }else{
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Warning");
+                    alert.setHeaderText("Unit Limit Reached!");
+                    alert.setContentText("You can't increase your army");
+                    alert.showAndWait();
+                }
             }else{
-                Button rightB = new Button(currentSelectedUnit.getName());
-                currentOrkList.add(currentSelectedUnit);
-                rightB.setMaxWidth(150);
-                rightB.setMinWidth(150);
-                rightB.setMaxHeight(40);
-                rightB.setMinHeight(40);
-                rightB.setAlignment(Pos.BASELINE_LEFT);
-                rightB.setGraphic(currentSelectedUnit.getImageView(1, 0.25));
-                rightB.setOnAction(s->{
-                    rightVbox.getChildren().remove(rightB);
-                    Unit unit = currentOrkList.stream().filter(k->k.getName().equals(rightB.getText())).findFirst().orElse(null);
-                    currentOrkList.remove(unit);
-                });
-                rightVbox.getChildren().add(rightB);
+                if(getTeamTwoTotalCost() < getArmyLimit() && (getTeamTwoTotalCost()+currentSelectedUnit.getCost())<=getArmyLimit()) {
+                    Button rightB = new Button(currentSelectedUnit.getName());
+                    currentOrkList.add(currentSelectedUnit);
+                    setTeamTwoTotalCost(getTeamTwoTotalCost()+currentSelectedUnit.getCost());
+
+                    rightB.setMaxWidth(150);
+                    rightB.setMinWidth(150);
+                    rightB.setMaxHeight(40);
+                    rightB.setMinHeight(40);
+                    rightB.setAlignment(Pos.BASELINE_LEFT);
+                    rightB.setGraphic(currentSelectedUnit.getImageView(1, 0.25));
+                    rightB.setOnAction(s->{
+                        rightVbox.getChildren().remove(rightB);
+                        Unit unit = currentOrkList.stream().filter(k->k.getName().equals(rightB.getText())).findFirst().orElse(null);
+                        setTeamTwoTotalCost(getTeamTwoTotalCost()-unit.getCost());
+                        currentOrkList.remove(unit);
+                    });
+                    rightVbox.getChildren().add(rightB);
+                }else{
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Warning");
+                    alert.setHeaderText("Unit Limit Reached!");
+                    alert.setContentText("You can't increase your army");
+                    alert.showAndWait();
+                }
             }
         });
 
@@ -186,14 +217,17 @@ public class ChooseBoard {
             }
         });
 
-        HBox hBox1 = new HBox(new VBox(leftComboBox, leftScrollPane));
+        HBox hBox1 = new HBox(new VBox(leftComboBox, leftScrollPane, getBoardSizeBlock()));
         hBox1.setPadding(new Insets(5));
+        hBox1.setAlignment(Pos.CENTER);
 
-        HBox hBox2 = new HBox(new VBox(selectButton, centerTextArea));
+        HBox hBox2 = new HBox(new VBox(selectButton, centerTextArea, getUnitCostBlock()));
         hBox2.setPadding(new Insets(5));
+        hBox2.setAlignment(Pos.CENTER);
 
-        HBox hBox3 = new HBox(new VBox(rightComboBox, rightScrollPane));
+        HBox hBox3 = new HBox(new VBox(rightComboBox, rightScrollPane, getNextBlock()));
         hBox3.setPadding(new Insets(5));
+        hBox3.setAlignment(Pos.CENTER);
 
         HBox hbox = new HBox(hBox1, hBox2, hBox3);
         hbox.setAlignment(Pos.CENTER);
@@ -201,69 +235,189 @@ public class ChooseBoard {
         return  hbox;
     }
 
-    private HBox getTopPart(){
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER);
+    private GridPane getBoardSizeBlock(){
+        GridPane gridPane = new GridPane();
+        gridPane.setMaxSize(200, 50);
+        gridPane.setMaxSize(200, 50);
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setPadding(new Insets(5));
+        gridPane.setHgap(5);
+        gridPane.setVgap(5);
 
-        Button res1Button = new Button("1024/768");
-        res1Button.setOnAction(e -> {
-            Size.setSceneWidth(1024.0);
-            Size.setSceneHeight(768.0);
+
+        ComboBox resolutionComboBox = new ComboBox(FXCollections.observableArrayList("1024/768", "1366/768", "1600/900", "1920/1080"));
+        resolutionComboBox.setMaxWidth(100);
+        resolutionComboBox.setMinWidth(100);
+        resolutionComboBox.valueProperty().addListener(new ChangeListener<String>() {
+            @Override public void changed(ObservableValue ov, String t, String t1) {
+                System.out.println("["+t1 + " is Selected]");
+
+                if(t1.equals("1024/768")){
+                    Size.setSceneWidth(1024);
+                    Size.setSceneHeight(768);
+                }
+                if(t1.equals("1366/768")){
+                    Size.setSceneWidth(1366);
+                    Size.setSceneHeight(768);
+                }
+                if(t1.equals("1600/900")){
+                    Size.setSceneWidth(1600);
+                    Size.setSceneHeight(900);
+                }
+                if(t1.equals("1920/1080")){
+                    Size.setSceneWidth(1920);
+                    Size.setSceneHeight(1080);
+                }
+            }
         });
+        resolutionComboBox.setValue("1366/768");
 
-        Button res2Button = new Button("1366/768");
-        res2Button.setOnAction(e -> {
-            Size.setSceneWidth(1366);
-            Size.setSceneHeight(768);
+
+        ComboBox sizeComboBox = new ComboBox(FXCollections.observableArrayList("Small", "Medium", "Large"));
+        sizeComboBox.setMaxWidth(100);
+        sizeComboBox.setMinWidth(100);
+        sizeComboBox.valueProperty().addListener(new ChangeListener<String>() {
+            @Override public void changed(ObservableValue ov, String t, String t1) {
+                System.out.println("["+t1 + " is Selected]");
+
+                if(t1.equals("Small")){
+                    setBoardWidth(20);
+                    setBoardHeight(10);
+                }
+                if(t1.equals("Medium")){
+                    setBoardWidth(40);
+                    setBoardHeight(20);
+                }
+                if(t1.equals("Large")){
+                    setBoardWidth(50);
+                    setBoardHeight(30);
+                }
+            }
         });
+        sizeComboBox.setValue("Medium");
 
-        Button res3Button = new Button("1600/900");
-        res3Button.setOnAction(e -> {
-            Size.setSceneWidth(1600);
-            Size.setSceneHeight(900);
-        });
+        Label boardHeightLabel = new Label("Board Size:");
+        boardHeightLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        boardHeightLabel.setTextFill(Color.LIGHTCORAL);
+        boardHeightLabel.setMaxWidth(100);
 
-        Button res4Button = new Button("1920/1080");
-        res4Button.setOnAction(e -> {
-            Size.setSceneWidth(1920);
-            Size.setSceneHeight(1080);
+        Label screenResolutionLabel = new Label("Resolution:");
+        screenResolutionLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        screenResolutionLabel.setTextFill(Color.LIGHTCORAL);
+        screenResolutionLabel.setMaxWidth(100);
+
+        gridPane.add(boardHeightLabel, 0,0);
+        gridPane.add(sizeComboBox, 1,0);
+        gridPane.add(screenResolutionLabel, 0,1);
+        gridPane.add(resolutionComboBox, 1,1);
+
+        return gridPane;
+    }
+
+    private GridPane getUnitCostBlock(){
+        GridPane gridPane = new GridPane();
+        gridPane.setMaxSize(200, 100);
+        gridPane.setMinSize(200, 100);
+        gridPane.setAlignment(Pos.TOP_CENTER);
+        gridPane.setPadding(new Insets(5));
+        gridPane.setHgap(5);
+        gridPane.setVgap(5);
+
+        Label teamOneLabel = new Label("Team ONE:");
+        teamOneLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+        teamOneLabel.setTextFill(Color.LIGHTCORAL);
+        teamOneLabel.setMaxWidth(100);
+
+        Label teamTwoLabel = new Label("Team TWO");
+        teamTwoLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+        teamTwoLabel.setTextFill(Color.LIGHTCORAL);
+        teamTwoLabel.setMaxWidth(100);
+
+        Label costOne = new Label();
+        costOne.setText(Integer.toString(getTeamOneTotalCost()));
+        costOne.setId("costOne");
+        costOne.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+        costOne.setTextFill(Color.LIGHTCORAL);
+        costOne.setMaxWidth(100);
+
+        Label costTwo = new Label();
+        costTwo.setText(Integer.toString(getTeamTwoTotalCost()));
+        costTwo.setId("costTwo");
+        costTwo.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+        costTwo.setTextFill(Color.LIGHTCORAL);
+        costTwo.setMaxWidth(100);
+
+        gridPane.add(teamOneLabel, 0,0);
+        gridPane.add(costOne, 1,0);
+        gridPane.add(teamTwoLabel, 0,1);
+        gridPane.add(costTwo, 1,1);
+
+        return gridPane;
+    }
+
+    private GridPane getNextBlock(){
+        GridPane gridPane = new GridPane();
+        gridPane.setMaxSize(200, 50);
+        gridPane.setMaxSize(200, 50);
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setPadding(new Insets(5));
+        gridPane.setHgap(5);
+        gridPane.setVgap(5);
+
+        Label armyLimitLabel = new Label("Army Limit:");
+        armyLimitLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        armyLimitLabel.setTextFill(Color.LIGHTCORAL);
+        armyLimitLabel.setMaxWidth(100);
+        armyLimitLabel.setMinWidth(100);
+
+        TextField armyLimit = new TextField();
+        armyLimit.setMaxWidth(70);
+        armyLimit.setMinWidth(70);
+        armyLimit.setText(Integer.toString(getArmyLimit()));
+        armyLimit.textProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("textfield changed from " + oldValue + " to " + newValue);
+
+            VBox leftSC = (VBox)scene.lookup("#leftUnitVbox");
+            leftSC.getChildren().remove(0, leftSC.getChildren().size());
+            setTeamOneTotalCost(0);
+
+            VBox rightSC = (VBox)scene.lookup("#rightUnitVbox");
+            rightSC.getChildren().remove(0, rightSC.getChildren().size());
+            setTeamTwoTotalCost(0);
+
+            try {
+                BoardInitializer.setArmyLimit(Integer.parseInt(newValue));
+            }catch (NumberFormatException e){
+            //    BoardInitializer.setArmyLimit(0);
+            //    armyLimit.setText("0");
+            }
+
         });
 
         Button nextButton = new Button("Next");
+        nextButton.setMinWidth(70);
         nextButton.setOnAction(e -> {
-            if(Size.getSceneHeight()!=0 && Size.getSceneWidth()!=0){
-                Stage stage = new Stage();
-                Board main = new Board();
-                main.createUI(stage);
 
-                Stage OldStage = (Stage)scene.getWindow();
-                OldStage.close();
-            }else{
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning");
-                alert.setHeaderText("Warning!");
-                alert.setContentText("Please, choose the screen resolution!");
-                alert.showAndWait();
+            if(Size.getSceneHeight() == 0 || Size.getSceneWidth() == 0){
+                Size.setSceneWidth(1366);
+                Size.setSceneHeight(768);
             }
+            setMainBattlefieldGP(generateCellBattleField(getBoardWidth(), getBoardHeight()));
+            Stage stage = new Stage();
+            Board main = new Board();
+            main.createUI(stage);
+
+            Stage OldStage = (Stage)scene.getWindow();
+            OldStage.close();
         });
 
+        gridPane.add(armyLimitLabel, 0,0);
+        gridPane.add(armyLimit, 1,0);
+        gridPane.add(nextButton, 1,1);
 
-        HBox res1 = new HBox(res1Button);
-        HBox res2 = new HBox(res2Button);
-        HBox res3 = new HBox(res3Button);
-        HBox res4 = new HBox(res4Button);
-        HBox next = new HBox(nextButton);
-
-        res1.setPadding(new Insets(5));
-        res2.setPadding(new Insets(5));
-        res3.setPadding(new Insets(5));
-        res4.setPadding(new Insets(5));
-        next.setPadding(new Insets(5));
-
-        hBox.getChildren().addAll(res1, res2 , res3, res4, next);
-
-        return hBox;
+        return gridPane;
     }
+
 
     public static  ArrayList<Unit> getCurrentHumanList() {
         return currentHumanList;
@@ -272,5 +426,27 @@ public class ChooseBoard {
     public static ArrayList<Unit> getCurrentOrkList() {
         return currentOrkList;
     }
+
+
+    public int getTeamOneTotalCost() {
+        return teamOneTotalCost;
+    }
+
+    public void setTeamOneTotalCost(int teamOneTotalCost) {
+        this.teamOneTotalCost = teamOneTotalCost;
+        Label label = (Label) scene.lookup("#costOne");
+        label.setText(Integer.toString(teamOneTotalCost));
+    }
+
+    public int getTeamTwoTotalCost() {
+        return teamTwoTotalCost;
+    }
+
+    public void setTeamTwoTotalCost(int teamTwoTotalCost) {
+        this.teamTwoTotalCost = teamTwoTotalCost;
+        Label label = (Label) scene.lookup("#costTwo");
+        label.setText(Integer.toString(teamTwoTotalCost));
+    }
+
 
 }

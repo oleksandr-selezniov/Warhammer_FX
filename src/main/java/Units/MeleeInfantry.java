@@ -34,6 +34,7 @@ public class MeleeInfantry extends LightInfantry {
         this.walkRange = Integer.parseInt(resourceBundle.getString(unitName+".walkRange"));
         this.picturePath = resourceBundle.getString(unitName+".picturePath");
         this.key = resourceBundle.getString(unitName+".key");
+        this.cost = Integer.parseInt(resourceBundle.getString(unitName+".cost"));
         this.heightCoeff = 1;
         this.widthCoeff = 1;
         this.isActive = false;
@@ -118,6 +119,7 @@ public class MeleeInfantry extends LightInfantry {
 
     public String getInfo(){
         return "Name: "+name+"\n"+"Efficiency "+closeEfficiency+"\n"+"Health "+health+"/"+maxHealth+"\n"
-                +"Close Damage "+ minCloseDamage +"-"+maxCloseDamage +"\n"+"Walk range "+walkRange+"\n";
+                +"Close Damage "+ minCloseDamage +"-"+maxCloseDamage +"\n"+"Walk range "+walkRange+"\n"
+                + "Cost: " +cost;
     }
 }
