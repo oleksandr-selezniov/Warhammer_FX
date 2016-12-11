@@ -36,10 +36,10 @@ import static Board.BoardInitializer.getArmyLimit;
 public class ChooseBoard {
     private String defaultBackgroundPath = "backgrounds/background_7.jpg";
     private static Scene scene;
-    int winHeight = 700;
-    int winWidth = 750;
-    int teamOneTotalCost = 0;
-    int teamTwoTotalCost = 0;
+    private int winHeight = 700;
+    private int winWidth = 750;
+    private int teamOneTotalCost = 0;
+    private int teamTwoTotalCost = 0;
     private static Map<String, Unit> humanUnitMap = Unit.getRaceUnitMap("Humans");
     private static Map<String, Unit> orkUnitMap = Unit.getRaceUnitMap("Orks");
     private static Unit currentSelectedUnit;
@@ -66,7 +66,6 @@ public class ChooseBoard {
         borderPane.setMaxHeight(winHeight);
         borderPane.setCenter(getCenterPart());
         borderPane.setBottom(getBottomPart());
- //       borderPane.setTop(getTopPart());
 
         anchorPane.getChildren().add(borderPane);
 
@@ -107,10 +106,13 @@ public class ChooseBoard {
         leftScrollPane.setMinSize(200, 200);
         leftScrollPane.setId("leftScrollPane");
 
-        TextArea centerTextArea = new TextArea();
-        centerTextArea.setMaxSize(200, 200);
-        centerTextArea.setMinSize(200, 200);
-        centerTextArea.setId("centerTextArea");
+//        TextArea centerTextArea = new TextArea();
+//        centerTextArea.setMaxSize(200, 200);
+//        centerTextArea.setMinSize(200, 200);
+//        centerTextArea.setId("centerTextArea");
+        HBox centerHBox = new HBox();
+        centerHBox.setMaxSize(200, 200);
+        centerHBox.setMinSize(200, 200);
 
         VBox rightVbox = new VBox();
         rightVbox.setMinWidth(200);
@@ -194,7 +196,9 @@ public class ChooseBoard {
                 VBox vbox = (VBox) scene.lookup("#centerVbox");
                 vbox.getChildren().clear();
                 vbox.getChildren().add(humanUnitMap.get(t1).getImageView(1, 1.8));
-                centerTextArea.setText(humanUnitMap.get(t1).getInfo());
+                centerHBox.getChildren().clear();
+                centerHBox.getChildren().add(humanUnitMap.get(t1).getInfoGridPane());
+                //centerTextArea.setText(humanUnitMap.get(t1).getInfo());
                 currentSelectedUnit = humanUnitMap.get(t1);
             }
         });
@@ -212,7 +216,9 @@ public class ChooseBoard {
                 VBox vbox = (VBox) scene.lookup("#centerVbox");
                 vbox.getChildren().clear();
                 vbox.getChildren().add(orkUnitMap.get(t1).getImageView(1, 1.8));
-                centerTextArea.setText(orkUnitMap.get(t1).getInfo());
+                centerHBox.getChildren().clear();
+                centerHBox.getChildren().add(orkUnitMap.get(t1).getInfoGridPane());
+               // centerTextArea.setText(orkUnitMap.get(t1).getInfo());
                 currentSelectedUnit = orkUnitMap.get(t1);
             }
         });
@@ -221,7 +227,7 @@ public class ChooseBoard {
         hBox1.setPadding(new Insets(5));
         hBox1.setAlignment(Pos.CENTER);
 
-        HBox hBox2 = new HBox(new VBox(selectButton, centerTextArea, getUnitCostBlock()));
+        HBox hBox2 = new HBox(new VBox(selectButton, centerHBox, getUnitCostBlock()));
         hBox2.setPadding(new Insets(5));
         hBox2.setAlignment(Pos.CENTER);
 

@@ -24,10 +24,8 @@ public class MeleeInfantry extends LightInfantry {
     public MeleeInfantry(String unitName, int team){
         this.team = team;
         this.name = resourceBundle.getString(unitName+".name");
-        this.health = Integer.parseInt(resourceBundle.getString(unitName+".health"));
-        this.maxHealth = health;
+        this.setHealth(Integer.parseInt(resourceBundle.getString(unitName+".health")));
 //        this.ammo = Integer.parseInt(resourceBundle.getString(unitName+".ammo"));
-        this.maxAmmo = ammo;
         this.armor = Double.parseDouble(resourceBundle.getString(unitName+".armor"));
         this.minCloseDamage = Integer.parseInt(resourceBundle.getString(unitName+".minCloseDamage"));
         this.maxCloseDamage = Integer.parseInt(resourceBundle.getString(unitName+".maxCloseDamage"));
@@ -118,7 +116,7 @@ public class MeleeInfantry extends LightInfantry {
     }
 
     public String getInfo(){
-        return "Name: "+name+"\n"+"Efficiency "+closeEfficiency+"\n"+"Health "+health+"/"+maxHealth+"\n"
+        return "Name: "+name+"\n"+"Efficiency "+closeEfficiency+"\n"+"Health "+getHealth()+"/"+maxHealth+"\n"
                 +"Close Damage "+ minCloseDamage +"-"+maxCloseDamage +"\n"+"Walk range "+walkRange+"\n"
                 + "Cost: " +cost;
     }

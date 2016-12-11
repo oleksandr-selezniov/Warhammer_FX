@@ -25,10 +25,9 @@ public class Vehicle extends Unit {
     public Vehicle(String unitName, int team){
         this.team = team;
         this.name = resourceBundle.getString(unitName+".name");
-        this.health = Integer.parseInt(resourceBundle.getString(unitName+".health"));
-        this.maxHealth = health;
-        this.ammo = Integer.parseInt(resourceBundle.getString(unitName+".ammo"));
-        this.maxAmmo = ammo;
+        this.setHealth(Integer.parseInt(resourceBundle.getString(unitName+".health")));
+        this.setAmmo(Integer.parseInt(resourceBundle.getString(unitName+".ammo")));
+        this.maxAmmo = getAmmo();
         this.armor = Double.parseDouble(resourceBundle.getString(unitName+".armor"));
         this.minRangeDamage = Integer.parseInt(resourceBundle.getString(unitName+".minRangeDamage"));
         this.maxRangeDamage = Integer.parseInt(resourceBundle.getString(unitName+".maxRangeDamage"));

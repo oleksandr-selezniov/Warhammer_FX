@@ -26,10 +26,9 @@ public class Artillery extends Vehicle {
     public Artillery(String unitName, int team){
         this.team = team;
         this.name = resourceBundle.getString(unitName+".name");
-        this.health = Integer.parseInt(resourceBundle.getString(unitName+".health"));
-        this.maxHealth = health;
-        this.ammo = Integer.parseInt(resourceBundle.getString(unitName+".ammo"));
-        this.maxAmmo = ammo;
+        this.setHealth(Integer.parseInt(resourceBundle.getString(unitName+".health")));
+        this.setAmmo(Integer.parseInt(resourceBundle.getString(unitName+".ammo")));
+        this.maxAmmo = getAmmo();
         this.armor = Double.parseDouble(resourceBundle.getString(unitName+".armor"));
         this.minRangeDamage = Integer.parseInt(resourceBundle.getString(unitName+".minRangeDamage"));
         this.maxRangeDamage = Integer.parseInt(resourceBundle.getString(unitName+".maxRangeDamage"));
@@ -119,8 +118,8 @@ public class Artillery extends Vehicle {
     }
 
     public String getInfo(){
-        return "Name: "+name+"\n"+"Efficiency "+rangeEfficiency+"\n"+"Health "+health+"/"+maxHealth+"\n"+"Accuracy "+accuracy+
-                "\n"+"Ammo "+ammo+"/"+maxAmmo+"\n"+"Close Damage "+ minCloseDamage +"-"+maxCloseDamage +"\n"
+        return "Name: "+name+"\n"+"Efficiency "+rangeEfficiency+"\n"+"Health "+getHealth()+"/"+maxHealth+"\n"+"Accuracy "+accuracy+
+                "\n"+"Ammo "+getAmmo()+"/"+maxAmmo+"\n"+"Close Damage "+ minCloseDamage +"-"+maxCloseDamage +"\n"
                 + "Range Damage "+ minRangeDamage +"-"+ maxRangeDamage +"\n"+"Walk range "+walkRange+"\n"+"ShotRange "+shotRange+"\n"+
                 "Dead Zone Range "+deadZone+"\n"+ "Cost: " +cost;
     }

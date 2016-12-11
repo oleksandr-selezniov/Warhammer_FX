@@ -134,13 +134,14 @@ public class Board {
         leftVbox.setFillWidth(true);
         leftVbox.setMinHeight(Size.getSceneHeight()*0.25);
         leftVbox.setMinWidth(Size.getSceneWidth()*0.15);
+        leftVbox.setId("leftVBox");
+//
+//        TextArea leftTextArea = new TextArea();
+//        leftTextArea.setMaxWidth(Size.getSceneWidth()*0.14);
+//        leftTextArea.setMaxHeight(Size.getSceneHeight()*0.26);
+//        leftTextArea.setId("leftTextArea");
 
-        TextArea leftTextArea = new TextArea();
-        leftTextArea.setMaxWidth(Size.getSceneWidth()*0.14);
-        leftTextArea.setMaxHeight(Size.getSceneHeight()*0.26);
-        leftTextArea.setId("leftTextArea");
-
-        leftVbox.getChildren().addAll(leftTextArea);
+//        leftVbox.getChildren().addAll(leftTextArea);
         leftEarGP.add(leftVbox, 2,0);
 
         return leftEarGP;
@@ -273,6 +274,10 @@ public class Board {
         damagePanel.setTextFill(Color.ORANGE);
         damagePanel.setEffect(new Bloom());
 
+//        ProgressBar dc = new ProgressBar(1);
+//        dc.
+//
+
         hbox.getChildren().addAll(title, damagePanel);
         return hbox;
     }
@@ -336,7 +341,10 @@ public class Board {
     }
 
     static void initializeBottomMenu(GameCell gameCell, String direction){
-        writeToTextArea("#"+direction+"TextArea", gameCell.getUnit().getInfo(), false);
+        //writeToTextArea("#"+direction+"TextArea", gameCell.getUnit().getInfo(), false);
+        VBox vBox = (VBox)scene.lookup("#leftVBox");
+        vBox.getChildren().clear();
+        vBox.getChildren().add(gameCell.getUnit().getInfoGridPane());
 
         HBox hbox = new HBox(gameCell.getUnit().getImageView(1, 1.1));
         hbox.setMinWidth(Size.getSceneWidth()*0.18);

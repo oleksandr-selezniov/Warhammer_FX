@@ -119,7 +119,7 @@ public class BoardUtils {
         BoardUtils.showShootingRange();
     }
 
-    Image getImage(String imagePath){
+    public Image getImage(String imagePath){
         ClassLoader classLoader = getClass().getClassLoader();
         URL urlToImage = classLoader.getResource(imagePath);
         return new Image(urlToImage.toString(), false);
