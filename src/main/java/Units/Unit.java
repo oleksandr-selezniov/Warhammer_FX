@@ -302,122 +302,126 @@ public abstract class Unit implements Serializable{
                 + "Cost: " +cost;
     }
 
-    public GridPane getInfoGridPane(){
+    public GridPane getLeftInfoGridPane(){
         GridPane infoGP = new GridPane();
-        infoGP.setMaxSize(200, 200);
-        infoGP.setMinSize(200, 200);
         infoGP.setVgap(1);
         infoGP.setHgap(1);
 
+        ImageView acLIImV = getIcon("icons/icon_16.png");
+        ProgressBar pbAcLI = getNewProgressbar(getCurrentAccuracy(new LightInfantry()), "red");
+        infoGP.add(acLIImV, 0,0);
+        infoGP.add(pbAcLI, 1,0);
 
+        ImageView acHIImV = getIcon("icons/icon_17.png");
+        ProgressBar pbAcHI = getNewProgressbar(getCurrentAccuracy(new HeavyInfantry()), "red");
+        infoGP.add(acHIImV, 0,1);
+        infoGP.add(pbAcHI, 1,1);
 
-        ImageView nameImV = getIcon("icons/icon_14.png");
-        Label nameLabel = new Label(name);
-        nameLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
-        nameLabel.setTextFill(Color.WHITE);
-        infoGP.add(nameImV, 0,0);
-        infoGP.add(nameLabel, 1,0);
+        ImageView acVEImV = getIcon("icons/icon_18.png");
+        ProgressBar pbAcVE = getNewProgressbar(getCurrentAccuracy(new Vehicle()), "red");
+        infoGP.add(acVEImV, 0,2);
+        infoGP.add(pbAcVE, 1,2);
 
-//_____________________________________________________________________________________________________________________
-        ImageView healthImV = getIcon("icons/icon_7.png");
-        HBox healthHBox = new HBox();
-        healthHBox.setAlignment(Pos.CENTER_LEFT);
-        ProgressBar healthPB = getNewProgressbar();
-        healthPB.setStyle( "-fx-text-box-border: forestgreen; -fx-accent: red");
-        healthPB.progressProperty().bind(healthPercentageProperty());
-        Label currentHealthLabel = new Label();
-        currentHealthLabel.textProperty().bind(healthProperty().asString());
-        Label maxHealthLabel = new Label("/"+maxHealth);
-        currentHealthLabel.setTextFill(Color.WHITE);
-        currentHealthLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 10));
-        maxHealthLabel.setTextFill(Color.WHITE);
-        maxHealthLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 10));
-        healthHBox.getChildren().addAll(healthPB, currentHealthLabel, maxHealthLabel);
+        ImageView efLIImV = getIcon("icons/icon_19.png");
+        ProgressBar pbEfLI = getNewProgressbar(getCurrentRangeEfficiency(new LightInfantry()), "red");
+        infoGP.add(efLIImV, 0,3);
+        infoGP.add(pbEfLI, 1,3);
 
-        infoGP.add(healthImV, 0,1);
-        infoGP.add(healthHBox, 1,1);
+        ImageView efHIImV = getIcon("icons/icon_20.png");
+        ProgressBar pbEfHI = getNewProgressbar(getCurrentRangeEfficiency(new HeavyInfantry()), "red");
+        infoGP.add(efHIImV, 0,4);
+        infoGP.add(pbEfHI, 1,4);
 
-//_____________________________________________________________________________________________________________________
-        ImageView ammoIV = getIcon("icons/icon_12.png");
-        HBox ammoHBox = new HBox();
-        ammoHBox.setAlignment(Pos.CENTER_LEFT);
-        ProgressBar ammoPB = getNewProgressbar();
-        ammoPB.setStyle( "-fx-text-box-border: forestgreen; -fx-accent: yellow");
-        ammoPB.progressProperty().bind(ammoPercentageProperty());
-        Label currentAmmoLabel = new Label();
-        currentAmmoLabel.textProperty().bind(ammoProperty().asString());
-        Label maxAmmoLabel = new Label("/"+maxAmmo);
-        currentAmmoLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 10));
-        currentAmmoLabel.setTextFill(Color.WHITE);
-        maxAmmoLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 10));
-        maxAmmoLabel.setTextFill(Color.WHITE);
-        ammoHBox.getChildren().addAll(ammoPB, currentAmmoLabel, maxAmmoLabel);
-
-        infoGP.add(ammoIV, 0,2);
-        infoGP.add(ammoHBox, 1,2);
-//_____________________________________________________________________________________________________________________
-
-        ImageView rangeDamageImV = getIcon("icons/icon_6.png");
-        Label rangeDamageLabel = new Label(minRangeDamage + " - " +maxRangeDamage);
-        rangeDamageLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 10));
-        rangeDamageLabel.setTextFill(Color.WHITE);
-        infoGP.add(rangeDamageImV, 0,3);
-        infoGP.add(rangeDamageLabel, 1,3);
-//_____________________________________________________________________________________________________________________
+        ImageView efVEImV = getIcon("icons/icon_21.png");
+        ProgressBar pbEfVE = getNewProgressbar(getCurrentRangeEfficiency(new Vehicle()), "red");
+        infoGP.add(efVEImV, 0,5);
+        infoGP.add(pbEfVE, 1,5);
 
         ImageView closeDamageImV = getIcon("icons/icon_2.png");
-        Label closeDamageLabel = new Label(minCloseDamage + " - " +maxCloseDamage);
-        closeDamageLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 10));
-        closeDamageLabel.setTextFill(Color.WHITE);
-        infoGP.add(closeDamageImV, 0,4);
-        infoGP.add(closeDamageLabel, 1,4);
-
-//_____________________________________________________________________________________________________________________
-
-        ImageView walkrangeImV = getIcon("icons/icon_13.png");
-        Label walkrangeLabel = new Label(Integer.toString(walkRange));
-        walkrangeLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 10));
-        walkrangeLabel.setTextFill(Color.WHITE);
-        infoGP.add(walkrangeImV, 0,5);
-        infoGP.add(walkrangeLabel, 1,5);
-
-//_____________________________________________________________________________________________________________________
-
-        ImageView shotRangeImV = getIcon("icons/icon_5.png");
-        Label shotRangeLabel = new Label(Integer.toString(shotRange));
-        shotRangeLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 10));
-        shotRangeLabel.setTextFill(Color.WHITE);
-        infoGP.add(shotRangeImV, 0,6);
-        infoGP.add(shotRangeLabel, 1,6);
-
-//_____________________________________________________________________________________________________________________
-
-        ImageView costImV = getIcon("icons/icon_3.png");
-        Label costLabel = new Label(Integer.toString(cost));
-        costLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 10));
-        costLabel.setTextFill(Color.WHITE);
-        infoGP.add(costImV, 0,7);
-        infoGP.add(costLabel, 1,7);
-
+        Label closeDamageLabel = getLabel("CONSTANT");
+        infoGP.add(closeDamageImV, 0,6);
+        infoGP.add(closeDamageLabel, 1,6);
 
         return infoGP;
     }
 
-    private ProgressBar getNewProgressbar(){
-        ProgressBar pb1 = new ProgressBar();
-        pb1.setMinSize(100, 15);
-        pb1.setMaxSize(100, 15);
-        pb1.setEffect(new Glow());
+    public GridPane getCenterInfoGridPane(){
+        GridPane infoGP = new GridPane();
+        infoGP.setVgap(1);
+        infoGP.setHgap(1);
 
+        ImageView nameImV = getIcon("icons/icon_14.png");
+        Label nameLabel = getLabel(name);
+        infoGP.add(nameImV, 0,0);
+        infoGP.add(nameLabel, 1,0);
+
+        ImageView healthImV = getIcon("icons/icon_7.png");
+        HBox healthHBox = new HBox();
+        healthHBox.setAlignment(Pos.CENTER_LEFT);
+        Label maxHealthLabel = getLabel(Integer.toString(maxHealth));
+        healthHBox.getChildren().addAll(maxHealthLabel);
+        infoGP.add(healthImV, 0,1);
+        infoGP.add(healthHBox, 1,1);
+
+        ImageView ammoIV = getIcon("icons/icon_12.png");
+        HBox ammoHBox = new HBox();
+        ammoHBox.setAlignment(Pos.CENTER_LEFT);
+        Label maxAmmoLabel = getLabel(Integer.toString(maxAmmo));
+        ammoHBox.getChildren().addAll(maxAmmoLabel);
+        infoGP.add(ammoIV, 0,2);
+        infoGP.add(ammoHBox, 1,2);
+
+        ImageView rangeDamageImV = getIcon("icons/icon_6.png");
+        Label rangeDamageLabel = getLabel(minRangeDamage + " - " +maxRangeDamage);
+        infoGP.add(rangeDamageImV, 0,3);
+        infoGP.add(rangeDamageLabel, 1,3);
+
+        ImageView closeDamageImV = getIcon("icons/icon_2.png");
+        Label closeDamageLabel = getLabel(minCloseDamage + " - " +maxCloseDamage);
+        infoGP.add(closeDamageImV, 0,4);
+        infoGP.add(closeDamageLabel, 1,4);
+
+        ImageView walkrangeImV = getIcon("icons/icon_13.png");
+        Label walkrangeLabel = getLabel(Integer.toString(walkRange));
+        infoGP.add(walkrangeImV, 0,5);
+        infoGP.add(walkrangeLabel, 1,5);
+
+        ImageView shotRangeImV = getIcon("icons/icon_5.png");
+        Label shotRangeLabel = getLabel(Integer.toString(shotRange));
+        infoGP.add(shotRangeImV, 0,6);
+        infoGP.add(shotRangeLabel, 1,6);
+
+        ImageView costImV = getIcon("icons/icon_3.png");
+        Label costLabel = getLabel(Integer.toString(cost));
+        infoGP.add(costImV, 0,7);
+        infoGP.add(costLabel, 1,7);
+
+        return infoGP;
+    }
+
+    protected ProgressBar getNewProgressbar(double progress, String colour){
+        ProgressBar pb1 = new ProgressBar();
+        pb1.setMinSize(140, 20);
+        pb1.setMaxSize(140, 20);
+        pb1.setProgress(progress);
+        pb1.setStyle( "-fx-text-box-border: forestgreen; -fx-accent: "+colour);
+        pb1.setEffect(new Glow());
         return pb1;
     }
 
-    private ImageView getIcon(String path){
+    protected ImageView getIcon(String path){
         BoardUtils boardUtils = new BoardUtils();
         ImageView healthImV = new ImageView(boardUtils.getImage(path));
-        healthImV.setFitHeight(25);
-        healthImV.setFitWidth(25);
+        healthImV.setFitHeight(40);
+        healthImV.setFitWidth(40);
         return healthImV;
+    }
+
+    protected Label getLabel(String text){
+        Label nameLabel = new Label(text);
+        nameLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        nameLabel.setTextFill(Color.WHITE);
+        return nameLabel;
     }
 
     public static List getUnitNamesList(String race){
@@ -471,3 +475,26 @@ public abstract class Unit implements Serializable{
         return unitMap;
     }
 }
+
+
+//_____________________________________________________________________________________________________________________
+
+//        ProgressBar healthPB = getNewProgressbar();
+//        healthPB.setStyle( "-fx-text-box-border: forestgreen; -fx-accent: red");
+//        healthPB.progressProperty().bind(healthPercentageProperty());
+//        Label currentHealthLabel = new Label();
+//        currentHealthLabel.textProperty().bind(healthProperty().asString());
+//        currentHealthLabel.setTextFill(Color.WHITE);
+//        currentHealthLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 10));
+
+//_____________________________________________________________________________________________________________________
+
+//        ProgressBar ammoPB = getNewProgressbar();
+//        ammoPB.setStyle( "-fx-text-box-border: forestgreen; -fx-accent: yellow");
+//        ammoPB.progressProperty().bind(ammoPercentageProperty());
+//        Label currentAmmoLabel = new Label();
+//        currentAmmoLabel.textProperty().bind(ammoProperty().asString());
+//        currentAmmoLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 10));
+//        currentAmmoLabel.setTextFill(Color.WHITE);
+
+//_____________________________________________________________________________________________________________________

@@ -344,7 +344,7 @@ public class Board {
         //writeToTextArea("#"+direction+"TextArea", gameCell.getUnit().getInfo(), false);
         VBox vBox = (VBox)scene.lookup("#leftVBox");
         vBox.getChildren().clear();
-        vBox.getChildren().add(gameCell.getUnit().getInfoGridPane());
+        vBox.getChildren().add(gameCell.getUnit().getCenterInfoGridPane());
 
         HBox hbox = new HBox(gameCell.getUnit().getImageView(1, 1.1));
         hbox.setMinWidth(Size.getSceneWidth()*0.18);

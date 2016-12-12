@@ -37,7 +37,7 @@ public class ChooseBoard {
     private String defaultBackgroundPath = "backgrounds/background_7.jpg";
     private static Scene scene;
     private int winHeight = 700;
-    private int winWidth = 750;
+    private int winWidth = 800;
     private int teamOneTotalCost = 0;
     private int teamTwoTotalCost = 0;
     private static Map<String, Unit> humanUnitMap = Unit.getRaceUnitMap("Humans");
@@ -78,7 +78,14 @@ public class ChooseBoard {
         primaryStage.show();
     }
 
-    private VBox getCenterPart(){
+    private GridPane getCenterPart(){
+        GridPane gridPane = new GridPane();
+        gridPane.setMaxSize(winWidth, winHeight* 0.5);
+        gridPane.setMinSize(winWidth, winHeight* 0.5);
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setPadding(new Insets(5));
+        gridPane.setGridLinesVisible(true);
+
         ImageView centerImageView = new ImageView();
         centerImageView.setFitWidth(winWidth* 0.7);
         centerImageView.setFitHeight(winHeight* 0.5);
@@ -86,12 +93,28 @@ public class ChooseBoard {
 
         VBox vbox = new VBox(centerImageView);
         vbox.setId("centerVbox");
-        vbox.setMinWidth(winWidth);
+        vbox.setMinWidth(350);
         vbox.setMinHeight(winHeight*0.5);
-        vbox.setMaxWidth(winWidth);
+        vbox.setMaxWidth(350);
         vbox.setMaxHeight(winHeight*0.5);
         vbox.setAlignment(Pos.CENTER);
-        return  vbox;
+
+        VBox leftInfoVbox = new VBox();
+        leftInfoVbox.setId("leftInfoVbox");
+        leftInfoVbox.setMinSize(200,winHeight*0.5);
+        leftInfoVbox.setMaxSize(200,winHeight*0.5);
+        leftInfoVbox.setAlignment(Pos.CENTER);
+
+        VBox rightInfoVbox = new VBox();
+        rightInfoVbox.setId("rightInfoVbox");
+        rightInfoVbox.setMinSize(200,winHeight*0.5);
+        rightInfoVbox.setMaxSize(200,winHeight*0.5);
+        rightInfoVbox.setAlignment(Pos.CENTER);
+
+        gridPane.add(leftInfoVbox, 0,0);
+        gridPane.add(vbox, 1, 0);
+        gridPane.add(rightInfoVbox, 3,0);
+        return  gridPane;
     }
 
     private HBox getBottomPart(){
@@ -197,7 +220,14 @@ public class ChooseBoard {
                 vbox.getChildren().clear();
                 vbox.getChildren().add(humanUnitMap.get(t1).getImageView(1, 1.8));
                 centerHBox.getChildren().clear();
-                centerHBox.getChildren().add(humanUnitMap.get(t1).getInfoGridPane());
+
+                VBox leftInfoBox = (VBox)scene.lookup("#leftInfoVbox");
+                leftInfoBox.getChildren().clear();
+                leftInfoBox.getChildren().add(humanUnitMap.get(t1).getCenterInfoGridPane());
+
+                VBox rightInfoBox = (VBox)scene.lookup("#rightInfoVbox");
+                rightInfoBox.getChildren().clear();
+                rightInfoBox.getChildren().add(humanUnitMap.get(t1).getLeftInfoGridPane());
                 //centerTextArea.setText(humanUnitMap.get(t1).getInfo());
                 currentSelectedUnit = humanUnitMap.get(t1);
             }
@@ -217,7 +247,14 @@ public class ChooseBoard {
                 vbox.getChildren().clear();
                 vbox.getChildren().add(orkUnitMap.get(t1).getImageView(1, 1.8));
                 centerHBox.getChildren().clear();
-                centerHBox.getChildren().add(orkUnitMap.get(t1).getInfoGridPane());
+
+                VBox leftInfoBox = (VBox)scene.lookup("#leftInfoVbox");
+                leftInfoBox.getChildren().clear();
+                leftInfoBox.getChildren().add(orkUnitMap.get(t1).getCenterInfoGridPane());
+
+                VBox rightInfoBox = (VBox)scene.lookup("#rightInfoVbox");
+                rightInfoBox.getChildren().clear();
+                rightInfoBox.getChildren().add(orkUnitMap.get(t1).getLeftInfoGridPane());
                // centerTextArea.setText(orkUnitMap.get(t1).getInfo());
                 currentSelectedUnit = orkUnitMap.get(t1);
             }

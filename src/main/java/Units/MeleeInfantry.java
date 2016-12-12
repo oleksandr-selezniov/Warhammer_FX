@@ -3,6 +3,9 @@ package Units;
 import Board.Board;
 import Size.Size;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -11,6 +14,8 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import Board.LoggerUtils;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 
 /**
  * Created by Glazyrin.D on 11/9/2016.
@@ -20,6 +25,7 @@ public class MeleeInfantry extends LightInfantry {
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("MeleeInfantry", locale);
     private double insetsY = 2.0;
     private String closeEfficiency;
+    public MeleeInfantry(){}
 
     public MeleeInfantry(String unitName, int team){
         this.team = team;
@@ -119,5 +125,68 @@ public class MeleeInfantry extends LightInfantry {
         return "Name: "+name+"\n"+"Efficiency "+closeEfficiency+"\n"+"Health "+getHealth()+"/"+maxHealth+"\n"
                 +"Close Damage "+ minCloseDamage +"-"+maxCloseDamage +"\n"+"Walk range "+walkRange+"\n"
                 + "Cost: " +cost;
+    }
+
+    public GridPane getLeftInfoGridPane(){
+        GridPane infoGP = new GridPane();
+        infoGP.setVgap(1);
+        infoGP.setHgap(1);
+
+
+        ImageView rangeDamageImV = getIcon("icons/icon_6.png");
+        Label rangeDamageLabel = getLabel("N/A");
+        infoGP.add(rangeDamageImV, 0,0);
+        infoGP.add(rangeDamageLabel, 1,0);
+
+        ImageView ammoIV = getIcon("icons/icon_12.png");
+        HBox ammoHBox = new HBox();
+        ammoHBox.setAlignment(Pos.CENTER_LEFT);
+        Label maxAmmoLabel = getLabel("N/A");
+        ammoHBox.getChildren().addAll(maxAmmoLabel);
+        infoGP.add(ammoIV, 0,1);
+        infoGP.add(ammoHBox, 1,1);
+
+        ImageView closeDamageImV = getIcon("icons/icon_2.png");
+        Label closeDamageLabel = getLabel("CONSTANT");
+        infoGP.add(closeDamageImV, 0,2);
+        infoGP.add(closeDamageLabel, 1,2);
+
+        return infoGP;
+    }
+
+    public GridPane getCenterInfoGridPane(){
+        GridPane infoGP = new GridPane();
+        infoGP.setVgap(1);
+        infoGP.setHgap(1);
+
+        ImageView nameImV = getIcon("icons/icon_14.png");
+        Label nameLabel = getLabel(name);
+        infoGP.add(nameImV, 0,0);
+        infoGP.add(nameLabel, 1,0);
+
+        ImageView healthImV = getIcon("icons/icon_7.png");
+        HBox healthHBox = new HBox();
+        healthHBox.setAlignment(Pos.CENTER_LEFT);
+        Label maxHealthLabel = getLabel(Integer.toString(maxHealth));
+        healthHBox.getChildren().addAll(maxHealthLabel);
+        infoGP.add(healthImV, 0,1);
+        infoGP.add(healthHBox, 1,1);
+
+        ImageView closeDamageImV = getIcon("icons/icon_2.png");
+        Label closeDamageLabel = getLabel(minCloseDamage + " - " +maxCloseDamage);
+        infoGP.add(closeDamageImV, 0,2);
+        infoGP.add(closeDamageLabel, 1,2);
+
+        ImageView walkrangeImV = getIcon("icons/icon_13.png");
+        Label walkrangeLabel = getLabel(Integer.toString(walkRange));
+        infoGP.add(walkrangeImV, 0,3);
+        infoGP.add(walkrangeLabel, 1,3);
+
+        ImageView costImV = getIcon("icons/icon_3.png");
+        Label costLabel = getLabel(Integer.toString(cost));
+        infoGP.add(costImV, 0,4);
+        infoGP.add(costLabel, 1,4);
+
+        return infoGP;
     }
 }

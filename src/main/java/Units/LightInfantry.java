@@ -22,7 +22,6 @@ public class LightInfantry extends Unit {
     private double insetsY = 1.0;
     public LightInfantry(){}
 
-
     public LightInfantry(String unitName, int team){
         this.team = team;
         this.name = resourceBundle.getString(unitName+".name");

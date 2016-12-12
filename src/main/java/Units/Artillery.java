@@ -4,8 +4,11 @@ import Board.Board;
 import Board.LoggerUtils;
 import Size.Size;
 import javafx.geometry.Insets;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -22,6 +25,7 @@ public class Artillery extends Vehicle {
     private int deadZone;
     private double insetsY = 37;
     private double insetsX = 50;
+    public Artillery(){}
 
     public Artillery(String unitName, int team){
         this.team = team;
@@ -122,5 +126,53 @@ public class Artillery extends Vehicle {
                 "\n"+"Ammo "+getAmmo()+"/"+maxAmmo+"\n"+"Close Damage "+ minCloseDamage +"-"+maxCloseDamage +"\n"
                 + "Range Damage "+ minRangeDamage +"-"+ maxRangeDamage +"\n"+"Walk range "+walkRange+"\n"+"ShotRange "+shotRange+"\n"+
                 "Dead Zone Range "+deadZone+"\n"+ "Cost: " +cost;
+    }
+
+    public GridPane getLeftInfoGridPane(){
+        GridPane infoGP = new GridPane();
+        infoGP.setVgap(1);
+        infoGP.setHgap(1);
+
+        ImageView acLIImV = getIcon("icons/icon_16.png");
+        ProgressBar pbAcLI = getNewProgressbar(getCurrentAccuracy(new LightInfantry()), "red");
+        infoGP.add(acLIImV, 0,0);
+        infoGP.add(pbAcLI, 1,0);
+
+        ImageView acHIImV = getIcon("icons/icon_17.png");
+        ProgressBar pbAcHI = getNewProgressbar(getCurrentAccuracy(new HeavyInfantry()), "red");
+        infoGP.add(acHIImV, 0,1);
+        infoGP.add(pbAcHI, 1,1);
+
+        ImageView acVEImV = getIcon("icons/icon_18.png");
+        ProgressBar pbAcVE = getNewProgressbar(getCurrentAccuracy(new Vehicle()), "red");
+        infoGP.add(acVEImV, 0,2);
+        infoGP.add(pbAcVE, 1,2);
+
+        ImageView efLIImV = getIcon("icons/icon_19.png");
+        ProgressBar pbEfLI = getNewProgressbar(getCurrentRangeEfficiency(new LightInfantry()), "red");
+        infoGP.add(efLIImV, 0,3);
+        infoGP.add(pbEfLI, 1,3);
+
+        ImageView efHIImV = getIcon("icons/icon_20.png");
+        ProgressBar pbEfHI = getNewProgressbar(getCurrentRangeEfficiency(new HeavyInfantry()), "red");
+        infoGP.add(efHIImV, 0,4);
+        infoGP.add(pbEfHI, 1,4);
+
+        ImageView efVEImV = getIcon("icons/icon_21.png");
+        ProgressBar pbEfVE = getNewProgressbar(getCurrentRangeEfficiency(new Vehicle()), "red");
+        infoGP.add(efVEImV, 0,5);
+        infoGP.add(pbEfVE, 1,5);
+
+        ImageView closeDamageImV = getIcon("icons/icon_2.png");
+        Label closeDamageLabel = getLabel("CONSTANT");
+        infoGP.add(closeDamageImV, 0,6);
+        infoGP.add(closeDamageLabel, 1,6);
+
+        ImageView deadZoneImV = getIcon("icons/icon_10.png");
+        Label deadZoneLabel = getLabel(Integer.toString(deadZone));
+        infoGP.add(deadZoneImV, 0,7);
+        infoGP.add(deadZoneLabel, 1,7);
+
+        return infoGP;
     }
 }

@@ -19,6 +19,7 @@ public class HeavyInfantry extends Unit{
     private static Locale locale = new Locale("en", "US");
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("HeavyInfantry", locale);
     private double insetsY = 1.0;
+    public HeavyInfantry(){}
 
     public HeavyInfantry(String unitName, int team){
         this.team = team;
