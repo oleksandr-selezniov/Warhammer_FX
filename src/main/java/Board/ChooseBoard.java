@@ -92,7 +92,7 @@ public class ChooseBoard {
         centerImageView.setImage(new BoardUtils().getImage("other/Logo.png"));
 
         VBox vbox = new VBox(centerImageView);
-        vbox.setId("centerVbox");
+        vbox.setId("centerImageVbox");
         vbox.setMinWidth(350);
         vbox.setMinHeight(winHeight*0.5);
         vbox.setMaxWidth(350);
@@ -136,6 +136,7 @@ public class ChooseBoard {
         HBox centerHBox = new HBox();
         centerHBox.setMaxSize(200, 200);
         centerHBox.setMinSize(200, 200);
+        centerHBox.setId("centerHbox");
 
         VBox rightVbox = new VBox();
         rightVbox.setMinWidth(200);
@@ -152,113 +153,24 @@ public class ChooseBoard {
         selectButton.setOnAction(p->{
 
             if(currentSelectedUnit.getTeam() == 1){
-                if(getTeamOneTotalCost() < getArmyLimit() && (getTeamOneTotalCost()+currentSelectedUnit.getCost())<=getArmyLimit()) {
-                    Button leftB = new Button(currentSelectedUnit.getName());
-                    currentHumanList.add(currentSelectedUnit);
-                    setTeamOneTotalCost(getTeamOneTotalCost() + currentSelectedUnit.getCost());
-
-                    leftB.setMaxWidth(150);
-                    leftB.setMinWidth(150);
-                    leftB.setMaxHeight(40);
-                    leftB.setMinHeight(40);
-                    leftB.setAlignment(Pos.BASELINE_LEFT);
-                    leftB.setGraphic(currentSelectedUnit.getImageView(1, 0.25));
-                    leftB.setOnAction(s -> {
-                        leftVbox.getChildren().remove(leftB);
-                        Unit unit = currentHumanList.stream().filter(k -> k.getName().equals(leftB.getText())).findFirst().orElse(null);
-                        setTeamOneTotalCost(getTeamOneTotalCost() - unit.getCost());
-                        currentHumanList.remove(unit);
-                    });
+                if(getTeamTotalCost(1) < getArmyLimit() && (getTeamTotalCost(1)+currentSelectedUnit.getCost())<=getArmyLimit()) {
+                    Button leftB = getUnitButton(currentHumanList, currentSelectedUnit, leftVbox);
                     leftVbox.getChildren().add(leftB);
                 }else{
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("Unit Limit Reached!");
-                    alert.setContentText("You can't increase your army");
-                    alert.showAndWait();
+                    showUnitLimitWarning();
                 }
             }else{
-                if(getTeamTwoTotalCost() < getArmyLimit() && (getTeamTwoTotalCost()+currentSelectedUnit.getCost())<=getArmyLimit()) {
-                    Button rightB = new Button(currentSelectedUnit.getName());
-                    currentOrkList.add(currentSelectedUnit);
-                    setTeamTwoTotalCost(getTeamTwoTotalCost()+currentSelectedUnit.getCost());
-
-                    rightB.setMaxWidth(150);
-                    rightB.setMinWidth(150);
-                    rightB.setMaxHeight(40);
-                    rightB.setMinHeight(40);
-                    rightB.setAlignment(Pos.BASELINE_LEFT);
-                    rightB.setGraphic(currentSelectedUnit.getImageView(1, 0.25));
-                    rightB.setOnAction(s->{
-                        rightVbox.getChildren().remove(rightB);
-                        Unit unit = currentOrkList.stream().filter(k->k.getName().equals(rightB.getText())).findFirst().orElse(null);
-                        setTeamTwoTotalCost(getTeamTwoTotalCost()-unit.getCost());
-                        currentOrkList.remove(unit);
-                    });
+                if(getTeamTotalCost(2) < getArmyLimit() && (getTeamTotalCost(2)+currentSelectedUnit.getCost())<=getArmyLimit()) {
+                    Button rightB = getUnitButton(currentOrkList, currentSelectedUnit, rightVbox);
                     rightVbox.getChildren().add(rightB);
                 }else{
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("Unit Limit Reached!");
-                    alert.setContentText("You can't increase your army");
-                    alert.showAndWait();
+                    showUnitLimitWarning();
                 }
             }
         });
 
-        ArrayList<String> arrayListH= new ArrayList<>();
-        arrayListH.addAll(humanUnitMap.keySet());
-        ObservableList<String> humanNameList = FXCollections.observableArrayList(arrayListH);
-        ComboBox leftComboBox = new ComboBox(humanNameList);
-        leftComboBox.setMaxWidth(200);
-        leftComboBox.setValue("Human Units");
-        leftComboBox.valueProperty().addListener(new ChangeListener<String>() {
-            @Override public void changed(ObservableValue ov, String t, String t1) {
-                System.out.println("["+t1 + " is Selected]");
-
-                VBox vbox = (VBox) scene.lookup("#centerVbox");
-                vbox.getChildren().clear();
-                vbox.getChildren().add(humanUnitMap.get(t1).getImageView(1, 1.8));
-                centerHBox.getChildren().clear();
-
-                VBox leftInfoBox = (VBox)scene.lookup("#leftInfoVbox");
-                leftInfoBox.getChildren().clear();
-                leftInfoBox.getChildren().add(humanUnitMap.get(t1).getCenterInfoGridPane());
-
-                VBox rightInfoBox = (VBox)scene.lookup("#rightInfoVbox");
-                rightInfoBox.getChildren().clear();
-                rightInfoBox.getChildren().add(humanUnitMap.get(t1).getLeftInfoGridPane());
-                //centerTextArea.setText(humanUnitMap.get(t1).getInfo());
-                currentSelectedUnit = humanUnitMap.get(t1);
-            }
-        });
-
-        ArrayList<String> arrayListO= new ArrayList<>();
-        arrayListO.addAll(orkUnitMap.keySet());
-        ObservableList<String> orkNameList = FXCollections.observableArrayList(arrayListO);
-        ComboBox rightComboBox = new ComboBox(orkNameList);
-        rightComboBox.setMaxWidth(200);
-        rightComboBox.setValue("Ork Units");
-        rightComboBox.valueProperty().addListener(new ChangeListener<String>() {
-            @Override public void changed(ObservableValue ov, String t, String t1) {
-                System.out.println("["+t1 + " is Selected]");
-
-                VBox vbox = (VBox) scene.lookup("#centerVbox");
-                vbox.getChildren().clear();
-                vbox.getChildren().add(orkUnitMap.get(t1).getImageView(1, 1.8));
-                centerHBox.getChildren().clear();
-
-                VBox leftInfoBox = (VBox)scene.lookup("#leftInfoVbox");
-                leftInfoBox.getChildren().clear();
-                leftInfoBox.getChildren().add(orkUnitMap.get(t1).getCenterInfoGridPane());
-
-                VBox rightInfoBox = (VBox)scene.lookup("#rightInfoVbox");
-                rightInfoBox.getChildren().clear();
-                rightInfoBox.getChildren().add(orkUnitMap.get(t1).getLeftInfoGridPane());
-               // centerTextArea.setText(orkUnitMap.get(t1).getInfo());
-                currentSelectedUnit = orkUnitMap.get(t1);
-            }
-        });
+        ComboBox leftComboBox = getUnitComboBox(humanUnitMap, "Human Units");
+        ComboBox rightComboBox = getUnitComboBox(orkUnitMap, "Ork Units");
 
         HBox hBox1 = new HBox(new VBox(leftComboBox, leftScrollPane, getBoardSizeBlock()));
         hBox1.setPadding(new Insets(5));
@@ -278,6 +190,61 @@ public class ChooseBoard {
         return  hbox;
     }
 
+    private void showUnitLimitWarning(){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
+        alert.setHeaderText("Unit Limit Reached!");
+        alert.setContentText("You can't increase your army");
+        alert.showAndWait();
+    }
+
+    private Button getUnitButton(ArrayList<Unit> currentList, Unit currentSelectedUnit, VBox vBox){
+        Button rightB = new Button(currentSelectedUnit.getName());
+        currentList.add(currentSelectedUnit);
+        setTeamTotalCost( currentSelectedUnit.getTeam(), (getTeamTotalCost(currentSelectedUnit.getTeam())+currentSelectedUnit.getCost()));
+        rightB.setMaxWidth(150);
+        rightB.setMinWidth(150);
+        rightB.setMaxHeight(40);
+        rightB.setMinHeight(40);
+        rightB.setAlignment(Pos.BASELINE_LEFT);
+        rightB.setGraphic(currentSelectedUnit.getImageView(1, 0.25));
+        rightB.setOnAction(s->{
+            vBox.getChildren().remove(rightB);
+            Unit unit = currentList.stream().filter(k->k.getName().equals(rightB.getText())).findFirst().orElse(null);
+            setTeamTotalCost(currentSelectedUnit.getTeam(),(getTeamTotalCost(currentSelectedUnit.getTeam())-unit.getCost()));
+            currentList.remove(unit);
+        });
+        return rightB;
+    }
+
+    private ComboBox getUnitComboBox(Map<String, Unit> UnitMap, String name){
+        ArrayList<String> arrayListO= new ArrayList<>();
+        arrayListO.addAll(UnitMap.keySet());
+        ObservableList<String> orkNameList = FXCollections.observableArrayList(arrayListO);
+        ComboBox unitComboBox = new ComboBox(orkNameList);
+        unitComboBox.setMaxWidth(200);
+        unitComboBox.setValue(name);
+        unitComboBox.valueProperty().addListener(new ChangeListener<String>() {
+            @Override public void changed(ObservableValue ov, String t, String t1) {
+                System.out.println("["+t1 + " is Selected]");
+
+                VBox vbox = (VBox) scene.lookup("#centerImageVbox");
+                vbox.getChildren().clear();
+                vbox.getChildren().add(UnitMap.get(t1).getImageView(1, 1.8));
+
+                VBox leftInfoBox = (VBox)scene.lookup("#leftInfoVbox");
+                leftInfoBox.getChildren().clear();
+                leftInfoBox.getChildren().add(UnitMap.get(t1).getCenterInfoGridPane());
+
+                VBox rightInfoBox = (VBox)scene.lookup("#rightInfoVbox");
+                rightInfoBox.getChildren().clear();
+                rightInfoBox.getChildren().add(UnitMap.get(t1).getLeftInfoGridPane());
+                currentSelectedUnit = UnitMap.get(t1);
+            }
+        });
+        return unitComboBox;
+    }
+
     private GridPane getBoardSizeBlock(){
         GridPane gridPane = new GridPane();
         gridPane.setMaxSize(200, 50);
@@ -286,7 +253,6 @@ public class ChooseBoard {
         gridPane.setPadding(new Insets(5));
         gridPane.setHgap(5);
         gridPane.setVgap(5);
-
 
         ComboBox resolutionComboBox = new ComboBox(FXCollections.observableArrayList("1024/768", "1366/768", "1600/900", "1920/1080"));
         resolutionComboBox.setMaxWidth(100);
@@ -314,7 +280,6 @@ public class ChooseBoard {
             }
         });
         resolutionComboBox.setValue("1366/768");
-
 
         ComboBox sizeComboBox = new ComboBox(FXCollections.observableArrayList("Small", "Medium", "Large"));
         sizeComboBox.setMaxWidth(100);
@@ -377,14 +342,14 @@ public class ChooseBoard {
         teamTwoLabel.setMaxWidth(100);
 
         Label costOne = new Label();
-        costOne.setText(Integer.toString(getTeamOneTotalCost()));
+        costOne.setText(Integer.toString(getTeamTotalCost(1)));
         costOne.setId("costOne");
         costOne.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
         costOne.setTextFill(Color.LIGHTCORAL);
         costOne.setMaxWidth(100);
 
         Label costTwo = new Label();
-        costTwo.setText(Integer.toString(getTeamTwoTotalCost()));
+        costTwo.setText(Integer.toString(getTeamTotalCost(2)));
         costTwo.setId("costTwo");
         costTwo.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
         costTwo.setTextFill(Color.LIGHTCORAL);
@@ -422,17 +387,17 @@ public class ChooseBoard {
 
             VBox leftSC = (VBox)scene.lookup("#leftUnitVbox");
             leftSC.getChildren().remove(0, leftSC.getChildren().size());
-            setTeamOneTotalCost(0);
+            setTeamTotalCost(1, 0);
 
             VBox rightSC = (VBox)scene.lookup("#rightUnitVbox");
             rightSC.getChildren().remove(0, rightSC.getChildren().size());
-            setTeamTwoTotalCost(0);
+            setTeamTotalCost(2, 0);
 
             try {
                 BoardInitializer.setArmyLimit(Integer.parseInt(newValue));
             }catch (NumberFormatException e){
-            //    BoardInitializer.setArmyLimit(0);
-            //    armyLimit.setText("0");
+                //    BoardInitializer.setArmyLimit(0);
+                //    armyLimit.setText("0");
             }
 
         });
@@ -470,26 +435,19 @@ public class ChooseBoard {
         return currentOrkList;
     }
 
-
-    public int getTeamOneTotalCost() {
-        return teamOneTotalCost;
+    public void setTeamTotalCost(int team, int teamTotalCost) {
+        if(team == 1){
+            this.teamOneTotalCost = teamTotalCost;
+            Label label = (Label) scene.lookup("#costOne");
+            label.setText(Integer.toString(teamOneTotalCost));
+        }else{
+            this.teamTwoTotalCost = teamTotalCost;
+            Label label = (Label) scene.lookup("#costTwo");
+            label.setText(Integer.toString(teamTwoTotalCost));
+        }
     }
 
-    public void setTeamOneTotalCost(int teamOneTotalCost) {
-        this.teamOneTotalCost = teamOneTotalCost;
-        Label label = (Label) scene.lookup("#costOne");
-        label.setText(Integer.toString(teamOneTotalCost));
+    public int getTeamTotalCost(int team) {
+        return team == 1? teamOneTotalCost:teamTwoTotalCost;
     }
-
-    public int getTeamTwoTotalCost() {
-        return teamTwoTotalCost;
-    }
-
-    public void setTeamTwoTotalCost(int teamTwoTotalCost) {
-        this.teamTwoTotalCost = teamTwoTotalCost;
-        Label label = (Label) scene.lookup("#costTwo");
-        label.setText(Integer.toString(teamTwoTotalCost));
-    }
-
-
 }
