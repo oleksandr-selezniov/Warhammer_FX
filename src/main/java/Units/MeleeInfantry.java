@@ -31,7 +31,6 @@ public class MeleeInfantry extends LightInfantry {
         this.team = team;
         this.name = resourceBundle.getString(unitName+".name");
         this.setHealth(Integer.parseInt(resourceBundle.getString(unitName+".health")));
-//        this.ammo = Integer.parseInt(resourceBundle.getString(unitName+".ammo"));
         this.armor = Double.parseDouble(resourceBundle.getString(unitName+".armor"));
         this.minCloseDamage = Integer.parseInt(resourceBundle.getString(unitName+".minCloseDamage"));
         this.maxCloseDamage = Integer.parseInt(resourceBundle.getString(unitName+".maxCloseDamage"));
@@ -127,34 +126,43 @@ public class MeleeInfantry extends LightInfantry {
                 + "Cost: " +cost;
     }
 
-    public GridPane getLeftInfoGridPane(){
+    public GridPane getRightInfoGridPane(){
         GridPane infoGP = new GridPane();
         infoGP.setVgap(1);
         infoGP.setHgap(1);
 
+        ImageView cdLIImV = getIcon("icons/icon_22.png");
+        ProgressBar cdAcLI = getNewProgressbar(getCurrentCloseEfficiency(new LightInfantry()), "red");
+        infoGP.add(cdLIImV, 0,0);
+        infoGP.add(cdAcLI, 1,0);
+
+        ImageView cdHIImV = getIcon("icons/icon_23.png");
+        ProgressBar cdAcHI = getNewProgressbar(getCurrentCloseEfficiency(new HeavyInfantry()), "red");
+        infoGP.add(cdHIImV, 0,1);
+        infoGP.add(cdAcHI, 1,1);
+
+        ImageView cdVEImV = getIcon("icons/icon_24.png");
+        ProgressBar cdAcVE = getNewProgressbar(getCurrentCloseEfficiency(new Vehicle()), "red");
+        infoGP.add(cdVEImV, 0,2);
+        infoGP.add(cdAcVE, 1,2);
 
         ImageView rangeDamageImV = getIcon("icons/icon_6.png");
         Label rangeDamageLabel = getLabel("N/A");
-        infoGP.add(rangeDamageImV, 0,0);
-        infoGP.add(rangeDamageLabel, 1,0);
+        infoGP.add(rangeDamageImV, 0,3);
+        infoGP.add(rangeDamageLabel, 1,3);
 
         ImageView ammoIV = getIcon("icons/icon_12.png");
         HBox ammoHBox = new HBox();
         ammoHBox.setAlignment(Pos.CENTER_LEFT);
         Label maxAmmoLabel = getLabel("N/A");
         ammoHBox.getChildren().addAll(maxAmmoLabel);
-        infoGP.add(ammoIV, 0,1);
-        infoGP.add(ammoHBox, 1,1);
-
-        ImageView closeDamageImV = getIcon("icons/icon_2.png");
-        Label closeDamageLabel = getLabel("CONSTANT");
-        infoGP.add(closeDamageImV, 0,2);
-        infoGP.add(closeDamageLabel, 1,2);
+        infoGP.add(ammoIV, 0,4);
+        infoGP.add(ammoHBox, 1,4);
 
         return infoGP;
     }
 
-    public GridPane getCenterInfoGridPane(){
+    public GridPane getLeftInfoGridPane(){
         GridPane infoGP = new GridPane();
         infoGP.setVgap(1);
         infoGP.setHgap(1);

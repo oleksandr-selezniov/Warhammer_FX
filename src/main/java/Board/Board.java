@@ -21,10 +21,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import java.io.File;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import static Board.BoardInitializer.getScoreLimit;
 
@@ -344,7 +340,7 @@ public class Board {
         //writeToTextArea("#"+direction+"TextArea", gameCell.getUnit().getInfo(), false);
         VBox vBox = (VBox)scene.lookup("#leftVBox");
         vBox.getChildren().clear();
-        vBox.getChildren().add(gameCell.getUnit().getCenterInfoGridPane());
+        vBox.getChildren().add(gameCell.getUnit().getLeftInfoGridPane());
 
         HBox hbox = new HBox(gameCell.getUnit().getImageView(1, 1.1));
         hbox.setMinWidth(Size.getSceneWidth()*0.18);

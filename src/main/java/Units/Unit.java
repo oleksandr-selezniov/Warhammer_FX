@@ -302,7 +302,7 @@ public abstract class Unit implements Serializable{
                 + "Cost: " +cost;
     }
 
-    public GridPane getLeftInfoGridPane(){
+    public GridPane getRightInfoGridPane(){
         GridPane infoGP = new GridPane();
         infoGP.setVgap(1);
         infoGP.setHgap(1);
@@ -337,7 +337,7 @@ public abstract class Unit implements Serializable{
         infoGP.add(efVEImV, 0,5);
         infoGP.add(pbEfVE, 1,5);
 
-        ImageView closeDamageImV = getIcon("icons/icon_2.png");
+        ImageView closeDamageImV = getIcon("icons/icon_25.png");
         Label closeDamageLabel = getLabel("CONSTANT");
         infoGP.add(closeDamageImV, 0,6);
         infoGP.add(closeDamageLabel, 1,6);
@@ -345,7 +345,7 @@ public abstract class Unit implements Serializable{
         return infoGP;
     }
 
-    public GridPane getCenterInfoGridPane(){
+    public GridPane getLeftInfoGridPane(){
         GridPane infoGP = new GridPane();
         infoGP.setVgap(1);
         infoGP.setHgap(1);

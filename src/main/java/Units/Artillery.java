@@ -128,7 +128,7 @@ public class Artillery extends Vehicle {
                 "Dead Zone Range "+deadZone+"\n"+ "Cost: " +cost;
     }
 
-    public GridPane getLeftInfoGridPane(){
+    public GridPane getRightInfoGridPane(){
         GridPane infoGP = new GridPane();
         infoGP.setVgap(1);
         infoGP.setHgap(1);

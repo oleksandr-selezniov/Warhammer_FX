@@ -1,19 +1,15 @@
 package Board;
 
 import Size.Size;
-import Units.LightInfantry;
 import Units.Unit;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -22,8 +18,6 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 
 import static Board.Board.*;
@@ -129,11 +123,11 @@ public class ChooseBoard {
         leftScrollPane.setMinSize(200, 200);
         leftScrollPane.setId("leftScrollPane");
 
-//        TextArea centerTextArea = new TextArea();
-//        centerTextArea.setMaxSize(200, 200);
-//        centerTextArea.setMinSize(200, 200);
-//        centerTextArea.setId("centerTextArea");
-        HBox centerHBox = new HBox();
+        TextArea centerTextArea = new TextArea();
+        centerTextArea.setMaxSize(200, 200);
+        centerTextArea.setMinSize(200, 200);
+        centerTextArea.setId("centerTextArea");
+        HBox centerHBox = new HBox(centerTextArea);
         centerHBox.setMaxSize(200, 200);
         centerHBox.setMinSize(200, 200);
         centerHBox.setId("centerHbox");
@@ -234,11 +228,11 @@ public class ChooseBoard {
 
                 VBox leftInfoBox = (VBox)scene.lookup("#leftInfoVbox");
                 leftInfoBox.getChildren().clear();
-                leftInfoBox.getChildren().add(UnitMap.get(t1).getCenterInfoGridPane());
+                leftInfoBox.getChildren().add(UnitMap.get(t1).getLeftInfoGridPane());
 
                 VBox rightInfoBox = (VBox)scene.lookup("#rightInfoVbox");
                 rightInfoBox.getChildren().clear();
-                rightInfoBox.getChildren().add(UnitMap.get(t1).getLeftInfoGridPane());
+                rightInfoBox.getChildren().add(UnitMap.get(t1).getRightInfoGridPane());
                 currentSelectedUnit = UnitMap.get(t1);
             }
         });
