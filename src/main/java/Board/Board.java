@@ -126,10 +126,12 @@ public class Board {
 
         VBox leftVbox = new VBox();
         leftVbox.setPadding(new Insets(5));
-        leftVbox.setAlignment(Pos.CENTER);
+        leftVbox.setAlignment(Pos.TOP_CENTER);
         leftVbox.setFillWidth(true);
         leftVbox.setMinHeight(Size.getSceneHeight()*0.25);
         leftVbox.setMinWidth(Size.getSceneWidth()*0.15);
+        leftVbox.setMaxHeight(Size.getSceneHeight()*0.25);
+        leftVbox.setMaxWidth(Size.getSceneWidth()*0.15);
         leftVbox.setId("leftVBox");
 //
 //        TextArea leftTextArea = new TextArea();
@@ -194,17 +196,20 @@ public class Board {
 
         VBox rightVbox = new VBox();
         rightVbox.setPadding(new Insets(5));
-        rightVbox.setAlignment(Pos.CENTER);
+        rightVbox.setAlignment(Pos.TOP_CENTER);
         rightVbox.setFillWidth(true);
         rightVbox.setMinHeight(Size.getSceneHeight()*0.25);
         rightVbox.setMinWidth(Size.getSceneWidth()*0.15);
+        rightVbox.setMaxHeight(Size.getSceneHeight()*0.25);
+        rightVbox.setMaxWidth(Size.getSceneWidth()*0.15);
+        rightVbox.setId("rightVBox");
 
-        TextArea rightTextArea = new TextArea();
-        rightTextArea.setMaxWidth(Size.getSceneWidth()*0.14);
-        rightTextArea.setMaxHeight(Size.getSceneHeight()*0.26);
-        rightTextArea.setId("rightTextArea");
+//        TextArea rightTextArea = new TextArea();
+//        rightTextArea.setMaxWidth(Size.getSceneWidth()*0.14);
+//        rightTextArea.setMaxHeight(Size.getSceneHeight()*0.26);
+//        rightTextArea.setId("rightTextArea");
 
-        rightVbox.getChildren().addAll(rightTextArea);
+//        rightVbox.getChildren().addAll(rightTextArea);
         rightEarGP.add(rightVbox, 0,0);
         return rightEarGP;
     }
@@ -337,18 +342,19 @@ public class Board {
     }
 
     static void initializeBottomMenu(GameCell gameCell, String direction){
-        //writeToTextArea("#"+direction+"TextArea", gameCell.getUnit().getInfo(), false);
-        VBox vBox = (VBox)scene.lookup("#leftVBox");
-        vBox.getChildren().clear();
-        vBox.getChildren().add(gameCell.getUnit().getLeftInfoGridPane());
-
         HBox hbox = new HBox(gameCell.getUnit().getImageView(1, 1.1));
         hbox.setMinWidth(Size.getSceneWidth()*0.18);
         hbox.setMinHeight(Size.getSceneHeight()*0.25);
         if(direction.equals("left")){
             hbox.setStyle("-fx-background-color: linear-gradient(from 25% 100% to 100% 25%, #703D66, #99FFFF)");
+            VBox vBox = (VBox)scene.lookup("#leftVBox");
+            vBox.getChildren().clear();
+            vBox.getChildren().add(gameCell.getUnit().getBattleInfoGridPane());
         }else{
             hbox.setStyle("-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #99FFFF, #703D66)");
+            VBox vBox = (VBox)scene.lookup("#rightVBox");
+            vBox.getChildren().clear();
+            vBox.getChildren().add(gameCell.getUnit().getBattleInfoGridPane());
         }
         hbox.setAlignment(Pos.CENTER);
         ScrollPane scrollPane = (ScrollPane)scene.lookup("#"+direction+"ScrollPane");
