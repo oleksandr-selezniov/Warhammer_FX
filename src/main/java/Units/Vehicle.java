@@ -1,6 +1,4 @@
 package Units;
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -64,12 +62,12 @@ public class Vehicle extends Unit {
         imageView.setImage(image);
         imageView.setOpacity(opacity);
         if (Board.getScaleCoefficient() != null) {
-            imageView.setFitHeight(Size.getCellHeight() * this.heightCoeff * Board.getScaleCoefficient());
-            imageView.setFitWidth(Size.getCellWidth() * this.widthCoeff * Board.getScaleCoefficient());
+            imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff * Board.getScaleCoefficient());
+            imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff * Board.getScaleCoefficient());
         }
         else {
-            imageView.setFitHeight(Size.getCellHeight() * this.heightCoeff);
-            imageView.setFitWidth(Size.getCellHeight() * this.widthCoeff);
+            imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff);
+            imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff);
         }
         return imageView;
     }
@@ -82,8 +80,8 @@ public class Vehicle extends Unit {
         Image image = new Image(urlToImage.toString(), false);
         imageView.setImage(image);
         imageView.setOpacity(opacity);
-        imageView.setFitHeight(Size.getCellHeight() * this.heightCoeff * scaleCoeff * 0.7);
-        imageView.setFitWidth(Size.getCellWidth() * this.widthCoeff * scaleCoeff * 0.7);
+        imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff * scaleCoeff * 0.7);
+        imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff * scaleCoeff * 0.7);
         return imageView;
     }
 

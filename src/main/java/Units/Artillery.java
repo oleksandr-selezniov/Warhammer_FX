@@ -7,15 +7,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -67,7 +63,7 @@ public class Artillery extends Vehicle {
     @Override
     public javafx.geometry.Insets getInsetsY() {
         if(Board.getScaleCoefficient()!=null){
-            return new Insets(2,2,Board.getScaleCoefficient()* insetsY,-Size.getCellHeight()*Board.getScaleCoefficient()*0.4);
+            return new Insets(2,2,Board.getScaleCoefficient()* insetsY,-Size.getCellSize()*Board.getScaleCoefficient()*0.4);
         }
         return new Insets(2,2, insetsY,2);
     }

@@ -16,8 +16,6 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import static Board.Board.initializeBottomMenu;
@@ -51,7 +49,12 @@ public class GameCell extends Button {
 
     GameCell() {
         this.setPadding(new Insets(50));
-        this.setSize(Size.getCellWidth(), Size.getCellHeight());
+        //this.setSize(Size.getCellSize());
+        this.maxHeightProperty().bindBidirectional(Size.cellSizeProperty());
+        this.maxWidthProperty().bindBidirectional(Size.cellSizeProperty());
+        this.minHeightProperty().bindBidirectional(Size.cellSizeProperty());
+        this.minWidthProperty().bindBidirectional(Size.cellSizeProperty());
+
         this.setCellImage(defaultCellImagePath, 0.6);
         this.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         actionMode();
@@ -183,11 +186,11 @@ public class GameCell extends Button {
         this.setGraphic(imageView);
     }
 
-    public void setSize(Double width, Double height){
-        this.setMaxHeight(height);
-        this.setMinHeight(height);
-        this.setMaxWidth(width);
-        this.setMinWidth(width);
+    public void setSize(Double size){
+        this.setMaxHeight(size);
+        this.setMinHeight(size);
+        this.setMaxWidth(size);
+        this.setMinWidth(size);
     }
 
     public static void checkTeamTurn(){

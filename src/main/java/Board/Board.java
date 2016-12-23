@@ -315,29 +315,38 @@ public class Board {
         slider.setPrefHeight(120);
         slider.setOrientation(Orientation.VERTICAL);
         slider.setCursor(Cursor.HAND);
-        slider.setMin(0.19);
-        slider.setMax(2.0);
-        slider.setMajorTickUnit(0.1);
-        slider.setBlockIncrement(0.1);
-        slider.setShowTickMarks(true);
-        slider.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                for(int i=0; i<getMainBattlefieldGP().getChildren().size();i++){
-                    Node node = getMainBattlefieldGP().getChildren().get(i);
-                    if(node instanceof GameCell){
+//        slider.setMin(0.19);
+//        slider.setMax(2.0);
+//        slider.setMajorTickUnit(0.1);
+//        slider.setBlockIncrement(0.1);
 
-                        GameCell gc = (GameCell)node;
-                        gc.setSize(Size.getCellWidth()*newValue.doubleValue(), Size.getCellHeight()*newValue.doubleValue());
-                        setScaleCoefficient(newValue.doubleValue());
-                        if(gc.getUnit()!=null){
-                            gc.setGraphic(gc.getUnit().getImageView(1.0));
-                            gc.setPadding(gc.getUnit().getInsetsY());
-                        }
-                    }
-                }
-            }
-        });
-        slider.setValue(0.65);
+        slider.setMin(10);
+        slider.setMax(200);
+        slider.setMajorTickUnit(10);
+        slider.setBlockIncrement(10);
+        slider.setShowTickMarks(true);
+
+        slider.valueProperty().bindBidirectional(Size.cellSizeProperty());
+
+
+//        slider.valueProperty().addListener(new ChangeListener<Number>() {
+//            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+//                for(int i=0; i<getMainBattlefieldGP().getChildren().size();i++){
+//                    Node node = getMainBattlefieldGP().getChildren().get(i);
+//                    if(node instanceof GameCell){
+//
+//                          GameCell gc = (GameCell)node;
+//                        gc.setSize(Size.getCellWidth()*newValue.doubleValue(), Size.getCellSize()*newValue.doubleValue());
+//                        setScaleCoefficient(newValue.doubleValue());
+//                        if(gc.getUnit()!=null){
+//                            gc.setGraphic(gc.getUnit().getImageView(1.0));
+//                            gc.setPadding(gc.getUnit().getInsetsY());
+//                        }
+//                    }
+//                }
+//            }
+//        });
+        slider.setValue(30);
         return slider;
     }
 
@@ -362,12 +371,12 @@ public class Board {
     }
 
     public static Double getScaleCoefficient() {
-        return scaleCoefficient;
+        return Size.getCellSizePercentage();
     }
 
-    private static void setScaleCoefficient(Double scaleCoefficient) {
-        Board.scaleCoefficient = scaleCoefficient;
-    }
+//    private static void setScaleCoefficient(Double scaleCoefficient) {
+//        Board.scaleCoefficient = scaleCoefficient;
+//    }
 
 
     public static int getBoardHeight() {
