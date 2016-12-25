@@ -244,8 +244,8 @@ public class Board {
         textArea.setText(text);
         textArea.setEditable(false);
         if(scrollDowm){
-        textArea.positionCaret(textArea.getText().length());
-        textArea.setScrollTop(Double.MAX_VALUE);
+            textArea.positionCaret(textArea.getText().length());
+            textArea.setScrollTop(Double.MAX_VALUE);
         }
     }
 
@@ -274,10 +274,6 @@ public class Board {
         damagePanel.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         damagePanel.setTextFill(Color.ORANGE);
         damagePanel.setEffect(new Bloom());
-
-//        ProgressBar dc = new ProgressBar(1);
-//        dc.
-//
 
         hbox.getChildren().addAll(title, damagePanel);
         return hbox;
@@ -315,38 +311,33 @@ public class Board {
         slider.setPrefHeight(120);
         slider.setOrientation(Orientation.VERTICAL);
         slider.setCursor(Cursor.HAND);
-//        slider.setMin(0.19);
-//        slider.setMax(2.0);
-//        slider.setMajorTickUnit(0.1);
-//        slider.setBlockIncrement(0.1);
-
-        slider.setMin(10);
-        slider.setMax(200);
-        slider.setMajorTickUnit(10);
-        slider.setBlockIncrement(10);
+        slider.setMin(0.19);
+        slider.setMax(2.0);
+        slider.setMajorTickUnit(0.1);
+        slider.setBlockIncrement(0.1);
         slider.setShowTickMarks(true);
 
-        slider.valueProperty().bindBidirectional(Size.cellSizeProperty());
-
-
-//        slider.valueProperty().addListener(new ChangeListener<Number>() {
-//            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-//                for(int i=0; i<getMainBattlefieldGP().getChildren().size();i++){
-//                    Node node = getMainBattlefieldGP().getChildren().get(i);
-//                    if(node instanceof GameCell){
-//
-//                          GameCell gc = (GameCell)node;
-//                        gc.setSize(Size.getCellWidth()*newValue.doubleValue(), Size.getCellSize()*newValue.doubleValue());
-//                        setScaleCoefficient(newValue.doubleValue());
-//                        if(gc.getUnit()!=null){
-//                            gc.setGraphic(gc.getUnit().getImageView(1.0));
-//                            gc.setPadding(gc.getUnit().getInsetsY());
-//                        }
-//                    }
-//                }
-//            }
-//        });
-        slider.setValue(30);
+        slider.valueProperty().addListener(new ChangeListener<Number>() {
+            double previousSliderValue = 0.65;
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if(Math.abs((previousSliderValue - newValue.doubleValue()))>0.1){
+                    previousSliderValue = newValue.doubleValue();
+                    for(int i=0; i<getMainBattlefieldGP().getChildren().size();i++){
+                        Node node = getMainBattlefieldGP().getChildren().get(i);
+                        if(node instanceof GameCell){
+                            GameCell gc = (GameCell)node;
+                            gc.setSize(Size.getCellSize()*newValue.doubleValue());
+                            setScaleCoefficient(newValue.doubleValue());
+                            if(gc.getUnit()!=null){
+                                gc.setGraphic(gc.getUnit().getImageView(1.0));
+                                gc.setPadding(gc.getUnit().getInsetsY());
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        slider.setValue(0.65);
         return slider;
     }
 
@@ -371,13 +362,12 @@ public class Board {
     }
 
     public static Double getScaleCoefficient() {
-        return Size.getCellSizePercentage();
+        return scaleCoefficient;
     }
 
-//    private static void setScaleCoefficient(Double scaleCoefficient) {
-//        Board.scaleCoefficient = scaleCoefficient;
-//    }
-
+    private static void setScaleCoefficient(Double scaleCoefficient) {
+        Board.scaleCoefficient = scaleCoefficient;
+    }
 
     public static int getBoardHeight() {
         return boardHeight;

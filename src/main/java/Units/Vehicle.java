@@ -62,12 +62,12 @@ public class Vehicle extends Unit {
         imageView.setImage(image);
         imageView.setOpacity(opacity);
         if (Board.getScaleCoefficient() != null) {
-            imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff * Board.getScaleCoefficient());
-            imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff * Board.getScaleCoefficient());
+            imageView.setFitHeight(Size.getCellSize() * this.heightCoeff * Board.getScaleCoefficient());
+            imageView.setFitWidth(Size.getCellSize() * this.widthCoeff * Board.getScaleCoefficient());
         }
         else {
-            imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff);
-            imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff);
+            imageView.setFitHeight(Size.getCellSize() * this.heightCoeff);
+            imageView.setFitWidth(Size.getCellSize() * this.widthCoeff);
         }
         return imageView;
     }
@@ -80,8 +80,8 @@ public class Vehicle extends Unit {
         Image image = new Image(urlToImage.toString(), false);
         imageView.setImage(image);
         imageView.setOpacity(opacity);
-        imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff * scaleCoeff * 0.7);
-        imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff * scaleCoeff * 0.7);
+        imageView.setFitHeight(Size.getCellSize() * this.heightCoeff * scaleCoeff * 0.7);
+        imageView.setFitWidth(Size.getCellSize() * this.widthCoeff * scaleCoeff * 0.7);
         return imageView;
     }
 

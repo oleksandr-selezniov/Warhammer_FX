@@ -49,12 +49,7 @@ public class GameCell extends Button {
 
     GameCell() {
         this.setPadding(new Insets(50));
-        //this.setSize(Size.getCellSize());
-        this.maxHeightProperty().bindBidirectional(Size.cellSizeProperty());
-        this.maxWidthProperty().bindBidirectional(Size.cellSizeProperty());
-        this.minHeightProperty().bindBidirectional(Size.cellSizeProperty());
-        this.minWidthProperty().bindBidirectional(Size.cellSizeProperty());
-
+        this.setSize(Size.getCellSize());
         this.setCellImage(defaultCellImagePath, 0.6);
         this.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         actionMode();
