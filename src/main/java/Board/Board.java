@@ -133,13 +133,7 @@ public class Board {
         leftVbox.setMaxHeight(Size.getSceneHeight()*0.25);
         leftVbox.setMaxWidth(Size.getSceneWidth()*0.15);
         leftVbox.setId("leftVBox");
-//
-//        TextArea leftTextArea = new TextArea();
-//        leftTextArea.setMaxWidth(Size.getSceneWidth()*0.14);
-//        leftTextArea.setMaxHeight(Size.getSceneHeight()*0.26);
-//        leftTextArea.setId("leftTextArea");
 
-//        leftVbox.getChildren().addAll(leftTextArea);
         leftEarGP.add(leftVbox, 2,0);
 
         return leftEarGP;
@@ -204,12 +198,6 @@ public class Board {
         rightVbox.setMaxWidth(Size.getSceneWidth()*0.15);
         rightVbox.setId("rightVBox");
 
-//        TextArea rightTextArea = new TextArea();
-//        rightTextArea.setMaxWidth(Size.getSceneWidth()*0.14);
-//        rightTextArea.setMaxHeight(Size.getSceneHeight()*0.26);
-//        rightTextArea.setId("rightTextArea");
-
-//        rightVbox.getChildren().addAll(rightTextArea);
         rightEarGP.add(rightVbox, 0,0);
         return rightEarGP;
     }
