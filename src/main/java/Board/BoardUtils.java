@@ -139,10 +139,21 @@ public class BoardUtils {
                 .filter(p->((GameCell)p).getUnit().getTeam()==team).count());
     }
 
+    static int getTotalUnitNumber(){
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        return (int)(gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).getUnit() != null))
+                .count());
+    }
+
     static int getStrategicalPoints(int team){
         GridPane gridPane = Board.getMainBattlefieldGP();
         return (int)(gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).isStrategical()
                 && ((GameCell)p).getOwner() == team)).count());
+    }
+
+    static int getStrategicalPoints(){
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        return (int)(gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).isStrategical())).count());
     }
 
     static int getActiveUnitNumber(int team){

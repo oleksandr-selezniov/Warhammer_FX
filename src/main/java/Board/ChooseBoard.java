@@ -409,6 +409,10 @@ public class ChooseBoard {
             Board main = new Board();
             main.createUI(stage);
 
+//            if(true){
+//                AI.getInstance().setBoard(main);
+//            }
+
             Stage OldStage = (Stage)scene.getWindow();
             OldStage.close();
         });
