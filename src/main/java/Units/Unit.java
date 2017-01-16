@@ -1,5 +1,6 @@
 package Units;
 
+import Board.Board;
 import Board.BoardUtils;
 import Size.Size;
 import javafx.beans.property.IntegerProperty;
@@ -71,8 +72,6 @@ public abstract class Unit implements Serializable{
         return picturePath;
     }
 
-    public abstract ImageView getImageView(double opacity);
-
     public  ImageView getImageView(double opacity, double scaleCoeff){
         ImageView imageView = new ImageView();
         ClassLoader classLoader = getClass().getClassLoader();
@@ -82,6 +81,24 @@ public abstract class Unit implements Serializable{
         imageView.setOpacity(opacity);
         imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff * scaleCoeff);
         imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff * scaleCoeff);
+        return imageView;
+    }
+
+    public ImageView getImageView(double opacity){
+        ImageView imageView = new ImageView();
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL urlToImage = classLoader.getResource(this.picturePath);
+        Image image = new Image(urlToImage.toString(), false);
+        imageView.setImage(image);
+        imageView.setOpacity(opacity);
+        if (Board.getScaleCoefficient() != null) {
+            imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff * Board.getScaleCoefficient());
+            imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff * Board.getScaleCoefficient());
+        }
+        else {
+            imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff);
+            imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff);
+        }
         return imageView;
     }
 

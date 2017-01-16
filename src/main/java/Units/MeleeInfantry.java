@@ -55,25 +55,6 @@ public class MeleeInfantry extends LightInfantry {
     }
 
     @Override
-    public ImageView getImageView(double opacity){
-        ImageView imageView = new ImageView();
-        ClassLoader classLoader = getClass().getClassLoader();
-        URL urlToImage = classLoader.getResource(this.picturePath);
-        Image image = new Image(urlToImage.toString(), false);
-        imageView.setImage(image);
-        imageView.setOpacity(opacity);
-        if (Board.getScaleCoefficient() != null) {
-            imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff * Board.getScaleCoefficient());
-            imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff * Board.getScaleCoefficient());
-        }
-        else {
-            imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff);
-            imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff);
-        }
-        return imageView;
-    }
-
-    @Override
     public javafx.geometry.Insets getInsetsY() {
         if(Board.getScaleCoefficient()!=null){
             return new Insets(2,2,Board.getScaleCoefficient()* insetsY,2);

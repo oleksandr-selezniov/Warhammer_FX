@@ -22,6 +22,7 @@ import static Board.Board.initializeBottomMenu;
 import static Board.BoardInitializer.*;
 import static Board.BoardInitializer.getTeam1Score;
 import static Board.BoardUtils.getStrategicalPoints;
+import static Board.GameCellUtils.*;
 
 /**
  * Created by Dmitriy on 18.10.2016.
@@ -33,7 +34,6 @@ public class GameCell extends Button {
     private static int teamTurnValue = 1;
     private String defaultCellImagePath = "cellBackground/"+generateRandomNumber(1,25)+".jpg";
     private static String deadCellImagePath = "other/dead.jpg";
-    private static String obstacleImagePath;
     private String name = this.getText();
     private int xCoord;
     private int yCoord;
@@ -54,6 +54,13 @@ public class GameCell extends Button {
         this.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         actionMode();
         mouseMovementMode();
+    }
+
+    public void setSize(Double size){
+        this.setMaxHeight(size);
+        this.setMinHeight(size);
+        this.setMaxWidth(size);
+        this.setMinWidth(size);
     }
 
     public void actionMode() {
@@ -181,13 +188,6 @@ public class GameCell extends Button {
         this.setGraphic(imageView);
     }
 
-    public void setSize(Double size){
-        this.setMaxHeight(size);
-        this.setMinHeight(size);
-        this.setMaxWidth(size);
-        this.setMinWidth(size);
-    }
-
     public static void checkTeamTurn(){
         if(getTeam1Score() >= BoardInitializer.getScoreLimit() | getTeam2Score() >=BoardInitializer.getScoreLimit()) {
             int winner = (getTeam1Score() >= BoardInitializer.getScoreLimit())? 1:2;
@@ -204,32 +204,6 @@ public class GameCell extends Button {
                 }
             }
         }
-    }
-
-    private static Tooltip getToolTip(GameCell gameCell){
-        Tooltip tooltip = new Tooltip(gameCell.getUnit().getInfo());
-        tooltip.setAutoHide(false);
-        return tooltip;
-    }
-
-    private static void placeObstacle(GameCell gameCell, String path){
-        gameCell.setBlocked(true);
-        gameCell.setCellImage(path, 1);
-    }
-
-    static void generateObstacles(double density){
-        Board.getMainBattlefieldGP().getChildren().forEach(p->{
-            double chance = Math.random();
-            if(((GameCell)p).getUnit()==null && !((GameCell)p).isBlocked()
-                    && ((GameCell)p).getxCoord()>1 && ((GameCell)p).getyCoord()>1
-                    && ((GameCell)p).getxCoord()<(Board.getBoardWidth()-2)
-                    && ((GameCell)p).getyCoord()<(Board.getBoardHeight()-2)){
-                if(density > chance){
-                    obstacleImagePath = "obstacles/"+generateRandomNumber(1,8)+".jpg";
-                    placeObstacle(((GameCell)p), obstacleImagePath);
-                }
-            }
-        });
     }
 
     private boolean isAlreadyUsedCurrentTeamUnit(){
@@ -250,13 +224,6 @@ public class GameCell extends Button {
         this.getGraphic().setEffect(new Lighting(new Light.Spot()));
     }
 
-    static void makeStrategical(int x, int y){
-        GameCell gameCell = (GameCell) Board.getScene().lookup("#" + x + "_" + y);
-        gameCell.setStrategical(true);
-        gameCell.setBlocked(true);
-        gameCell.setCellImage("other/strartegical_point.jpg", 1);
-    }
-
     void activate(Unit activator){
         this.setActivated(true);
         this.setOwner(activator.getTeam());
@@ -267,21 +234,11 @@ public class GameCell extends Button {
         }
     }
 
-    private static int generateRandomNumber(int min, int max){
-        return min + (int)(Math.random() * ((max - min) + 1));
-    }
-
     public static void changeTeamTurn(){
         setTeam1Score(getStrategicalPoints(1));
         setTeam2Score(getStrategicalPoints(2));
         Board.setScore(getTeam1Score() + " : " + getTeam2Score());
         teamTurnValue = teamTurnValue==1? 2:1 ;
-    }
-
-    private static void endGame(){
-        BoardUtils.setActiveTeamUnits(1, false);
-        BoardUtils.setActiveTeamUnits(2, false);
-        Board.getScene().lookup("#end_turn").setDisable(true);
     }
 
     public static int getEnemyTeam(){
