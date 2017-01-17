@@ -38,6 +38,14 @@ public class AI {
     private int totalSPNumber;
     private int totalUnitNumber;
 
+    private enum Strategy{
+        KILL_THEM_ALL, CAPTURE_IT, RUN_AND_WAIT
+    }
+
+    private enum Tactic{
+        CLOSE_ATTACK, RANGE_ATTACK, MOVE_AHEAD, MOVE_TO_NEAREST_SP, ACTIVATE_SP, RUNAWAY
+    }
+
     int enemyScore;
     int myScore;
     int scoreLimit;
