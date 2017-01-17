@@ -23,6 +23,8 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import static Board.BoardInitializer.getScoreLimit;
+import static Board.GameCellUtils.changeTeamTurn;
+import static Board.GameCellUtils.checkTeamTurn;
 
 
 /**
@@ -155,12 +157,11 @@ public class Board {
         endTurnButton.setMinWidth(70);
         endTurnButton.setMinHeight(20);
         endTurnButton.setOnAction(p-> {
-            GameCell.checkTeamTurn();
+            checkTeamTurn();
             BoardUtils.setActiveTeamUnits(GameCell.getTeamTurnValue(), false);
-            GameCell.changeTeamTurn();
+            changeTeamTurn();
             BoardUtils.setActiveTeamUnits(GameCell.getTeamTurnValue(), true);
         });
-
 
         Button rightButton2 = new Button();
         rightButton2.setMinWidth(70);

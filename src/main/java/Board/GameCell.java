@@ -1,13 +1,10 @@
 package Board;
 
 import Size.Size;
-import Units.MeleeInfantry;
 import Units.Unit;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
-import javafx.scene.ImageCursor;
 import javafx.scene.control.Button;
-import javafx.scene.control.Tooltip;
 import javafx.scene.effect.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,8 +16,6 @@ import javafx.scene.paint.Color;
 import java.net.URL;
 
 import static Board.Board.initializeBottomMenu;
-import static Board.BoardInitializer.*;
-import static Board.BoardInitializer.getTeam1Score;
 import static Board.BoardUtils.getStrategicalPoints;
 import static Board.GameCellUtils.*;
 
@@ -67,45 +62,15 @@ public class GameCell extends Button {
         this.setOnMouseClicked(e -> {
 
             if (!this.isSelected) { // first step
-                firstClickOnUnitCell(this);
+                clickOnUnitCell(this);
             } else if (this.isPassable() && this.unit == null) { // second step
-                secondClickOnFreeCell(this);
+                clickOnFreeCell(this);
             } else if (this.isStrategical() && this.unit == null) { // activate strategical cell
-                activateStrategicalCell(this);
+                clickOnStrategicalCell(this);
             } else if (this.unit != null && temporaryUnit.isEnemyUnit(this.unit) && isTeamTurn(temporaryUnit.getTeam())) { // attack
-                attackEnemyUnitCell(this);
+                clickOnEnemyUnitCell(this);
             }
         });
-    }
-
-
-
-
-
-    public static void abortRangesAndPassability(){
-        BoardUtils.refreshZOrder();
-        BoardUtils.abortFieldPassability();
-        BoardUtils.abortShootingRange();
-    }
-
-    public void performAttack(GameCell hunter_GC, GameCell victim_CG){
-        if (victim_CG.unit.getHealth() > 0) {
-            victim_CG.getGraphic().setEffect(new SepiaTone());
-
-            if (BoardUtils.isOnNeighbouringCellPlusDiagonal(hunter_GC, victim_CG)) {
-                GameCell.temporaryUnit.performCloseAttack(victim_CG.unit);
-                checkTeamTurn();
-            } else if(!(GameCell.temporaryUnit instanceof MeleeInfantry)){
-                GameCell.temporaryUnit.performRangeAttack(victim_CG.unit);
-                checkTeamTurn();
-            }
-        }
-        if (unit.getHealth() <= 0) {
-            LoggerUtils.writeDeadLog(temporaryUnit, unit);
-            GameCell.this.setCellImage(deadCellImagePath, 0.6);
-            unit = null;
-            checkTeamTurn();
-        }
     }
 
     public void mouseMovementMode(){
@@ -122,12 +87,11 @@ public class GameCell extends Button {
                 GameCell.this.getGraphic().setEffect(new Glow());
 
                 if (isAlreadyUsedCurrentTeamUnit())
-                    paintUnitWithBlack();
+                    paintUnitWithBlack(GameCell.this);
             }
-
             if (temporaryUnit != null && GameCell.this.getUnit() != null){
                 if (GameCell.this.getUnit().isEnemyUnit(temporaryUnit)) {
-                    highlightEnemyUnit();
+                    highlightEnemyUnit(GameCell.this);
                 }
             }
         });
@@ -137,6 +101,10 @@ public class GameCell extends Button {
             GameCell.this.getGraphic().setEffect(null);
             GameCell.this.setTooltip(null);
         });
+    }
+
+    private boolean isAlreadyUsedCurrentTeamUnit(){
+        return (GameCell.this.getUnit()!=null && !GameCell.this.getUnit().isActive() && GameCell.this.getUnit().getTeam()==teamTurnValue);
     }
 
     public void setCellImage(String path, double opacity){
@@ -152,42 +120,6 @@ public class GameCell extends Button {
         this.setGraphic(imageView);
     }
 
-    public static void checkTeamTurn(){
-        if(getTeam1Score() >= BoardInitializer.getScoreLimit() | getTeam2Score() >=BoardInitializer.getScoreLimit()) {
-            int winner = (getTeam1Score() >= BoardInitializer.getScoreLimit())? 1:2;
-            LoggerUtils.writeWinLog(winner);
-            endGame();
-        }else{
-            if(BoardUtils.getTotalUnitNumber(getEnemyTeam())<=0){
-                endGame();
-            }else {
-                if (BoardUtils.getActiveUnitNumber(teamTurnValue) == 0) {
-                    changeTeamTurn();
-                    LoggerUtils.writeTurnLog(teamTurnValue);
-                    BoardUtils.setActiveTeamUnits(teamTurnValue, true);
-                }
-            }
-        }
-    }
-
-    private boolean isAlreadyUsedCurrentTeamUnit(){
-        return (GameCell.this.getUnit()!=null && !GameCell.this.getUnit().isActive() && GameCell.this.getUnit().getTeam()==teamTurnValue);
-    }
-
-    private void highlightEnemyUnit(){
-        Cursor c = new ImageCursor(new BoardUtils().getImage("other/CursorChainsword.png"), 300,300);
-        this.setCursor(c);
-        DropShadow dropShadow = new DropShadow();
-        dropShadow.setOffsetX(3);
-        dropShadow.setOffsetY(3);
-        dropShadow.setColor(Color.rgb(255, 0, 0, 1));
-        this.getGraphic().setEffect(dropShadow);
-    }
-
-    private void paintUnitWithBlack(){
-        this.getGraphic().setEffect(new Lighting(new Light.Spot()));
-    }
-
     void activate(Unit activator){
         this.setActivated(true);
         this.setOwner(activator.getTeam());
@@ -196,13 +128,6 @@ public class GameCell extends Button {
         }else{
             this.setEffect(new Bloom()); //setStyle("-fx-background-color: #FF0000");
         }
-    }
-
-    public static void changeTeamTurn(){
-        setTeam1Score(getStrategicalPoints(1));
-        setTeam2Score(getStrategicalPoints(2));
-        Board.setScore(getTeam1Score() + " : " + getTeam2Score());
-        teamTurnValue = teamTurnValue==1? 2:1 ;
     }
 
     public static int getEnemyTeam(){
