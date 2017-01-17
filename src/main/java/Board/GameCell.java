@@ -66,74 +66,38 @@ public class GameCell extends Button {
     public void actionMode() {
         this.setOnMouseClicked(e -> {
 
-            if (!isSelected) { // first step
-                if (unit != null && isTeamTurn(unit.getTeam()) && unit.isActive()) {
-                    isSelected = true;
-                    temporaryUnit = unit;
-                    BoardUtils.calculateRanges(GameCell.this);
-                    GameCell.this.setGraphic(unit.getImageView(0.7));
-                    previousGameCell = GameCell.this;
-                    unit = null;
-                }
-            } else if (GameCell.this.isPassable() && unit == null) { // second step
-                if (temporaryUnit != null) {
-                    unit = temporaryUnit;
-                    GameCell.this.setGraphic(temporaryUnit.getImageView(1.0));
-                    GameCell.this.setPadding(temporaryUnit.getInsetsY());
-                    previousGameCell.setEffect(null);
-                    temporaryUnit = null;
-                }
-                isSelected = false;
-                if (!(previousGameCell.equals(GameCell.this))) {
-                    previousGameCell.setCellImage(defaultCellImagePath, 0.6);
-                    previousGameCell.setPadding(new Insets(1));
-                    unit.setActive(false);
-                    checkTeamTurn();
-                }
-                BoardUtils.refreshZOrder();
-                BoardUtils.abortFieldPassability();
-                BoardUtils.abortShootingRange();
-
-            } else if (GameCell.this.isStrategical() && unit == null) { // activate strategical cell
-                previousGameCell.setUnit(temporaryUnit);
-                previousGameCell.setGraphic(temporaryUnit.getImageView(1.0));
-                isSelected = false;
-                if (BoardUtils.isOnNeighbouringCellPlusDiagonal(previousGameCell, GameCell.this)){
-                    if (GameCell.this.getOwner() != temporaryUnit.getTeam()){
-                        GameCell.this.activate(temporaryUnit);
-                        temporaryUnit.setActive(false);
-                        checkTeamTurn();
-                    }
-                }
-                BoardUtils.refreshZOrder();
-                BoardUtils.abortFieldPassability();
-                BoardUtils.abortShootingRange();
-
-            } else if (unit != null && temporaryUnit.isEnemyUnit(unit) && isTeamTurn(temporaryUnit.getTeam())) { // attack
-                previousGameCell.setUnit(temporaryUnit);
-                previousGameCell.setGraphic(temporaryUnit.getImageView(1.0));
-                isSelected = false;
-                if (GameCell.this.isInShootingRange() || (BoardUtils.isOnNeighbouringCellPlusDiagonal(previousGameCell, GameCell.this))) {
-                    performAttack(previousGameCell, GameCell.this);
-                }
-                BoardUtils.abortFieldPassability();
-                BoardUtils.abortShootingRange();
-                temporaryUnit = null;
+            if (!this.isSelected) { // first step
+                firstClickOnUnitCell(this);
+            } else if (this.isPassable() && this.unit == null) { // second step
+                secondClickOnFreeCell(this);
+            } else if (this.isStrategical() && this.unit == null) { // activate strategical cell
+                activateStrategicalCell(this);
+            } else if (this.unit != null && temporaryUnit.isEnemyUnit(this.unit) && isTeamTurn(temporaryUnit.getTeam())) { // attack
+                attackEnemyUnitCell(this);
             }
         });
     }
 
-    public void performAttack(GameCell hunter_GC, GameCell victim_CG){
 
-        if (unit.getHealth() > 0) {
+
+
+
+    public static void abortRangesAndPassability(){
+        BoardUtils.refreshZOrder();
+        BoardUtils.abortFieldPassability();
+        BoardUtils.abortShootingRange();
+    }
+
+    public void performAttack(GameCell hunter_GC, GameCell victim_CG){
+        if (victim_CG.unit.getHealth() > 0) {
             victim_CG.getGraphic().setEffect(new SepiaTone());
 
             if (BoardUtils.isOnNeighbouringCellPlusDiagonal(hunter_GC, victim_CG)) {
-                temporaryUnit.performCloseAttack(unit);
+                GameCell.temporaryUnit.performCloseAttack(victim_CG.unit);
                 checkTeamTurn();
-            } else if(!(temporaryUnit instanceof MeleeInfantry)){
-                    temporaryUnit.performRangeAttack(unit);
-                    checkTeamTurn();
+            } else if(!(GameCell.temporaryUnit instanceof MeleeInfantry)){
+                GameCell.temporaryUnit.performRangeAttack(victim_CG.unit);
+                checkTeamTurn();
             }
         }
         if (unit.getHealth() <= 0) {
@@ -245,7 +209,7 @@ public class GameCell extends Button {
         return teamTurnValue==1? 2:1;
     }
 
-    private boolean isTeamTurn(int team){
+    public static boolean isTeamTurn(int team){
         return (team == teamTurnValue);
     }
 
@@ -352,4 +316,62 @@ public class GameCell extends Button {
     public static String getDeadCellImagePath() {
         return deadCellImagePath;
     }
+
+
+    public static Unit getTemporaryUnit() {
+        return temporaryUnit;
+    }
+
+    public static void setTemporaryUnit(Unit temporaryUnit) {
+        GameCell.temporaryUnit = temporaryUnit;
+    }
+
+    public static GameCell getPreviousGameCell() {
+        return previousGameCell;
+    }
+
+    public static void setPreviousGameCell(GameCell previousGameCell) {
+        GameCell.previousGameCell = previousGameCell;
+    }
+
+    public static boolean isSelected() {
+        return isSelected;
+    }
+
+    public static void setIsSelected(boolean isSelected) {
+        GameCell.isSelected = isSelected;
+    }
+
+    public static void setTeamTurnValue(int teamTurnValue) {
+        GameCell.teamTurnValue = teamTurnValue;
+    }
+
+    public String getDefaultCellImagePath() {
+        return defaultCellImagePath;
+    }
+
+    public void setDefaultCellImagePath(String defaultCellImagePath) {
+        this.defaultCellImagePath = defaultCellImagePath;
+    }
+
+    public static void setDeadCellImagePath(String deadCellImagePath) {
+        GameCell.deadCellImagePath = deadCellImagePath;
+    }
+
+    public Boolean getBlocked() {
+        return isBlocked;
+    }
+
+    public Boolean getPassable() {
+        return isPassable;
+    }
+
+    public Boolean getInShootingRange() {
+        return isInShootingRange;
+    }
+
+    public Boolean getStrategical() {
+        return isStrategical;
+    }
+
 }
