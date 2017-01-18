@@ -2,12 +2,12 @@ package Board;
 
 import javafx.scene.layout.GridPane;
 
+import java.util.ArrayList;
+
 import static Board.BoardInitializer.getScoreLimit;
 import static Board.BoardInitializer.getTeam1Score;
 import static Board.BoardInitializer.getTeam2Score;
-import static Board.BoardUtils.getActiveUnitNumber;
-import static Board.BoardUtils.getStrategicalPoints;
-import static Board.BoardUtils.getTotalUnitNumber;
+import static Board.BoardUtils.*;
 
 /**
  * Created by Dmitriy on 25.12.2016.
@@ -53,6 +53,8 @@ public class AI {
     Board gamingBoard;
     GridPane mainGP;
     Strategy strategy;
+    ArrayList myUnitGCList;
+    ArrayList enemyUnitGCList;
     private static AI ai_Elsa = null;
 
     private AI() {}
@@ -69,6 +71,9 @@ public class AI {
 
     public void scanBoard(){
         mainGP = gamingBoard.getMainBattlefieldGP();
+
+        myUnitGCList = getUnitCellList(2);
+        enemyUnitGCList = getUnitCellList(1);
 
         enemyTotalUnitNumber = getTotalUnitNumber(1);
         myTotalUnitNumber = getTotalUnitNumber(2);

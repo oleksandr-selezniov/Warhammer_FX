@@ -149,6 +149,17 @@ public class BoardUtils {
         return unitList;
     }
 
+    static int getEnemyUnitsInSRange(GameCell gc, int range, int team) {
+        int x = gc.getxCoord();
+        int y = gc.getyCoord();
+        GridPane gridPane = Board.getMainBattlefieldGP();
+
+        return (int)gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
+                isReachable( x,y,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), range)) && !((GameCell) p).isBlocked())
+                .filter(p->
+                    ((GameCell) p).getUnit()!=null && ((GameCell) p).getUnit().getTeam()==team).count();
+    }
+
     static String getUnitPopularity(int team, int place){
         Map<Integer, String> unitPopularityMap = new HashMap<>();
         ArrayList<String> unitTypeList = new ArrayList<>();
