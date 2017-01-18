@@ -39,7 +39,7 @@ public class AI {
     private int totalUnitNumber;
 
     private enum Strategy{
-        KILL_THEM_ALL, CAPTURE_IT, RUN_AND_WAIT
+        MELEE_MASSACRE, KILL_FROM_DISTANCE, CAPTURE_IT, RUN_AND_WAIT
     }
 
     private enum Tactic{
@@ -52,6 +52,7 @@ public class AI {
     int turnNumber;
     Board gamingBoard;
     GridPane mainGP;
+    Strategy strategy;
     private static AI ai_Elsa = null;
 
     private AI() {}
@@ -67,6 +68,8 @@ public class AI {
     }
 
     public void scanBoard(){
+        mainGP = gamingBoard.getMainBattlefieldGP();
+
         enemyTotalUnitNumber = getTotalUnitNumber(1);
         myTotalUnitNumber = getTotalUnitNumber(2);
 
@@ -83,10 +86,20 @@ public class AI {
         myScore = getTeam2Score();
         scoreLimit = getScoreLimit();
 
+
+        if(enemyTotalUnitNumber - myTotalUnitNumber > 5 && myScore > enemyScore){
+            strategy = Strategy.RUN_AND_WAIT;
+        }else if (enemyScore - myScore > 15){
+            strategy = Strategy.KILL_FROM_DISTANCE;
+        }else{
+            strategy = Strategy.CAPTURE_IT;
+        }
     }
 
     public void doAction(){
-        mainGP = gamingBoard.getMainBattlefieldGP();
+        scanBoard();
+
+
 
 
     }

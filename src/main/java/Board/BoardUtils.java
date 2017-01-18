@@ -1,6 +1,7 @@
 package Board;
 
 import Units.Artillery;
+import Units.Unit;
 import Units.Vehicle;
 import javafx.scene.Node;
 import javafx.scene.effect.InnerShadow;
@@ -11,6 +12,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.lang.Math.abs;
@@ -131,6 +134,40 @@ public class BoardUtils {
             (p instanceof GameCell && ((GameCell) p).getUnit() != null)
         ).collect(Collectors.toCollection(ArrayList::new));
         nodeList.forEach(Node::toFront);
+    }
+
+    static ArrayList getUnitCellList(int team) {
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        return gridPane.getChildren().stream().filter(p ->
+                (p instanceof GameCell && ((GameCell) p).getUnit() != null && ((GameCell) p).getUnit().getTeam()==team)
+        ).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    static ArrayList getUnitList(int team) {
+        ArrayList<Unit> unitList = new ArrayList<>();
+        getUnitCellList(team).forEach(p->unitList.add(((GameCell) p).getUnit()));
+        return unitList;
+    }
+
+    static String getUnitPopularity(int team, int place){
+        Map<Integer, String> unitPopularityMap = new HashMap<>();
+        ArrayList<String> unitTypeList = new ArrayList<>();
+
+        getUnitList(team).forEach(p->unitTypeList.add(((Unit) p).getClass().toString()));
+
+        long ARcount = unitTypeList.stream().filter("Artillery"::equals).count();
+        long MIcount = unitTypeList.stream().filter("MeleeInfantry"::equals).count();
+        long LIcount = unitTypeList.stream().filter("LightInfantry"::equals).count();
+        long HIcount = unitTypeList.stream().filter("HeavyInfantry"::equals).count();
+        long VEcount = unitTypeList.stream().filter("Vehicle"::equals).count();
+
+        unitPopularityMap.put((int)ARcount, "Artillery");
+        unitPopularityMap.put((int)MIcount, "MeleeInfantry");
+        unitPopularityMap.put((int)LIcount, "LightInfantry");
+        unitPopularityMap.put((int)HIcount, "HeavyInfantry");
+        unitPopularityMap.put((int)VEcount, "Vehicle");
+
+        return unitPopularityMap.get(place);
     }
 
     static int getTotalUnitNumber(int team){
