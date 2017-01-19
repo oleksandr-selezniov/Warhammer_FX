@@ -175,7 +175,7 @@ public class BoardUtils {
                         .filter(p->
                                 ((GameCell) p).getUnit()!=null && ((GameCell) p).getUnit().getTeam()!=yourCell.getUnit().getTeam()).forEach(s->
                         enemyGCList.add((GameCell) s));
-
+                break;
             }else System.out.println("no enemy units in range "+i);
         }
 
@@ -184,6 +184,58 @@ public class BoardUtils {
                 return enemyGCList.get(0);
             } else if (enemyGCList.size() > 1) {
                 return enemyGCList.get(generateRandomNumber(0, enemyGCList.size()));
+            }
+        }
+        return null;
+    }
+
+    static GameCell getNearestPassableCell(GameCell targetCell, int maxRange){
+        ArrayList<GameCell> nearestGCList = new ArrayList<>();
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        int x = targetCell.getxCoord();
+        int y = targetCell.getyCoord();
+
+        for(int i=0; i<maxRange; i++){
+            if(getEnemyUnitsInSRange(targetCell, i)>0){
+                gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
+                        isReachable( x,y,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), maxRange)) && ((GameCell) p).isPassable())
+                        .forEach(s->
+                        nearestGCList.add((GameCell) s));
+                break;
+            }else System.out.println("no enemy units in range "+i);
+        }
+
+        if(nearestGCList.size() > 0) {
+            if (nearestGCList.size() <= 1) {
+                return nearestGCList.get(0);
+            } else if (nearestGCList.size() > 1) {
+                return nearestGCList.get(generateRandomNumber(0, nearestGCList.size()));
+            }
+        }
+        return null;
+    }
+
+    static GameCell getNearestShootablePassableCell(GameCell targetCell, int maxRange){
+        ArrayList<GameCell> nearestGCList = new ArrayList<>();
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        int x = targetCell.getxCoord();
+        int y = targetCell.getyCoord();
+
+        for(int i=0; i<maxRange; i++){
+            if(getEnemyUnitsInSRange(targetCell, i)>0){
+                gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
+                        isReachable( x,y,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), maxRange)) && ((GameCell) p).isPassable() && ((GameCell) p).isInShootingRange())
+                        .forEach(s->
+                                nearestGCList.add((GameCell) s));
+                break;
+            }else System.out.println("no enemy units in range "+i);
+        }
+
+        if(nearestGCList.size() > 0) {
+            if (nearestGCList.size() <= 1) {
+                return nearestGCList.get(0);
+            } else if (nearestGCList.size() > 1) {
+                return nearestGCList.get(generateRandomNumber(0, nearestGCList.size()));
             }
         }
         return null;
