@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static Board.GameCellUtils.generateRandomNumber;
 import static java.lang.Math.abs;
 
 /**
@@ -149,7 +150,7 @@ public class BoardUtils {
         return unitList;
     }
 
-    static int getEnemyUnitsInSRange(GameCell gc, int range, int team) {
+    static int getEnemyUnitsInSRange(GameCell gc, int range) {
         int x = gc.getxCoord();
         int y = gc.getyCoord();
         GridPane gridPane = Board.getMainBattlefieldGP();
@@ -157,7 +158,74 @@ public class BoardUtils {
         return (int)gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
                 isReachable( x,y,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), range)) && !((GameCell) p).isBlocked())
                 .filter(p->
-                    ((GameCell) p).getUnit()!=null && ((GameCell) p).getUnit().getTeam()==team).count();
+                    ((GameCell) p).getUnit()!=null && ((GameCell) p).getUnit().getTeam()!=gc.getUnit().getTeam()).count();
+    }
+
+    static GameCell getNearestEnemyUnitCell(GameCell yourCell, int maxRange){
+        ArrayList<GameCell> enemyGCList = new ArrayList<>();
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        int x = yourCell.getxCoord();
+        int y = yourCell.getyCoord();
+
+        for(int i=0; i<maxRange; i++){
+            if(getEnemyUnitsInSRange(yourCell, i)>0){
+
+                gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
+                        isReachable( x,y,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), maxRange)) && !((GameCell) p).isBlocked())
+                        .filter(p->
+                                ((GameCell) p).getUnit()!=null && ((GameCell) p).getUnit().getTeam()!=yourCell.getUnit().getTeam()).forEach(s->
+                        enemyGCList.add((GameCell) s));
+
+            }else System.out.println("no enemy units in range "+i);
+        }
+
+        if(enemyGCList.size() > 0) {
+            if (enemyGCList.size() <= 1) {
+                return enemyGCList.get(0);
+            } else if (enemyGCList.size() > 1) {
+                return enemyGCList.get(generateRandomNumber(0, enemyGCList.size()));
+            }
+        }
+        return null;
+    }
+
+    static int getStrategicalCellsInSRange(GameCell gc, int range) {
+        int x = gc.getxCoord();
+        int y = gc.getyCoord();
+        GridPane gridPane = Board.getMainBattlefieldGP();
+
+        return (int)gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
+                isReachable( x,y,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), range)) && !((GameCell) p).isBlocked())
+                .filter(p->
+                        ((GameCell) p).isStrategical() && ((GameCell) p).getOwner()!=gc.getUnit().getTeam()).count();
+    }
+
+    static GameCell getNearestStrategicalCell(GameCell yourCell, int maxRange){
+        ArrayList<GameCell> strategicalGCList = new ArrayList<>();
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        int x = yourCell.getxCoord();
+        int y = yourCell.getyCoord();
+
+        for(int i=0; i<maxRange; i++){
+            if(getStrategicalCellsInSRange(yourCell, i)>0){
+
+                gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
+                        isReachable( x,y,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), maxRange)) && !((GameCell) p).isBlocked())
+                        .filter(p->
+                                ((GameCell) p).isStrategical() && ((GameCell) p).getOwner()!=yourCell.getUnit().getTeam()).forEach(s->
+                        strategicalGCList.add((GameCell) s));
+
+            }else System.out.println("no enemy units in range "+i);
+        }
+
+        if(strategicalGCList.size() > 0) {
+            if (strategicalGCList.size() <= 1) {
+                return strategicalGCList.get(0);
+            } else if (strategicalGCList.size() > 1) {
+                return strategicalGCList.get(generateRandomNumber(0, strategicalGCList.size()));
+            }
+        }
+        return null;
     }
 
     static String getUnitPopularity(int team, int place){
