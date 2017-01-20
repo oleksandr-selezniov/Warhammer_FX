@@ -183,7 +183,7 @@ public class BoardUtils {
             if (enemyGCList.size() <= 1) {
                 return enemyGCList.get(0);
             } else if (enemyGCList.size() > 1) {
-                return enemyGCList.get(generateRandomNumber(0, enemyGCList.size()));
+                return enemyGCList.get(generateRandomNumber(0, enemyGCList.size()-1));
             }
         }
         return null;

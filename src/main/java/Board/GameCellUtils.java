@@ -132,6 +132,9 @@ public class GameCellUtils {
                     changeTeamTurn();
                     LoggerUtils.writeTurnLog(getTeamTurnValue());
                     BoardUtils.setActiveTeamUnits(getTeamTurnValue(), true);
+                    if(getTeamTurnValue()==2){
+                        AI.getInstance().doAction();
+                    }
                 }
             }
         }

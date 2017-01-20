@@ -1,5 +1,6 @@
 package Board;
 
+import Units.Unit;
 import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import static Board.BoardInitializer.getScoreLimit;
 import static Board.BoardInitializer.getTeam1Score;
 import static Board.BoardInitializer.getTeam2Score;
 import static Board.BoardUtils.*;
+import static Board.GameCellUtils.*;
 
 /**
  * Created by Dmitriy on 25.12.2016.
@@ -43,7 +45,7 @@ public class AI {
     }
 
     private enum Tactic{
-        CLOSE_ATTACK, RANGE_ATTACK, MOVE_AHEAD, MOVE_TO_NEAREST_SP, ACTIVATE_SP, RUNAWAY
+        CLOSE_ATTACK, RANGE_ATTACK, MOVE_TO_NEAREST_ENEMY, MOVE_TO_NEAREST_SP, ACTIVATE_SP, RUNAWAY
     }
 
     int enemyScore;
@@ -53,8 +55,9 @@ public class AI {
     Board gamingBoard;
     GridPane mainGP;
     Strategy strategy;
-    ArrayList myUnitGCList;
-    ArrayList enemyUnitGCList;
+    Tactic tactic;
+    ArrayList<GameCell> myUnitGCList;
+    ArrayList<GameCell> enemyUnitGCList;
     private static AI ai_Elsa = null;
 
     private AI() {}
@@ -67,6 +70,35 @@ public class AI {
 
     public void setBoard(Board gamingBoard) {
         this.gamingBoard = gamingBoard;
+    }
+
+    public Strategy getStrategy(){
+
+        //getUnitPopularity()
+
+        if(enemyTotalUnitNumber - myTotalUnitNumber > 5 && myScore > enemyScore){
+            strategy = Strategy.RUN_AND_WAIT;
+        }else if (enemyScore - myScore > 15){
+            strategy = Strategy.KILL_FROM_DISTANCE;
+        }else{
+            strategy = Strategy.CAPTURE_IT;
+        }
+        return strategy;
+    }
+
+    public Tactic getTactic(GameCell gameCell){
+// рядом есть враг в зоне поражения дальним оружием - атаковать его дальним оружием (если оно есть и стратегия не ранэвэй)
+// рядом есть враг в зоне поражения ближним оружием - атаковать его ближним оружием (если стратегия не ранэвэй)
+// рядом нет врагов на расстоянии 3*walkingRange и стратегия CaptureIt - двигаться к ближайшей стратегической точке
+// рядом есть СТ в зоне активации и стратегия CaptureIt - активировать СП.
+// рядом есть враги на расстоянии меньше 3*walkingRange, и стратегия не ранэвэй - идти к ближайшему врагу
+// дефолтная идти к ближайшему врагу и тд;
+
+        int k = getEnemyUnitsInSRange(gameCell, 50);
+
+        int n = getStrategicalCellsInSRange(gameCell, 50);
+
+        return tactic=Tactic.RANGE_ATTACK;
     }
 
     public void scanBoard(){
@@ -90,22 +122,16 @@ public class AI {
         enemyScore = getTeam1Score();
         myScore = getTeam2Score();
         scoreLimit = getScoreLimit();
-
-
-        if(enemyTotalUnitNumber - myTotalUnitNumber > 5 && myScore > enemyScore){
-            strategy = Strategy.RUN_AND_WAIT;
-        }else if (enemyScore - myScore > 15){
-            strategy = Strategy.KILL_FROM_DISTANCE;
-        }else{
-            strategy = Strategy.CAPTURE_IT;
-        }
     }
 
     public void doAction(){
         scanBoard();
-
-
-
-
+        for(GameCell gc : myUnitGCList){
+            getTactic(gc);
+            GameCell enemyCell = getNearestEnemyUnitCell(gc, 50);
+            clickOnUnitCell(gc);
+            GameCell targetCell = getNearestPassableCell(enemyCell, 50);
+            clickOnFreeCell(targetCell);
+        }
     }
 }
