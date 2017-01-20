@@ -128,9 +128,10 @@ public class AI {
         scanBoard();
         for(GameCell gc : myUnitGCList){
             getTactic(gc);
-            GameCell enemyCell = getNearestEnemyUnitCell(gc, 50);
+            GameCell enemyCell = getNearestEnemyUnitCell(gc, mainGP.getChildren().size());
+            GameCell targetCell = getNearestPassableCell(gc, enemyCell);
+
             clickOnUnitCell(gc);
-            GameCell targetCell = getNearestPassableCell(enemyCell, 50);
             clickOnFreeCell(targetCell);
         }
     }

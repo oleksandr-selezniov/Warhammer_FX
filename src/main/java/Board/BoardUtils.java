@@ -169,21 +169,30 @@ public class BoardUtils {
 
         for(int i=0; i<maxRange; i++){
             if(getEnemyUnitsInSRange(yourCell, i)>0){
-
                 gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
                         isReachable( x,y,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), maxRange)) && !((GameCell) p).isBlocked())
                         .filter(p->
                                 ((GameCell) p).getUnit()!=null && ((GameCell) p).getUnit().getTeam()!=yourCell.getUnit().getTeam()).forEach(s->
                         enemyGCList.add((GameCell) s));
                 break;
-            }else System.out.println("no enemy units in range "+i);
+            }
         }
 
         if(enemyGCList.size() > 0) {
             if (enemyGCList.size() <= 1) {
+                System.out.println("Nearest Enemy Unit Has coords: X="+enemyGCList.get(0).getxCoord() + " Y=" + enemyGCList.get(0).getyCoord());
                 return enemyGCList.get(0);
             } else if (enemyGCList.size() > 1) {
-                return enemyGCList.get(generateRandomNumber(0, enemyGCList.size()-1));
+                final GameCell[] nearestGC = {enemyGCList.get(0)};
+
+                enemyGCList.forEach(p->{
+                    if(abs(p.getxCoord() - x) + abs(p.getyCoord() - y) < abs(nearestGC[0].getxCoord() - x) + abs(nearestGC[0].getyCoord() - y)) {
+                        nearestGC[0] = (GameCell) p;  // костыль чтобы запихнуть а лямбду НЕ final переменную
+                    }
+                });
+                //GameCell randomGC = enemyGCList.get(generateRandomNumber(0, enemyGCList.size()-1));
+                System.out.println("Nearest Enemy Unit Has coords: X="+nearestGC[0].getxCoord() + " Y=" + nearestGC[0].getyCoord());
+                return nearestGC[0];
             }
         }
         return null;
@@ -213,6 +222,48 @@ public class BoardUtils {
             }
         }
         return null;
+    }
+
+    static GameCell getNearestPassableCell(GameCell sourceCell, GameCell targetCell){
+        ArrayList<GameCell> nearestGCList = new ArrayList<>();
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        final GameCell[] nearestGC = {sourceCell};
+
+        int x1 = sourceCell.getxCoord();
+        int y1 = sourceCell.getyCoord();
+
+        int x2 = targetCell.getxCoord();
+        int y2 = targetCell.getyCoord();
+
+        gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
+                isReachable( x1,y1,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), sourceCell.getUnit().getWalkRange()))
+                && !((GameCell) p).isBlocked() && ((GameCell) p).getUnit()==null).forEach(p->{
+                      if(abs(((GameCell) p).getxCoord() - x2) + abs(((GameCell) p).getyCoord() - y2) < abs(nearestGC[0].getxCoord() - x2) + abs(nearestGC[0].getyCoord() - y2)){
+                          nearestGC[0] = (GameCell)p;  // костыль чтобы запихнуть а лямбду НЕ final переменную
+                      }
+                });
+
+        System.out.println("Nearest Passable cell equals X="+ nearestGC[0].getxCoord() + " Y=" +nearestGC[0].getyCoord());
+    return nearestGC[0];
+
+//        for(int i=0; i<maxRange; i++){
+//            if(getEnemyUnitsInSRange(targetCell, i)>0){
+//                gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
+//                        isReachable( x,y,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), maxRange)) && ((GameCell) p).isPassable())
+//                        .forEach(s->
+//                                nearestGCList.add((GameCell) s));
+//                break;
+//            }else System.out.println("no enemy units in range "+i);
+//        }
+//
+//        if(nearestGCList.size() > 0) {
+//            if (nearestGCList.size() <= 1) {
+//                return nearestGCList.get(0);
+//            } else if (nearestGCList.size() > 1) {
+//                return nearestGCList.get(generateRandomNumber(0, nearestGCList.size()));
+//            }
+//        }
+//        return null;
     }
 
     static GameCell getNearestShootablePassableCell(GameCell targetCell, int maxRange){
