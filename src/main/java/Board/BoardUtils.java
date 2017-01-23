@@ -1,15 +1,14 @@
 package Board;
 
-import Units.Artillery;
-import Units.Unit;
-import Units.Vehicle;
+import Units.*;
+import Units.Enums.UnitClassNames;
+import Units.Enums.UnitTypeNames;
+import Units.Interfaces.RangeUnit;
 import javafx.scene.Node;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +16,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static Board.GameCellUtils.generateRandomNumber;
+import static Units.Enums.UnitClassNames.*;
+import static Units.Enums.UnitTypeNames.MELEE;
+import static Units.Enums.UnitTypeNames.RANGE;
 import static java.lang.Math.abs;
 
 /**
@@ -224,8 +226,36 @@ public class BoardUtils {
         return null;
     }
 
+    static boolean canWalkSomewhere(GameCell gc){
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        final GameCell[] nearestGC = {gc};
+
+        int x1 = gc.getxCoord();
+        int y1 = gc.getyCoord();
+
+        gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
+                isReachable( x1,y1,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), gc.getUnit().getWalkRange()))
+                && !((GameCell) p).isBlocked() && ((GameCell) p).getUnit()==null)
+                .forEach(p->{
+                    nearestGC[0] = (GameCell)p;  // костыль чтобы запихнуть а лямбду НЕ final переменную
+                });
+        if(nearestGC[0].equals(gc)){
+            System.out.println("Unit on X="+ nearestGC[0].getxCoord() + " Y=" +nearestGC[0].getyCoord() + " Can't walk anywhere!");
+        }
+        return(!nearestGC[0].equals(gc));
+    }
+
+    static boolean canShootSomebody(GameCell gc){
+        boolean haveTargets = getEnemyUnitsInSRange(gc, gc.getUnit().getShotRange())>0;
+        boolean haveBullets = gc.getUnit().getAmmo()>0;
+        return (haveBullets && haveTargets);
+    }
+
+    static boolean canHitSomebody(GameCell gc){
+        return getEnemyUnitsInSRange(gc, 2)>0;
+    }
+
     static GameCell getNearestPassableCell(GameCell sourceCell, GameCell targetCell){
-        ArrayList<GameCell> nearestGCList = new ArrayList<>();
         GridPane gridPane = Board.getMainBattlefieldGP();
         final GameCell[] nearestGC = {sourceCell};
 
@@ -243,27 +273,11 @@ public class BoardUtils {
                       }
                 });
 
+    if(!nearestGC[0].equals(sourceCell)){
         System.out.println("Nearest Passable cell equals X="+ nearestGC[0].getxCoord() + " Y=" +nearestGC[0].getyCoord());
     return nearestGC[0];
-
-//        for(int i=0; i<maxRange; i++){
-//            if(getEnemyUnitsInSRange(targetCell, i)>0){
-//                gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
-//                        isReachable( x,y,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), maxRange)) && ((GameCell) p).isPassable())
-//                        .forEach(s->
-//                                nearestGCList.add((GameCell) s));
-//                break;
-//            }else System.out.println("no enemy units in range "+i);
-//        }
-//
-//        if(nearestGCList.size() > 0) {
-//            if (nearestGCList.size() <= 1) {
-//                return nearestGCList.get(0);
-//            } else if (nearestGCList.size() > 1) {
-//                return nearestGCList.get(generateRandomNumber(0, nearestGCList.size()));
-//            }
-//        }
-//        return null;
+    }
+    return null;
     }
 
     static GameCell getNearestShootablePassableCell(GameCell targetCell, int maxRange){
@@ -331,8 +345,8 @@ public class BoardUtils {
         return null;
     }
 
-    static String getUnitPopularity(int team, int place){
-        Map<Integer, String> unitPopularityMap = new HashMap<>();
+    static int getUnitPopularityClass(int team, UnitClassNames type){
+        Map<UnitClassNames, Integer> unitPopularityMap = new HashMap<>();
         ArrayList<String> unitTypeList = new ArrayList<>();
 
         getUnitList(team).forEach(p->unitTypeList.add(((Unit) p).getClass().toString()));
@@ -343,13 +357,34 @@ public class BoardUtils {
         long HIcount = unitTypeList.stream().filter("HeavyInfantry"::equals).count();
         long VEcount = unitTypeList.stream().filter("Vehicle"::equals).count();
 
-        unitPopularityMap.put((int)ARcount, "Artillery");
-        unitPopularityMap.put((int)MIcount, "MeleeInfantry");
-        unitPopularityMap.put((int)LIcount, "LightInfantry");
-        unitPopularityMap.put((int)HIcount, "HeavyInfantry");
-        unitPopularityMap.put((int)VEcount, "Vehicle");
+        unitPopularityMap.put(ARTILLERY, (int)ARcount);
+        unitPopularityMap.put(MELEE_INFANTRY, (int)MIcount);
+        unitPopularityMap.put(LIGHT_INFANTRY, (int)LIcount);
+        unitPopularityMap.put(HEAVY_INFANTRY, (int)HIcount);
+        unitPopularityMap.put(VEHICLE, (int)VEcount);
 
-        return unitPopularityMap.get(place);
+        return unitPopularityMap.get(type);
+    }
+
+    static int getUnitPopularityType(int team, UnitTypeNames type){
+        Map<UnitTypeNames, Integer> unitPopularityMap = new HashMap<>();
+        ArrayList<UnitTypeNames> unitTypeList = new ArrayList<>();
+
+        getUnitList(team).forEach(p->{
+           if(p instanceof RangeUnit){
+               unitTypeList.add(RANGE);
+           }else{
+               unitTypeList.add(MELEE);
+           }
+        });
+
+        long RAcount = unitTypeList.stream().filter(RANGE::equals).count();
+        long MEcount = unitTypeList.stream().filter("Melee"::equals).count();
+
+        unitPopularityMap.put(RANGE, (int)RAcount);
+        unitPopularityMap.put(MELEE, (int)MEcount);
+
+        return unitPopularityMap.get(type);
     }
 
     static int getTotalUnitNumber(int team){

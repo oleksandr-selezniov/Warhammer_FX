@@ -1,16 +1,13 @@
 package Units;
 
 import Board.Board;
-import Size.Size;
+import Units.Interfaces.MeleeUnit;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.io.File;
-import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import Board.LoggerUtils;
@@ -21,7 +18,7 @@ import javafx.scene.layout.VBox;
 /**
  * Created by Glazyrin.D on 11/9/2016.
  */
-public class MeleeInfantry extends LightInfantry {
+public class MeleeInfantry extends LightInfantry implements MeleeUnit {
     private static Locale locale = new Locale("en", "US");
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("MeleeInfantry", locale);
     private double insetsY = 2.0;
@@ -69,7 +66,7 @@ public class MeleeInfantry extends LightInfantry {
         this.setActive(false);
     }
 
-    private int getCloseDamage(Unit victim){
+    public int getCloseDamage(Unit victim){
         double efficiency = getCurrentCloseEfficiency(victim);
         int minActualDamage = minCloseDamage;
         int maxActualDamage = maxCloseDamage;

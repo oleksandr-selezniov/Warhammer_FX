@@ -12,7 +12,10 @@ import javafx.scene.effect.SepiaTone;
 import javafx.scene.paint.Color;
 
 import static Board.BoardInitializer.*;
-import static Board.BoardUtils.getStrategicalPoints;
+
+import Units.Interfaces.RangeUnit;
+
+import static Board.BoardUtils.*;
 import static Board.GameCell.*;
 
 /**
@@ -60,13 +63,15 @@ public class GameCellUtils {
     }
 
     public static void clickOnUnitCell(GameCell gc){
-        if (gc.getUnit() != null && isTeamTurn(gc.getUnit().getTeam()) && gc.getUnit().isActive()) {
-            setIsSelected(true);
-            setTemporaryUnit(gc.getUnit());
-            BoardUtils.calculateRanges(gc);
-            gc.setGraphic(gc.getUnit().getImageView(0.7));
-            setPreviousGameCell(gc);
-            gc.setUnit(null);
+        if(!canSkipTurn(gc)) {
+            if (gc.getUnit() != null && isTeamTurn(gc.getUnit().getTeam()) && gc.getUnit().isActive()) {
+                setIsSelected(true);
+                setTemporaryUnit(gc.getUnit());
+                BoardUtils.calculateRanges(gc);
+                gc.setGraphic(gc.getUnit().getImageView(0.7));
+                setPreviousGameCell(gc);
+                gc.setUnit(null);
+            }
         }
     }
 
@@ -97,6 +102,26 @@ public class GameCellUtils {
         }
         abortRangesAndPassability();
         setTemporaryUnit(null);
+    }
+
+    public static boolean canSkipTurn(GameCell gc){
+        if(gc.getUnit() instanceof RangeUnit){
+            if(!canWalkSomewhere(gc) && !canShootSomebody(gc) && !canHitSomebody(gc)){
+                setIsSelected(false);
+                abortRangesAndPassability();
+                checkTeamTurn();
+                return true;
+            }
+        }
+       else{
+            if(!canWalkSomewhere(gc) && !canHitSomebody(gc)){
+                setIsSelected(false);
+                abortRangesAndPassability();
+                checkTeamTurn();
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void clickOnStrategicalCell(GameCell gc){
@@ -146,10 +171,8 @@ public class GameCellUtils {
 
             if (BoardUtils.isOnNeighbouringCellPlusDiagonal(hunter_GC, victim_CG)) {
                 getTemporaryUnit().performCloseAttack(victim_CG.getUnit());
-                checkTeamTurn();
             } else if(!(getTemporaryUnit() instanceof MeleeInfantry)){
                 getTemporaryUnit().performRangeAttack(victim_CG.getUnit());
-                checkTeamTurn();
             }
         }
         if (victim_CG.getUnit().getHealth() <= 0) {
@@ -158,6 +181,7 @@ public class GameCellUtils {
             victim_CG.setUnit(null);
             checkTeamTurn();
         }
+        checkTeamTurn();
     }
 
     public static void highlightEnemyUnit(GameCell gc){

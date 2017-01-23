@@ -1,10 +1,16 @@
 package Board;
 
+import Units.Enums.UnitTypeNames;
 import Units.Unit;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
 
+import static Board.AI.Strategy.*;
 import static Board.BoardInitializer.getScoreLimit;
 import static Board.BoardInitializer.getTeam1Score;
 import static Board.BoardInitializer.getTeam2Score;
@@ -15,50 +21,39 @@ import static Board.GameCellUtils.*;
  * Created by Dmitriy on 25.12.2016.
  */
 public class AI {
-    //размер доски
-    //количество и присутствие стратегических ячеек
-    //количество своих юнитов
-    //количество вражеских юнитов
-    //очки до победы
-    //текущий номер хода
-    //мапа со всеми доступными юнитами на этот ход
-    //мапа со всеми вражескими юнитами на этот ход
 
-    int boardSize;
-    int strategicalCellNumber;
-    boolean StrategicalCellPresence = false;
-
+    private boolean strategicalCellPresence;
     private int enemyTotalUnitNumber;
     private int myTotalUnitNumber;
-
     private int enemyActiveUnitNumber;
     private int myActiveUnitNumber;
-
     private int enemyCapturedSPNumber;
     private int myCapturedSPNumber;
-
     private int totalSPNumber;
     private int totalUnitNumber;
+    private int myRangeUnitAmount;
+    private int enemyRangeUnitAmount;
+    private int myMeleeUnitAmount;
+    private int enemyMeleeUnitAmount;
+    private int enemyScore = 0;
+    private int myScore = 0;
+    private int scoreLimit;
+    private int turnNumber = 0;
+    private Board gamingBoard;
+    private GridPane mainGP;
+    private Strategy strategy;
+    private Tactic tactic;
+    private ArrayList<GameCell> myUnitGCList;
+    private ArrayList<GameCell> enemyUnitGCList;
+    private static AI ai_Elsa = null;
 
-    private enum Strategy{
+    enum Strategy{
         MELEE_MASSACRE, KILL_FROM_DISTANCE, CAPTURE_IT, RUN_AND_WAIT
     }
 
-    private enum Tactic{
+    enum Tactic{
         CLOSE_ATTACK, RANGE_ATTACK, MOVE_TO_NEAREST_ENEMY, MOVE_TO_NEAREST_SP, ACTIVATE_SP, RUNAWAY
     }
-
-    int enemyScore;
-    int myScore;
-    int scoreLimit;
-    int turnNumber;
-    Board gamingBoard;
-    GridPane mainGP;
-    Strategy strategy;
-    Tactic tactic;
-    ArrayList<GameCell> myUnitGCList;
-    ArrayList<GameCell> enemyUnitGCList;
-    private static AI ai_Elsa = null;
 
     private AI() {}
 
@@ -73,15 +68,19 @@ public class AI {
     }
 
     public Strategy getStrategy(){
-
-        //getUnitPopularity()
-
-        if(enemyTotalUnitNumber - myTotalUnitNumber > 5 && myScore > enemyScore){
-            strategy = Strategy.RUN_AND_WAIT;
-        }else if (enemyScore - myScore > 15){
-            strategy = Strategy.KILL_FROM_DISTANCE;
+        if(turnNumber < 5){
+            strategy = CAPTURE_IT;
+        }else
+        if(enemyTotalUnitNumber - myTotalUnitNumber > 5 && myScore > enemyScore && myTotalUnitNumber < 3){
+            strategy = RUN_AND_WAIT;
+        }else
+        if (myRangeUnitAmount > myMeleeUnitAmount && enemyTotalUnitNumber - myTotalUnitNumber < 10){
+            strategy = KILL_FROM_DISTANCE;
+        }else
+        if (myMeleeUnitAmount > myRangeUnitAmount && enemyTotalUnitNumber - myTotalUnitNumber < 10){
+            strategy = MELEE_MASSACRE;
         }else{
-            strategy = Strategy.CAPTURE_IT;
+            strategy = RUN_AND_WAIT;
         }
         return strategy;
     }
@@ -102,6 +101,8 @@ public class AI {
     }
 
     public void scanBoard(){
+        turnNumber++;
+
         mainGP = gamingBoard.getMainBattlefieldGP();
 
         myUnitGCList = getUnitCellList(2);
@@ -117,22 +118,48 @@ public class AI {
         myCapturedSPNumber = getStrategicalPoints(2);
 
         totalSPNumber = getStrategicalPoints();
+        strategicalCellPresence = totalSPNumber > 0;
+
+        myCapturedSPNumber = getStrategicalPoints(2);
+        enemyCapturedSPNumber = getStrategicalPoints(1);
+
         totalUnitNumber = getTotalUnitNumber();
 
         enemyScore = getTeam1Score();
         myScore = getTeam2Score();
         scoreLimit = getScoreLimit();
+
+        myRangeUnitAmount = getUnitPopularityType(2, UnitTypeNames.RANGE);
+        myMeleeUnitAmount = getUnitPopularityType(2, UnitTypeNames.MELEE);
+
+        enemyRangeUnitAmount = getUnitPopularityType(1, UnitTypeNames.RANGE);
+        enemyMeleeUnitAmount = getUnitPopularityType(1, UnitTypeNames.MELEE);
+
+
+
     }
+
+    //проблема
+    //если юнит не может хоть куда-то ходить, или хоть кого-то атаковать  (или нет снарядов) - пропуск ходв.
 
     public void doAction(){
         scanBoard();
+
         for(GameCell gc : myUnitGCList){
             getTactic(gc);
-            GameCell enemyCell = getNearestEnemyUnitCell(gc, mainGP.getChildren().size());
-            GameCell targetCell = getNearestPassableCell(gc, enemyCell);
+            GameCell nearestEnemyCell = getNearestEnemyUnitCell(gc, mainGP.getChildren().size());
+            GameCell nearestPassableCell = getNearestPassableCell(gc, nearestEnemyCell);
 
+
+
+// tactic for meleeMassacre ---------------------------------------------------------------------------------
             clickOnUnitCell(gc);
-            clickOnFreeCell(targetCell);
+            if(nearestPassableCell!=null){
+                clickOnFreeCell(nearestPassableCell);
+            }else if(nearestEnemyCell!=null && isOnNeighbouringCellPlusDiagonal(nearestEnemyCell, gc)){
+                clickOnEnemyUnitCell(nearestEnemyCell);
+            }
+//_____________________________________________________________________________________________________________
         }
     }
 }

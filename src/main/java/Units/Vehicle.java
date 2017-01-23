@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import Size.Size;
 import Board.Board;
+import Units.Interfaces.RangeUnit;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -13,7 +14,7 @@ import Board.LoggerUtils;
 /**
  * Created by Dmitriy on 02.11.2016.
  */
-public class Vehicle extends Unit {
+public class Vehicle extends Unit implements RangeUnit {
     private static Locale locale = new Locale("en", "US");
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("Vehicles", locale);
     private double insetsY = 80;
@@ -118,7 +119,7 @@ public class Vehicle extends Unit {
         }
     }
 
-    private int getRangeDamage(Unit victim){
+    public int getRangeDamage(Unit victim){
         double efficiency = getCurrentRangeEfficiency(victim);
         int minActualDamage = minRangeDamage;
         int maxActualDamage = maxRangeDamage;
@@ -132,7 +133,7 @@ public class Vehicle extends Unit {
         return minActualDamage + (int)(Math.random() * ((maxActualDamage - minActualDamage) + 1));
     }
 
-    private int getCloseDamage(){
+    public int getCloseDamage(){
         return minCloseDamage + (int)(Math.random() * ((maxCloseDamage - minCloseDamage) + 1));
     }
 }

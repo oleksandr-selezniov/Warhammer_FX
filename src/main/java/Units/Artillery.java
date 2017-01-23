@@ -3,6 +3,7 @@ package Units;
 import Board.Board;
 import Board.LoggerUtils;
 import Size.Size;
+import Units.Interfaces.RangeUnit;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -18,7 +19,7 @@ import java.util.ResourceBundle;
 /**
  * Created by Dmitriy on 02.11.2016.
  */
-public class Artillery extends Vehicle {
+public class Artillery extends Vehicle implements RangeUnit {
     private static Locale locale = new Locale("en", "US");
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("Artillery", locale);
     private int deadZone;
@@ -94,7 +95,7 @@ public class Artillery extends Vehicle {
         }
     }
 
-    private int getRangeDamage(Unit victim){
+     public int getRangeDamage(Unit victim){
         double efficiency = getCurrentRangeEfficiency(victim);
         int minActualDamage = minRangeDamage;
         int maxActualDamage = maxRangeDamage;
@@ -108,7 +109,7 @@ public class Artillery extends Vehicle {
         return minActualDamage + (int)(Math.random() * ((maxActualDamage - minActualDamage) + 1));
     }
 
-    private int getCloseDamage(){
+    public int getCloseDamage(){
         return minCloseDamage + (int)(Math.random() * ((maxCloseDamage - minCloseDamage) + 1));
     }
 

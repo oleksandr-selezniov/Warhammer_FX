@@ -1,21 +1,17 @@
 package Units;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import Size.Size;
+
 import Board.Board;
+import Units.Interfaces.RangeUnit;
 import javafx.geometry.Insets;
 import Board.LoggerUtils;
 
 /**
  * Created by Dmitriy on 03.11.2016.
  */
-public class HeavyInfantry extends Unit{
+public class HeavyInfantry extends Unit implements RangeUnit {
     private static Locale locale = new Locale("en", "US");
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("HeavyInfantry", locale);
     private double insetsY = 1.0;
@@ -87,7 +83,7 @@ public class HeavyInfantry extends Unit{
         }
     }
 
-    private int getRangeDamage(Unit victim){
+    public int getRangeDamage(Unit victim){
         double efficiency = getCurrentRangeEfficiency(victim);
         int minActualDamage = minRangeDamage;
         int maxActualDamage = maxRangeDamage;
@@ -101,7 +97,7 @@ public class HeavyInfantry extends Unit{
         return minActualDamage + (int)(Math.random() * ((maxActualDamage - minActualDamage) + 1));
     }
 
-    private int getCloseDamage(){
+    public int getCloseDamage(){
         return minCloseDamage + (int)(Math.random() * ((maxCloseDamage - minCloseDamage) + 1));
     }
 }
