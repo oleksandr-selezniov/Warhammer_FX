@@ -1,14 +1,11 @@
 package Board;
 
 import Units.Enums.UnitTypeNames;
-import Units.Unit;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 import static Board.AI.Strategy.*;
 import static Board.BoardInitializer.getScoreLimit;
@@ -142,38 +139,38 @@ public class AI {
 
     public void doAction(){
         Thread thread = new Thread(() -> {
-        scanBoard();
+            scanBoard();
 
-        for(GameCell gc : myUnitGCList){
-            getTactic(gc);
-            GameCell nearestEnemyCell = getNearestEnemyUnitCell(gc, mainGP.getChildren().size());
-            GameCell nearestPassableCell = getNearestPassableCell(gc, nearestEnemyCell);
+            for(GameCell gc : myUnitGCList){
+                getTactic(gc);
+                GameCell nearestEnemyCell = getNearestEnemyUnitCell(gc, mainGP.getChildren().size());
+                GameCell nearestPassableCell = getNearestPassableCell(gc, nearestEnemyCell);
 
 // tactic for meleeMassacre ---------------------------------------------------------------------------------
-                try {
-                    Platform.runLater(() -> {
-                        clickOnUnitCell(gc);
-                    });
-                    Thread.sleep(1000);
 
-                    if (nearestPassableCell != null) {
-                        Platform.runLater(() -> {
-                            clickOnFreeCell(nearestPassableCell);
-                        });
-                        Thread.sleep(1000);
-                    }else if (nearestEnemyCell != null && isOnNeighbouringCellPlusDiagonal(nearestEnemyCell, gc)){
-                        Platform.runLater(() -> {
-                            clickOnEnemyUnitCell(nearestEnemyCell);
-                        });
-                        Thread.sleep(1000);
-                    }
-                } catch (InterruptedException exc) {
-                    // should not be able to get here...
-                    throw new Error("Unexpected interruption");
+                runWithDelay(gc,
+                        p->clickOnUnitCell(gc), 1);
+                if (nearestPassableCell != null) {
+                    runWithDelay(nearestPassableCell,
+                            p->clickOnFreeCell(nearestPassableCell), 1);
+                }else if (nearestEnemyCell != null && isOnNeighbouringCellPlusDiagonal(nearestEnemyCell, gc)){
+                    runWithDelay(nearestEnemyCell,
+                            p->clickOnEnemyUnitCell(nearestEnemyCell), 1);
                 }
             }
+
 //_____________________________________________________________________________________________________________
         });
-                thread.start();
+        thread.start();
+    }
+
+    private void runWithDelay(GameCell gc, Consumer<GameCell> action, int delayInSec){
+        try{
+            Platform.runLater(()-> action.accept(gc));
+            Thread.sleep(delayInSec * 1000);
+        } catch (InterruptedException exc) {
+            throw new Error("Unexpected interruption");
+        }
+
     }
 }

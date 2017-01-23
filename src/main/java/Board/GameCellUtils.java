@@ -63,8 +63,8 @@ public class GameCellUtils {
     }
 
     public static void clickOnUnitCell(GameCell gc){
-        if(!canSkipTurn(gc)) {
-            if (gc.getUnit() != null && isTeamTurn(gc.getUnit().getTeam()) && gc.getUnit().isActive()) {
+        if(gc.getUnit() != null &&!canSkipTurn(gc)) {
+            if (isTeamTurn(gc.getUnit().getTeam()) && gc.getUnit().isActive()) {
                 setIsSelected(true);
                 setTemporaryUnit(gc.getUnit());
                 BoardUtils.calculateRanges(gc);
