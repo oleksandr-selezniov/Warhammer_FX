@@ -16,6 +16,7 @@ import static Board.BoardInitializer.getTeam1Score;
 import static Board.BoardInitializer.getTeam2Score;
 import static Board.BoardUtils.*;
 import static Board.GameCellUtils.*;
+import static java.lang.Thread.sleep;
 
 /**
  * Created by Dmitriy on 25.12.2016.
@@ -134,15 +135,13 @@ public class AI {
 
         enemyRangeUnitAmount = getUnitPopularityType(1, UnitTypeNames.RANGE);
         enemyMeleeUnitAmount = getUnitPopularityType(1, UnitTypeNames.MELEE);
-
-
-
     }
 
     //проблема
     //если юнит не может хоть куда-то ходить, или хоть кого-то атаковать  (или нет снарядов) - пропуск ходв.
 
     public void doAction(){
+        Thread thread = new Thread(() -> {
         scanBoard();
 
         for(GameCell gc : myUnitGCList){
@@ -150,16 +149,31 @@ public class AI {
             GameCell nearestEnemyCell = getNearestEnemyUnitCell(gc, mainGP.getChildren().size());
             GameCell nearestPassableCell = getNearestPassableCell(gc, nearestEnemyCell);
 
-
-
 // tactic for meleeMassacre ---------------------------------------------------------------------------------
-            clickOnUnitCell(gc);
-            if(nearestPassableCell!=null){
-                clickOnFreeCell(nearestPassableCell);
-            }else if(nearestEnemyCell!=null && isOnNeighbouringCellPlusDiagonal(nearestEnemyCell, gc)){
-                clickOnEnemyUnitCell(nearestEnemyCell);
+                try {
+                    Platform.runLater(() -> {
+                        clickOnUnitCell(gc);
+                    });
+                    Thread.sleep(1000);
+
+                    if (nearestPassableCell != null) {
+                        Platform.runLater(() -> {
+                            clickOnFreeCell(nearestPassableCell);
+                        });
+                        Thread.sleep(1000);
+                    }else if (nearestEnemyCell != null && isOnNeighbouringCellPlusDiagonal(nearestEnemyCell, gc)){
+                        Platform.runLater(() -> {
+                            clickOnEnemyUnitCell(nearestEnemyCell);
+                        });
+                        Thread.sleep(1000);
+                    }
+                } catch (InterruptedException exc) {
+                    // should not be able to get here...
+                    throw new Error("Unexpected interruption");
+                }
             }
 //_____________________________________________________________________________________________________________
-        }
+        });
+                thread.start();
     }
 }
