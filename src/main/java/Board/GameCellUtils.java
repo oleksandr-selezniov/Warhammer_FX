@@ -110,6 +110,7 @@ public class GameCellUtils {
                 setIsSelected(false);
                 abortRangesAndPassability();
                 checkTeamTurn();
+                System.out.println(gc.getUnit().getName() + " Skipped Turn");
                 return true;
             }
         }
@@ -118,6 +119,7 @@ public class GameCellUtils {
                 setIsSelected(false);
                 abortRangesAndPassability();
                 checkTeamTurn();
+                System.out.println(gc.getUnit().getName() + " Skipped Turn");
                 return true;
             }
         }

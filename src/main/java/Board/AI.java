@@ -8,26 +8,29 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import static Board.AI.Strategy.*;
+import static Board.Board.getMainBattlefieldGP;
 import static Board.BoardInitializer.getScoreLimit;
 import static Board.BoardInitializer.getTeam1Score;
 import static Board.BoardInitializer.getTeam2Score;
 import static Board.BoardUtils.*;
 import static Board.GameCellUtils.*;
-import static java.lang.Thread.sleep;
 
 /**
  * Created by Dmitriy on 25.12.2016.
  */
 public class AI {
+    private GridPane mainGP = getMainBattlefieldGP();
+    private int totalSPNumber = getStrategicalPoints();
+    private boolean strategicalCellPresence = totalSPNumber > 0;
+    private int scoreLimit = getScoreLimit();
 
-    private boolean strategicalCellPresence;
     private int enemyTotalUnitNumber;
     private int myTotalUnitNumber;
     private int enemyActiveUnitNumber;
     private int myActiveUnitNumber;
     private int enemyCapturedSPNumber;
     private int myCapturedSPNumber;
-    private int totalSPNumber;
+
     private int totalUnitNumber;
     private int myRangeUnitAmount;
     private int enemyRangeUnitAmount;
@@ -35,10 +38,8 @@ public class AI {
     private int enemyMeleeUnitAmount;
     private int enemyScore = 0;
     private int myScore = 0;
-    private int scoreLimit;
     private int turnNumber = 0;
-    private Board gamingBoard;
-    private GridPane mainGP;
+
     private Strategy strategy;
     private Tactic tactic;
     private ArrayList<GameCell> myUnitGCList;
@@ -55,17 +56,18 @@ public class AI {
 
     private AI() {}
 
-    public static synchronized AI getInstance() {
+    public static AI getInstance() {
         if (ai_Elsa == null)
             ai_Elsa = new AI();
         return ai_Elsa;
     }
 
-    public void setBoard(Board gamingBoard) {
-        this.gamingBoard = gamingBoard;
-    }
-
     public Strategy getStrategy(){
+        turnNumber++;
+        myUnitGCList = getUnitCellList(2);
+        enemyUnitGCList = getUnitCellList(1);
+        scanBoard();
+
         if(turnNumber < 5){
             strategy = CAPTURE_IT;
         }else
@@ -84,6 +86,7 @@ public class AI {
     }
 
     public Tactic getTactic(GameCell gameCell){
+        scanBoard();
 // рядом есть враг в зоне поражения дальним оружием - атаковать его дальним оружием (если оно есть и стратегия не ранэвэй)
 // рядом есть враг в зоне поражения ближним оружием - атаковать его ближним оружием (если стратегия не ранэвэй)
 // рядом нет врагов на расстоянии 3*walkingRange и стратегия CaptureIt - двигаться к ближайшей стратегической точке
@@ -91,20 +94,15 @@ public class AI {
 // рядом есть враги на расстоянии меньше 3*walkingRange, и стратегия не ранэвэй - идти к ближайшему врагу
 // дефолтная идти к ближайшему врагу и тд;
 
-        int k = getEnemyUnitsInSRange(gameCell, 50);
-
-        int n = getStrategicalCellsInSRange(gameCell, 50);
+//        int k = getEnemyUnitsInSRange(gameCell, 50);
+//        int n = getStrategicalCellsInSRange(gameCell, 50);
 
         return tactic=Tactic.RANGE_ATTACK;
     }
 
     public void scanBoard(){
-        turnNumber++;
-
-        mainGP = gamingBoard.getMainBattlefieldGP();
-
-        myUnitGCList = getUnitCellList(2);
-        enemyUnitGCList = getUnitCellList(1);
+        enemyCapturedSPNumber = getStrategicalPoints(1);
+        myCapturedSPNumber = getStrategicalPoints(2);
 
         enemyTotalUnitNumber = getTotalUnitNumber(1);
         myTotalUnitNumber = getTotalUnitNumber(2);
@@ -112,20 +110,10 @@ public class AI {
         enemyActiveUnitNumber = getActiveUnitNumber(1);
         myActiveUnitNumber = getActiveUnitNumber(2);
 
-        enemyCapturedSPNumber = getStrategicalPoints(1);
-        myCapturedSPNumber = getStrategicalPoints(2);
-
-        totalSPNumber = getStrategicalPoints();
-        strategicalCellPresence = totalSPNumber > 0;
-
-        myCapturedSPNumber = getStrategicalPoints(2);
-        enemyCapturedSPNumber = getStrategicalPoints(1);
-
         totalUnitNumber = getTotalUnitNumber();
 
         enemyScore = getTeam1Score();
         myScore = getTeam2Score();
-        scoreLimit = getScoreLimit();
 
         myRangeUnitAmount = getUnitPopularityType(2, UnitTypeNames.RANGE);
         myMeleeUnitAmount = getUnitPopularityType(2, UnitTypeNames.MELEE);
@@ -134,12 +122,9 @@ public class AI {
         enemyMeleeUnitAmount = getUnitPopularityType(1, UnitTypeNames.MELEE);
     }
 
-    //проблема
-    //если юнит не может хоть куда-то ходить, или хоть кого-то атаковать  (или нет снарядов) - пропуск ходв.
-
     public void doAction(){
         Thread thread = new Thread(() -> {
-            scanBoard();
+            getStrategy();
 
             for(GameCell gc : myUnitGCList){
                 getTactic(gc);
@@ -147,7 +132,6 @@ public class AI {
                 GameCell nearestPassableCell = getNearestPassableCell(gc, nearestEnemyCell);
 
 // tactic for meleeMassacre ---------------------------------------------------------------------------------
-
                 runWithDelay(gc,
                         p->clickOnUnitCell(gc), 1);
                 if (nearestPassableCell != null) {
@@ -156,12 +140,12 @@ public class AI {
                 }else if (nearestEnemyCell != null && isOnNeighbouringCellPlusDiagonal(nearestEnemyCell, gc)){
                     runWithDelay(nearestEnemyCell,
                             p->clickOnEnemyUnitCell(nearestEnemyCell), 1);
-                }
+                }//walk somewhere. add
             }
-
-//_____________________________________________________________________________________________________________
         });
+        thread.setName("AI EXECUTION THREAD");
         thread.start();
+//_____________________________________________________________________________________________________________
     }
 
     private void runWithDelay(GameCell gc, Consumer<GameCell> action, int delayInSec){

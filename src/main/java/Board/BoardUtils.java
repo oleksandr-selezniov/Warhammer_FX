@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static Board.GameCellUtils.generateRandomNumber;
@@ -34,11 +35,11 @@ public class BoardUtils {
         return ((x1==x2 && abs(y1-y2)<5)||(y1==y2 && abs(x1-x2)<5));
     }
 
-    private static boolean isReachable(int x1, int y1, int x2, int y2, int Range){
+    private synchronized static boolean isReachable(int x1, int y1, int x2, int y2, int Range){
         return ((x1 - x2 < Range && y1 - y2 < Range)&&(x2 - x1 < Range && y2 - y1 < Range));
     }
 
-    static boolean isOnNeighbouringCellPlusDiagonal(GameCell gc1, GameCell gc2){
+    static synchronized boolean isOnNeighbouringCellPlusDiagonal(GameCell gc1, GameCell gc2){
         int x1 = gc1.getxCoord();
         int y1 = gc1.getyCoord();
         int x2 = gc2.getxCoord();
@@ -46,14 +47,14 @@ public class BoardUtils {
         return (((x1 - x2) < 2 && (y1 - y2) < 2)&&((x2 - x1) < 2 && (y2 - y1) < 2));
     }
 
-    static void showFieldPassability(){
+    static synchronized void showFieldPassability(){
         GridPane gridPane = Board.getMainBattlefieldGP();
         gridPane.getChildren().stream().filter(p->(p instanceof GameCell
                 && ((GameCell) p).isPassable() && ((GameCell) p).getUnit()==null))
                 .forEach(p->p.setEffect(new InnerShadow()));
     }
 
-    static void setWalkingArea(GameCell currentcell){
+    static synchronized void setWalkingArea(GameCell currentcell){
         int walkrange = currentcell.getUnit().getWalkRange();
         int x = currentcell.getxCoord();
         int y = currentcell.getyCoord();
@@ -65,7 +66,7 @@ public class BoardUtils {
                     ((GameCell) p).setPassable(true);});
     }
 
-    static void abortFieldPassability(){
+    static synchronized void abortFieldPassability(){
         GridPane gridPane = Board.getMainBattlefieldGP();
         gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isPassable()) && !((GameCell) p).isBlocked())
                 .forEach(p->{
@@ -76,7 +77,7 @@ public class BoardUtils {
                 });
     }
 
-    static void abortShootingRange(){
+    static synchronized void abortShootingRange(){
         GridPane gridPane = Board.getMainBattlefieldGP();
         gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isInShootingRange()) && !((GameCell) p).isBlocked())
                 .forEach(p->{
@@ -86,13 +87,13 @@ public class BoardUtils {
                 });
     }
 
-    static void showShootingRange(){
+    static synchronized void showShootingRange(){
         GridPane gridPane = Board.getMainBattlefieldGP();
         gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isInShootingRange() && ((GameCell) p).getUnit()==null) && !((GameCell) p).isBlocked())
                 .forEach(p -> p.setStyle("-fx-background-color: #00CC33"));
     }
 
-    static void setShootingArea(GameCell currentCell){
+    static synchronized void setShootingArea(GameCell currentCell){
         int shotRange = currentCell.getUnit().getShotRange();
         int x = currentCell.getxCoord();
         int y = currentCell.getyCoord();
@@ -118,7 +119,7 @@ public class BoardUtils {
         }
     }
 
-    static void calculateRanges(GameCell gameCell){
+    static synchronized void calculateRanges(GameCell gameCell){
         BoardUtils.setWalkingArea(gameCell);
         BoardUtils.setShootingArea(gameCell);
         BoardUtils.showFieldPassability();
@@ -131,7 +132,7 @@ public class BoardUtils {
         return new Image(urlToImage.toString(), false);
     }
 
-    static void refreshZOrder() {
+    static synchronized void refreshZOrder() {
         GridPane gridPane = Board.getMainBattlefieldGP();
         ArrayList<Node> nodeList = gridPane.getChildren().stream().filter(p ->
             (p instanceof GameCell && ((GameCell) p).getUnit() != null)
@@ -139,20 +140,20 @@ public class BoardUtils {
         nodeList.forEach(Node::toFront);
     }
 
-    static ArrayList getUnitCellList(int team) {
+    static synchronized ArrayList getUnitCellList(int team) {
         GridPane gridPane = Board.getMainBattlefieldGP();
         return gridPane.getChildren().stream().filter(p ->
                 (p instanceof GameCell && ((GameCell) p).getUnit() != null && ((GameCell) p).getUnit().getTeam()==team)
         ).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    static ArrayList getUnitList(int team) {
+    static synchronized ArrayList getUnitList(int team) {
         ArrayList<Unit> unitList = new ArrayList<>();
         getUnitCellList(team).forEach(p->unitList.add(((GameCell) p).getUnit()));
         return unitList;
     }
 
-    static int getEnemyUnitsInSRange(GameCell gc, int range) {
+    static synchronized int getEnemyUnitsInSRange(GameCell gc, int range) {
         int x = gc.getxCoord();
         int y = gc.getyCoord();
         GridPane gridPane = Board.getMainBattlefieldGP();
@@ -163,7 +164,7 @@ public class BoardUtils {
                     ((GameCell) p).getUnit()!=null && ((GameCell) p).getUnit().getTeam()!=gc.getUnit().getTeam()).count();
     }
 
-    static GameCell getNearestEnemyUnitCell(GameCell yourCell, int maxRange){
+    static synchronized GameCell getNearestEnemyUnitCell(GameCell yourCell, int maxRange){
         ArrayList<GameCell> enemyGCList = new ArrayList<>();
         GridPane gridPane = Board.getMainBattlefieldGP();
         int x = yourCell.getxCoord();
@@ -200,7 +201,7 @@ public class BoardUtils {
         return null;
     }
 
-    static GameCell getNearestPassableCell(GameCell targetCell, int maxRange){
+    static synchronized GameCell getNearestPassableCell(GameCell targetCell, int maxRange){
         ArrayList<GameCell> nearestGCList = new ArrayList<>();
         GridPane gridPane = Board.getMainBattlefieldGP();
         int x = targetCell.getxCoord();
@@ -226,7 +227,7 @@ public class BoardUtils {
         return null;
     }
 
-    static boolean canWalkSomewhere(GameCell gc){
+    static synchronized boolean canWalkSomewhere(GameCell gc){
         GridPane gridPane = Board.getMainBattlefieldGP();
         final GameCell[] nearestGC = {gc};
 
@@ -245,17 +246,17 @@ public class BoardUtils {
         return(!nearestGC[0].equals(gc));
     }
 
-    static boolean canShootSomebody(GameCell gc){
+    static synchronized boolean canShootSomebody(GameCell gc){
         boolean haveTargets = getEnemyUnitsInSRange(gc, gc.getUnit().getShotRange())>0;
         boolean haveBullets = gc.getUnit().getAmmo()>0;
         return (haveBullets && haveTargets);
     }
 
-    static boolean canHitSomebody(GameCell gc){
+    static synchronized boolean canHitSomebody(GameCell gc){
         return getEnemyUnitsInSRange(gc, 2)>0;
     }
 
-    static GameCell getNearestPassableCell(GameCell sourceCell, GameCell targetCell){
+    static synchronized GameCell getNearestPassableCell(GameCell sourceCell, GameCell targetCell){
         GridPane gridPane = Board.getMainBattlefieldGP();
         final GameCell[] nearestGC = {sourceCell};
 
@@ -280,7 +281,7 @@ public class BoardUtils {
     return null;
     }
 
-    static GameCell getNearestShootablePassableCell(GameCell targetCell, int maxRange){
+    static synchronized GameCell getNearestShootablePassableCell(GameCell targetCell, int maxRange){
         ArrayList<GameCell> nearestGCList = new ArrayList<>();
         GridPane gridPane = Board.getMainBattlefieldGP();
         int x = targetCell.getxCoord();
@@ -306,7 +307,7 @@ public class BoardUtils {
         return null;
     }
 
-    static int getStrategicalCellsInSRange(GameCell gc, int range) {
+    static synchronized int getStrategicalCellsInSRange(GameCell gc, int range) {
         int x = gc.getxCoord();
         int y = gc.getyCoord();
         GridPane gridPane = Board.getMainBattlefieldGP();
@@ -317,7 +318,7 @@ public class BoardUtils {
                         ((GameCell) p).isStrategical() && ((GameCell) p).getOwner()!=gc.getUnit().getTeam()).count();
     }
 
-    static GameCell getNearestStrategicalCell(GameCell yourCell, int maxRange){
+    static synchronized GameCell getNearestStrategicalCell(GameCell yourCell, int maxRange){
         ArrayList<GameCell> strategicalGCList = new ArrayList<>();
         GridPane gridPane = Board.getMainBattlefieldGP();
         int x = yourCell.getxCoord();
@@ -345,7 +346,7 @@ public class BoardUtils {
         return null;
     }
 
-    static int getUnitPopularityClass(int team, UnitClassNames type){
+    static synchronized int getUnitPopularityClass(int team, UnitClassNames type){
         Map<UnitClassNames, Integer> unitPopularityMap = new HashMap<>();
         ArrayList<String> unitTypeList = new ArrayList<>();
 
@@ -366,7 +367,7 @@ public class BoardUtils {
         return unitPopularityMap.get(type);
     }
 
-    static int getUnitPopularityType(int team, UnitTypeNames type){
+    static synchronized int getUnitPopularityType(int team, UnitTypeNames type){
         Map<UnitTypeNames, Integer> unitPopularityMap = new HashMap<>();
         ArrayList<UnitTypeNames> unitTypeList = new ArrayList<>();
 
@@ -387,45 +388,51 @@ public class BoardUtils {
         return unitPopularityMap.get(type);
     }
 
-    static int getTotalUnitNumber(int team){
+    static synchronized int getTotalUnitNumber(int team){
         GridPane gridPane = Board.getMainBattlefieldGP();
         return (int)(gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).getUnit() != null))
                 .filter(p->((GameCell)p).getUnit().getTeam()==team).count());
     }
 
-    static int getTotalUnitNumber(){
+    static synchronized int getTotalUnitNumber(){
         GridPane gridPane = Board.getMainBattlefieldGP();
         return (int)(gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).getUnit() != null))
                 .count());
     }
 
-    static int getStrategicalPoints(int team){
+    static synchronized int getStrategicalPoints(int team){
         GridPane gridPane = Board.getMainBattlefieldGP();
         return (int)(gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).isStrategical()
                 && ((GameCell)p).getOwner() == team)).count());
     }
 
-    static int getStrategicalPoints(){
+    static synchronized int getStrategicalPoints(){
         GridPane gridPane = Board.getMainBattlefieldGP();
         return (int)(gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).isStrategical())).count());
     }
 
-    static int getActiveUnitNumber(int team){
+    static synchronized int getActiveUnitNumber(int team){
         GridPane gridPane = Board.getMainBattlefieldGP();
         return (int)(gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).getUnit() != null))
                 .filter(p->((GameCell)p).getUnit().getTeam()==team && ((GameCell)p).getUnit().isActive()).count());
     }
 
-    static void setActiveTeamUnits(int team, boolean state){
+    static synchronized void setActiveTeamUnits(int team, boolean state){
         GridPane gridPane = Board.getMainBattlefieldGP();
         gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).getUnit() != null))
                 .filter(p->((GameCell)p).getUnit().getTeam()==team)
                 .forEach(p->((GameCell)p).getUnit().setActive(state));
     }
 
-    public static void setDefaultOpacity(){
+    public synchronized static void setDefaultOpacity(){
         GridPane gridPane = Board.getMainBattlefieldGP();
         gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).getUnit() != null))
                 .forEach(p->((GameCell)p).setGraphic(((GameCell) p).getUnit().getImageView(1.0)));
+    }
+
+    public synchronized static void showAllThreads(){
+        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
+        for(int i=0; i<threadArray.length; i++) {System.out.println(threadArray[i]);}
     }
 }
