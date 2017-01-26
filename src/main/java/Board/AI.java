@@ -128,8 +128,15 @@ public class AI {
 
             for(GameCell gc : myUnitGCList){
                 getTactic(gc);
-                GameCell nearestEnemyCell = getNearestEnemyUnitCell(gc, mainGP.getChildren().size());
+                GameCell nearestEnemyCell = getNearestEnemyUnitCell(gc, 100);
                 GameCell nearestPassableCell = getNearestPassableCell(gc, nearestEnemyCell);
+                GameCell anyPassableCell = getAnyPassableCell(gc);
+                GameCell nearestStrategicalCell = getNearestStrategicalCell(gc, 100);
+                GameCell nearestSootablePassableCell = getNearestShootablePassableCell(gc, 100);
+                int enemyUnitsInMeleeRange = getEnemyUnitsInSRange(gc, 2);
+                int enemyUnitsInShotRange = getEnemyUnitsInSRange(gc, gc.getUnit().getShotRange());
+                int enemyUnitsInRange = getEnemyUnitsInSRange(gc, 10);
+                int unActivatedSPInRange = getStrategicalCellsInSRange(gc, 10);
 
 // tactic for meleeMassacre ---------------------------------------------------------------------------------
                 runWithDelay(gc,
@@ -140,7 +147,10 @@ public class AI {
                 }else if (nearestEnemyCell != null && isOnNeighbouringCellPlusDiagonal(nearestEnemyCell, gc)){
                     runWithDelay(nearestEnemyCell,
                             p->clickOnEnemyUnitCell(nearestEnemyCell), 1);
-                }//walk somewhere. add
+                }else{
+                    runWithDelay(anyPassableCell,
+                            p->clickOnFreeCell(anyPassableCell), 1);
+                }
             }
         });
         thread.setName("AI EXECUTION THREAD");

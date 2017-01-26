@@ -153,6 +153,14 @@ public class BoardUtils {
         return unitList;
     }
 
+    static synchronized int getTotalUnitCost(int team) {
+        int unitCost = 0;
+        for(Object u : getUnitCellList(team)){
+            unitCost+=((Unit)u).getCost();
+        }
+        return unitCost;
+    }
+
     static synchronized int getEnemyUnitsInSRange(GameCell gc, int range) {
         int x = gc.getxCoord();
         int y = gc.getyCoord();
@@ -279,6 +287,29 @@ public class BoardUtils {
     return nearestGC[0];
     }
     return null;
+    }
+
+    static synchronized GameCell getAnyPassableCell(GameCell sourceCell){
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        ArrayList<GameCell> anyPassableGC = new ArrayList<>();
+
+        int x1 = sourceCell.getxCoord();
+        int y1 = sourceCell.getyCoord();
+
+        gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
+                isReachable( x1,y1,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), sourceCell.getUnit().getWalkRange()))
+                && !((GameCell) p).isBlocked() && ((GameCell) p).getUnit()==null).forEach(p->{
+            anyPassableGC.add(((GameCell) p));
+        });
+
+        if(anyPassableGC.size() > 0) {
+            if (anyPassableGC.size() <= 1) {
+                return anyPassableGC.get(0);
+            } else if (anyPassableGC.size() > 1) {
+                return anyPassableGC.get(generateRandomNumber(0, anyPassableGC.size()));
+            }
+        }
+        return null;
     }
 
     static synchronized GameCell getNearestShootablePassableCell(GameCell targetCell, int maxRange){
