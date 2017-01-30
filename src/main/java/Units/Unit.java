@@ -194,9 +194,9 @@ public abstract class Unit implements Serializable{
         return isActive;
     }
 
-    public abstract void performRangeAttack(Unit victim);
+    public void performRangeAttack(Unit victim){}
 
-    public abstract void performCloseAttack(Unit victim);
+    public void performCloseAttack(Unit victim){}
 
     public int getMaxRangeDamage() {
         return maxRangeDamage;

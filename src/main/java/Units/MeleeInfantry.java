@@ -18,7 +18,7 @@ import javafx.scene.layout.VBox;
 /**
  * Created by Glazyrin.D on 11/9/2016.
  */
-public class MeleeInfantry extends LightInfantry implements MeleeUnit {
+public class MeleeInfantry extends Unit implements MeleeUnit {
     private static Locale locale = new Locale("en", "US");
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("MeleeInfantry", locale);
     private double insetsY = 2.0;
