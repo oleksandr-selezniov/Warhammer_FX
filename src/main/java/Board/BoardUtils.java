@@ -67,7 +67,7 @@ public class BoardUtils {
         return (abs(x3 - x1) + abs(y3 - y1) < abs(x2 - x1) + abs(y2 - y1));
     }
 
-    private static synchronized boolean isTargetFurtherToEtalonThanEtalon(GameCell etalon, GameCell source, GameCell target){
+    private static synchronized boolean isTargetFurtherToEtalonThanSource(GameCell etalon, GameCell source, GameCell target){
         int x1 = etalon.getxCoord();
         int y1 = etalon.getyCoord();
         int x2 = source.getxCoord();  //yourcell, nearestGC[0], Gamecell p
@@ -240,24 +240,30 @@ public class BoardUtils {
             ArrayList<GameCell> targetList = getEnemyUnitsInSRange(source, source.getUnit().getShotRange());
             bestTarget[0] = targetList.get(0);
             targetList.forEach(p->{
-                if(p.getUnit().getHealth() < ((RangeUnit) source.getUnit()).getCloseDamage() && isOnNeighbouringCellPlusDiagonal(p, source)){
-                    bestTarget[0]=p;
-                    return;
-                }
-                if(p.getUnit().getHealth() < ((RangeUnit) source.getUnit()).getRangeDamage(p.getUnit())
-                        && p.getUnit().getMaxHealth() > ((RangeUnit) source.getUnit()).getRangeDamage(p.getUnit())
-                        && !isOnNeighbouringCellPlusDiagonal(p, source)){
-                    bestTarget[0]=p;
-                    return;
-                }
-                if(p.getUnit().getHealth() < ((RangeUnit) source.getUnit()).getRangeDamage(p.getUnit())
-                        && p.getUnit().getCost() > (source.getUnit().getCost())
-                        && !isOnNeighbouringCellPlusDiagonal(p, source)){
-                    bestTarget[0]=p;
-                    return;
-                }
-                if(((RangeUnit) source.getUnit()).getRangeDamage(bestTarget[0].getUnit()) < ((RangeUnit) source.getUnit()).getRangeDamage(p.getUnit())){
-                    bestTarget[0]=p;
+
+                if(isOnNeighbouringCellPlusDiagonal(p, source)){
+                    if(p.getUnit().getHealth() < ((RangeUnit) source.getUnit()).getCloseDamage()){
+                        bestTarget[0]=p;
+                    }
+                }else{
+                    if(p.getUnit().getHealth() < ((RangeUnit) source.getUnit()).getRangeDamage(p.getUnit())
+                            && p.getUnit().getMaxHealth() > ((RangeUnit) source.getUnit()).getRangeDamage(p.getUnit())){
+                        bestTarget[0]=p;
+                        return;
+                    }
+                    if(p.getUnit().getHealth() < ((RangeUnit) source.getUnit()).getRangeDamage(p.getUnit())
+                            && p.getUnit().getCost() > (source.getUnit().getCost())){
+                        bestTarget[0]=p;
+                        return;
+                    }
+                    if(((RangeUnit) source.getUnit()).getRangeDamage(bestTarget[0].getUnit()) < ((RangeUnit) source.getUnit()).getRangeDamage(p.getUnit())
+                            && !isOnNeighbouringCellPlusDiagonal(bestTarget[0], source)){
+                        bestTarget[0]=p;
+                        return;
+                    }
+                    if(isOnNeighbouringCellPlusDiagonal(bestTarget[0], source) && !isOnNeighbouringCellPlusDiagonal(p, source)){
+                        bestTarget[0]=p;
+                    }
                 }
             });
         }else {
@@ -377,7 +383,7 @@ public class BoardUtils {
                 }
             });
 
-            GameCell nearGC = nearestGC[0];
+            GameCell nearGC = nearestGC[0]; // ближайшая к врагу ячейка
             if (!nearGC.equals(sourceCell)) {
                 if (getUnitsInSRangeNumber(nearGC, sourceCell.getUnit().getShotRange(), 1) > 0) {
                     final GameCell[] furtherGC = {nearGC};
@@ -386,8 +392,8 @@ public class BoardUtils {
                             isReachable(nearGC, ((GameCell) p), sourceCell.getUnit().getWalkRange()))
                             && !((GameCell) p).isBlocked() && ((GameCell) p).getUnit() == null).forEach(p -> {
 
-                        if (isTargetFurtherToEtalonThanEtalon(targetCell, furtherGC[0], (GameCell) p) &&
-                                (isReachable(nearGC, ((GameCell) p), sourceCell.getUnit().getShotRange()-1))) {
+                        if (isTargetFurtherToEtalonThanSource(targetCell, furtherGC[0], (GameCell) p) &&
+                                (isReachable(targetCell, ((GameCell) p), sourceCell.getUnit().getShotRange()))) {
                             furtherGC[0] = (GameCell) p;  // костыль чтобы запихнуть а лямбду НЕ final переменную
                         }
                     });
@@ -398,7 +404,7 @@ public class BoardUtils {
             }
 
             if (!nearGC.equals(sourceCell)) {
-                System.out.println("Nearest Passable cell equals X=" + nearGC.getxCoord() + " Y=" + nearGC.getyCoord());
+                System.out.println("Nearest (RANGE)Passable cell equals X=" + nearGC.getxCoord() + " Y=" + nearGC.getyCoord());
                 return nearGC;
             }
             System.out.println(sourceCell.getUnit().getName() + " Reporting: no suitable cells detected!");
@@ -420,8 +426,10 @@ public class BoardUtils {
 
         if(anyPassableGC.size() > 0) {
             if (anyPassableGC.size() <= 1) {
+                System.out.println(sourceCell.getUnit().getName() + " goes on ANY cell");
                 return anyPassableGC.get(0);
             } else if (anyPassableGC.size() > 1) {
+                System.out.println(sourceCell.getUnit().getName() + " goes on ANY cell");
                 return anyPassableGC.get(generateRandomNumber(0, anyPassableGC.size()-1));
             }
         }
@@ -453,8 +461,7 @@ public class BoardUtils {
                         .filter(p->
                                 ((GameCell) p).isStrategical() && ((GameCell) p).getOwner()!=yourCell.getUnit().getTeam()).forEach(s->
                         strategicalGCList.add((GameCell) s));
-
-            }else System.out.println("no enemy units in range "+i);
+            }
         }
 
         if(strategicalGCList.size() > 0) {

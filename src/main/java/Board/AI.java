@@ -144,9 +144,8 @@ public class AI {
                 GameCell nearestEnemyCell = getNearestEnemyUnitCell(gc, 100);
                 GameCell nearestPassableCell = getNearestPassableCell(gc, nearestEnemyCell);
                 GameCell anyPassableCell = getAnyPassableCell(gc);
-                GameCell furtherShootableCell;
+                GameCell furtherShootableCell = getFurtherShootableCell(gc, nearestEnemyCell);
                 GameCell nearestStrategicalCell = getNearestStrategicalCell(gc, 100);
-                furtherShootableCell = getFurtherShootableCell(gc, nearestEnemyCell);
 //                int enemyUnitsInMeleeRange = getEnemyUnitsInRangeNumber(gc, 2);
 //                int enemyUnitsInShotRange = getEnemyUnitsInRangeNumber(gc, gc.getUnit().getShotRange());
 //                int enemyUnitsInRange = getEnemyUnitsInRangeNumber(gc, 10);
