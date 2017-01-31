@@ -197,7 +197,7 @@ public class BoardUtils {
     }
 
     static synchronized boolean haveEnemyUnitsInShootingRange(GameCell gc) {
-        if(!(gc.getUnit() instanceof MeleeUnit)){
+        if(gc.getUnit() instanceof RangeUnit){
             return (getEnemyUnitsInRangeNumber(gc, gc.getUnit().getShotRange()) > 0);
         }
         return false;
@@ -236,7 +236,7 @@ public class BoardUtils {
     static GameCell getBestTarget(GameCell source){
         final GameCell[] bestTarget = {null};
 
-        if (!(source.getUnit() instanceof MeleeUnit) && haveEnemyUnitsInShootingRange(source)){
+        if (source.getUnit() instanceof RangeUnit && haveEnemyUnitsInShootingRange(source)){
             ArrayList<GameCell> targetList = getEnemyUnitsInSRange(source, source.getUnit().getShotRange());
             bestTarget[0] = targetList.get(0);
             targetList.forEach(p->{
@@ -244,7 +244,15 @@ public class BoardUtils {
                     bestTarget[0]=p;
                     return;
                 }
-                if(p.getUnit().getHealth() < ((RangeUnit) source.getUnit()).getRangeDamage(p.getUnit()) && !isOnNeighbouringCellPlusDiagonal(p, source)){
+                if(p.getUnit().getHealth() < ((RangeUnit) source.getUnit()).getRangeDamage(p.getUnit())
+                        && p.getUnit().getMaxHealth() > ((RangeUnit) source.getUnit()).getRangeDamage(p.getUnit())
+                        && !isOnNeighbouringCellPlusDiagonal(p, source)){
+                    bestTarget[0]=p;
+                    return;
+                }
+                if(p.getUnit().getHealth() < ((RangeUnit) source.getUnit()).getRangeDamage(p.getUnit())
+                        && p.getUnit().getCost() > (source.getUnit().getCost())
+                        && !isOnNeighbouringCellPlusDiagonal(p, source)){
                     bestTarget[0]=p;
                     return;
                 }
@@ -257,7 +265,13 @@ public class BoardUtils {
                 ArrayList<GameCell> targetList = getEnemyUnitsInSRange(source, 2);
                 bestTarget[0] = targetList.get(0);
                 targetList.forEach(p -> {
-                    if (p.getUnit().getHealth() < ((MeleeUnit) source.getUnit()).getCloseDamage(p.getUnit())) {
+                    if (p.getUnit().getHealth() < ((MeleeUnit) source.getUnit()).getCloseDamage(p.getUnit())
+                            && p.getUnit().getMaxHealth() > ((MeleeUnit) source.getUnit()).getCloseDamage(p.getUnit())) {
+                        bestTarget[0] = p;
+                        return;
+                    }
+                    if (p.getUnit().getHealth() < ((MeleeUnit) source.getUnit()).getCloseDamage(p.getUnit())
+                            && p.getUnit().getCost() > source.getUnit().getCost()) {
                         bestTarget[0] = p;
                         return;
                     }
@@ -287,7 +301,7 @@ public class BoardUtils {
 
         if(enemyGCList.size() > 0) {
             if (enemyGCList.size() <= 1) {
-                System.out.println("Nearest Enemy Unit Has coords: X="+enemyGCList.get(0).getxCoord() + " Y=" + enemyGCList.get(0).getyCoord());
+                System.out.println("Nearest Enemy Unit for " + yourCell.getUnit().getName() + " is " +enemyGCList.get(0).getUnit().getName());
                 return enemyGCList.get(0);
             } else if (enemyGCList.size() > 1) {
                 final GameCell[] nearestGC = {enemyGCList.get(0)};
@@ -297,7 +311,7 @@ public class BoardUtils {
                         nearestGC[0] = p;  // костыль чтобы запихнуть а лямбду НЕ final переменную
                     }
                 });
-                System.out.println("Nearest Enemy Unit Has coords: X="+nearestGC[0].getxCoord() + " Y=" + nearestGC[0].getyCoord());
+                System.out.println("Nearest Enemy Unit for " + yourCell.getUnit().getName() + " is " +nearestGC[0].getUnit().getName());
                 return nearestGC[0];
             }
         }
@@ -351,7 +365,7 @@ public class BoardUtils {
     }
 
     static synchronized GameCell getFurtherShootableCell(GameCell sourceCell, GameCell targetCell){
-        if(!(sourceCell.getUnit() instanceof MeleeUnit)) {
+        if(sourceCell.getUnit() instanceof RangeUnit) {
             GridPane gridPane = Board.getMainBattlefieldGP();
             final GameCell[] nearestGC = {sourceCell};
 
@@ -377,6 +391,7 @@ public class BoardUtils {
                             furtherGC[0] = (GameCell) p;  // костыль чтобы запихнуть а лямбду НЕ final переменную
                         }
                     });
+                    System.out.println(sourceCell.getUnit().getName() + " is going to attack "+ targetCell.getUnit().getName());
                     System.out.println("Further Shootable cell equals X=" + furtherGC[0].getxCoord() + " Y=" + furtherGC[0].getyCoord());
                     return furtherGC[0];
                 }
@@ -386,6 +401,7 @@ public class BoardUtils {
                 System.out.println("Nearest Passable cell equals X=" + nearGC.getxCoord() + " Y=" + nearGC.getyCoord());
                 return nearGC;
             }
+            System.out.println(sourceCell.getUnit().getName() + " Reporting: no suitable cells detected!");
             return null;
         }
         System.out.println("Not Suitable for Melee units!");
@@ -477,7 +493,7 @@ public class BoardUtils {
         ArrayList<UnitTypeNames> unitTypeList = new ArrayList<>();
 
         getUnitList(team).forEach(p->{
-            if(!(p instanceof MeleeUnit)){
+            if(p instanceof RangeUnit){
                 unitTypeList.add(RANGE);
             }else{
                 unitTypeList.add(MELEE);

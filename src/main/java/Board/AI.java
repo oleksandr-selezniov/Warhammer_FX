@@ -144,8 +144,9 @@ public class AI {
                 GameCell nearestEnemyCell = getNearestEnemyUnitCell(gc, 100);
                 GameCell nearestPassableCell = getNearestPassableCell(gc, nearestEnemyCell);
                 GameCell anyPassableCell = getAnyPassableCell(gc);
-                //GameCell nearestStrategicalCell = getNearestStrategicalCell(gc, 100);
-                GameCell furtherShootableCell = getFurtherShootableCell(gc, nearestEnemyCell);
+                GameCell furtherShootableCell;
+                GameCell nearestStrategicalCell = getNearestStrategicalCell(gc, 100);
+                furtherShootableCell = getFurtherShootableCell(gc, nearestEnemyCell);
 //                int enemyUnitsInMeleeRange = getEnemyUnitsInRangeNumber(gc, 2);
 //                int enemyUnitsInShotRange = getEnemyUnitsInRangeNumber(gc, gc.getUnit().getShotRange());
 //                int enemyUnitsInRange = getEnemyUnitsInRangeNumber(gc, 10);
@@ -154,8 +155,9 @@ public class AI {
                 boolean canAttackRange = haveEnemyUnitsInShootingRange(gc);
                 boolean canAttackMelee = haveEnemyUnitsInMeleeRange(gc);
                 GameCell bestTarget = getBestTarget(gc);
-                gc.getUnit();
-                getBestTarget(gc);
+                if(canAttackMelee || canAttackRange){
+                System.out.println(gc.getUnit().getName() + " can attack " + bestTarget.getUnit().getName());
+                }
 // tactic for meleeMassacre ---------------------------------------------------------------------------------
                 if(gc.getUnit() instanceof MeleeUnit){
                     runWithDelay(gc,
@@ -163,6 +165,7 @@ public class AI {
                     if(canAttackMelee){
                         runWithDelay(bestTarget,
                                 p->clickOnEnemyUnitCell(bestTarget), 1);
+                        System.out.println("Attack performed");
                     }else
                     if (nearestPassableCell != null) {
                         runWithDelay(nearestPassableCell,
@@ -177,6 +180,7 @@ public class AI {
                     if(canAttackRange){
                         runWithDelay(bestTarget,
                                 p->clickOnEnemyUnitCell(bestTarget), 1);
+                        System.out.println("Attack performed");
                     }else
                     if (furtherShootableCell != null) {
                         runWithDelay(furtherShootableCell,
