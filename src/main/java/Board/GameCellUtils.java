@@ -5,12 +5,10 @@ import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.control.Tooltip;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Light;
-import javafx.scene.effect.Lighting;
-import javafx.scene.effect.SepiaTone;
+import javafx.scene.effect.*;
 import javafx.scene.paint.Color;
 
+import static Board.Board.initializeBottomMenu;
 import static Board.BoardInitializer.*;
 
 import Units.Interfaces.RangeUnit;
@@ -201,6 +199,38 @@ public class GameCellUtils {
         setTeam2Score(getStrategicalPoints(2));
         Board.setScore(getTeam1Score() + " : " + getTeam2Score());
         setTeamTurnValue( getTeamTurnValue()==1? 2:1);
+    }
+
+    public static void mouseExited(GameCell gc){
+        gc.setCursor(Cursor.DEFAULT);
+        gc.getGraphic().setEffect(null);
+        gc.setTooltip(null);
+    }
+
+    public static void mouseEntered(GameCell gc){
+        if (gc.getUnit() != null) {
+            gc.setTooltip(getToolTip(gc));
+            if(gc.getUnit().getTeam()==1){
+                initializeBottomMenu(gc, "left");
+            }else{
+                initializeBottomMenu(gc, "right");
+            }
+        }
+        if (!(gc.getEffect() instanceof InnerShadow)){
+            gc.getGraphic().setEffect(new Glow());
+
+            if (isAlreadyUsedCurrentTeamUnit(gc))
+                paintUnitWithBlack(gc);
+        }
+        if (getTemporaryUnit() != null && gc.getUnit() != null){
+            if (gc.getUnit().isEnemyUnit(getTemporaryUnit())) {
+                highlightEnemyUnit(gc);
+            }
+        }
+    }
+
+    private static boolean isAlreadyUsedCurrentTeamUnit(GameCell gc){
+        return (gc.getUnit()!=null && !gc.getUnit().isActive() && gc.getUnit().getTeam()==getTeamTurnValue());
     }
 
     public static void paintUnitWithBlack(GameCell gc){

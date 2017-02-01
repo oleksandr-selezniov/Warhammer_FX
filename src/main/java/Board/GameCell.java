@@ -74,37 +74,8 @@ public class GameCell extends Button {
     }
 
     public void mouseMovementMode(){
-        this.setOnMouseEntered(e -> {
-            if (GameCell.this.getUnit() != null) {
-                GameCell.this.setTooltip(getToolTip(GameCell.this));
-                if(GameCell.this.getUnit().getTeam()==1){
-                    initializeBottomMenu(GameCell.this, "left");
-                }else{
-                    initializeBottomMenu(GameCell.this, "right");
-                }
-            }
-            if (!(GameCell.this.getEffect() instanceof InnerShadow)){
-                GameCell.this.getGraphic().setEffect(new Glow());
-
-                if (isAlreadyUsedCurrentTeamUnit())
-                    paintUnitWithBlack(GameCell.this);
-            }
-            if (temporaryUnit != null && GameCell.this.getUnit() != null){
-                if (GameCell.this.getUnit().isEnemyUnit(temporaryUnit)) {
-                    highlightEnemyUnit(GameCell.this);
-                }
-            }
-        });
-
-        this.setOnMouseExited(e -> {
-            GameCell.this.setCursor(Cursor.DEFAULT);
-            GameCell.this.getGraphic().setEffect(null);
-            GameCell.this.setTooltip(null);
-        });
-    }
-
-    private boolean isAlreadyUsedCurrentTeamUnit(){
-        return (GameCell.this.getUnit()!=null && !GameCell.this.getUnit().isActive() && GameCell.this.getUnit().getTeam()==teamTurnValue);
+        this.setOnMouseEntered(e -> mouseEntered(GameCell.this));
+        this.setOnMouseExited(e -> mouseExited(GameCell.this));
     }
 
     public void setCellImage(String path, double opacity){

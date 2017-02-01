@@ -198,8 +198,10 @@ public class AI {
 
     private void runWithDelay(GameCell gc, Consumer<GameCell> action, int delayInSec){
         try{
+            Platform.runLater(()-> mouseEntered(gc));
             Platform.runLater(()-> action.accept(gc));
             Thread.sleep(delayInSec * 1000);
+            Platform.runLater(()-> mouseExited(gc));
         } catch (InterruptedException exc) {
             throw new Error("Unexpected interruption");
         }
