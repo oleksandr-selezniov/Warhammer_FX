@@ -56,7 +56,7 @@ public class BoardUtils {
         return (((x1 - x2) < 2 && (y1 - y2) < 2)&&((x2 - x1) < 2 && (y2 - y1) < 2));
     }
 
-    private static synchronized boolean isTargetCloserToEtalonThanSource(GameCell etalon, GameCell source, GameCell target){
+    static synchronized boolean isTargetCloserToEtalonThanSource(GameCell etalon, GameCell source, GameCell target){
         int x1 = etalon.getxCoord();
         int y1 = etalon.getyCoord();
         int x2 = source.getxCoord();  //yourcell, nearestGC[0], Gamecell p
@@ -67,7 +67,7 @@ public class BoardUtils {
         return (abs(x3 - x1) + abs(y3 - y1) < abs(x2 - x1) + abs(y2 - y1));
     }
 
-    private static synchronized boolean isTargetFurtherToEtalonThanSource(GameCell etalon, GameCell source, GameCell target){
+    static synchronized boolean isTargetFurtherToEtalonThanSource(GameCell etalon, GameCell source, GameCell target){
         int x1 = etalon.getxCoord();
         int y1 = etalon.getyCoord();
         int x2 = source.getxCoord();  //yourcell, nearestGC[0], Gamecell p
@@ -205,6 +205,10 @@ public class BoardUtils {
 
     static synchronized boolean haveEnemyUnitsInMeleeRange(GameCell gc) {
         return (getEnemyUnitsInRangeNumber(gc, 2) > 0);
+    }
+
+    static synchronized boolean haveSPInActivationRange(GameCell gc) {
+        return (getStrategicalCellsInSRange(gc, 2) > 0);
     }
 
     static synchronized boolean haveEnemyUnitsInRange(GameCell gc, int range) {
@@ -370,6 +374,25 @@ public class BoardUtils {
         return null;
     }
 
+    static synchronized GameCell getFurtherPassableCell(GameCell sourceCell, GameCell targetCell){
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        final GameCell[] nearestGC = {sourceCell};
+
+        gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
+                isReachable(sourceCell,((GameCell) p), sourceCell.getUnit().getWalkRange()))
+                && !((GameCell) p).isBlocked() && ((GameCell) p).getUnit()==null).forEach(p->{
+            if(isTargetFurtherToEtalonThanSource(targetCell, nearestGC[0], (GameCell)p)){
+                nearestGC[0] = (GameCell)p;  // костыль чтобы запихнуть а лямбду НЕ final переменную
+            }
+        });
+
+        if(!nearestGC[0].equals(sourceCell)){
+            System.out.println("Nearest Passable cell equals X="+ nearestGC[0].getxCoord() + " Y=" +nearestGC[0].getyCoord());
+            return nearestGC[0];
+        }
+        return null;
+    }
+
     static synchronized GameCell getFurtherShootableCell(GameCell sourceCell, GameCell targetCell){
         if(sourceCell.getUnit() instanceof RangeUnit) {
             GridPane gridPane = Board.getMainBattlefieldGP();
@@ -442,7 +465,7 @@ public class BoardUtils {
         GridPane gridPane = Board.getMainBattlefieldGP();
 
         return (int)gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
-                isReachable( x,y,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), range)) && !((GameCell) p).isBlocked())
+                isReachable( x,y,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), range)))
                 .filter(p->
                         ((GameCell) p).isStrategical() && ((GameCell) p).getOwner()!=gc.getUnit().getTeam()).count();
     }
@@ -455,21 +478,22 @@ public class BoardUtils {
 
         for(int i=0; i<maxRange; i++){
             if(getStrategicalCellsInSRange(yourCell, i)>0){
-
                 gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
-                        isReachable( x,y,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), maxRange)) && !((GameCell) p).isBlocked())
+                        isReachable( x,y,((GameCell) p).getxCoord(), ((GameCell) p).getyCoord(), maxRange)))
                         .filter(p->
                                 ((GameCell) p).isStrategical() && ((GameCell) p).getOwner()!=yourCell.getUnit().getTeam()).forEach(s->
                         strategicalGCList.add((GameCell) s));
             }
         }
-
         if(strategicalGCList.size() > 0) {
-            if (strategicalGCList.size() <= 1) {
-                return strategicalGCList.get(0);
-            } else if (strategicalGCList.size() > 1) {
-                return strategicalGCList.get(generateRandomNumber(0, strategicalGCList.size()));
-            }
+            final GameCell[] nearestSP = {strategicalGCList.get(0)};
+            strategicalGCList.forEach(p->{
+                if(isTargetCloserToEtalonThanSource(yourCell, nearestSP[0], p)){
+                    nearestSP[0] = p;
+                }
+            });
+            System.out.println("Nearest SP equals X=" + nearestSP[0].getxCoord() + " Y=" + nearestSP[0].getyCoord());
+            return nearestSP[0];
         }
         return null;
     }

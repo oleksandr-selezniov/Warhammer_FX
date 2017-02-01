@@ -2,7 +2,6 @@ package Board;
 
 import Units.Enums.UnitTypeNames;
 import Units.Interfaces.MeleeUnit;
-import Units.Interfaces.RangeUnit;
 import Units.Unit;
 import javafx.application.Platform;
 import javafx.scene.layout.GridPane;
@@ -16,7 +15,6 @@ import static Board.BoardInitializer.getScoreLimit;
 import static Board.BoardInitializer.getTeam1Score;
 import static Board.BoardInitializer.getTeam2Score;
 import static Board.BoardUtils.*;
-import static Board.GameCell.getPreviousGameCell;
 import static Board.GameCellUtils.*;
 
 /**
@@ -47,17 +45,12 @@ public class AI {
     private int enemyArmyStrength;
 
     private Strategy strategy;
-    private Tactic tactic;
     private ArrayList<GameCell> myUnitGCList;
     private ArrayList<GameCell> enemyUnitGCList;
     private static AI ai_Elsa = null;
 
     enum Strategy{
-        PREFER_CAPTURE, PREFER_RETREAT, PREFER_RETREAT_CAPURE, PREFER_DARE_ATTACK, PREFER_CAUTIOUS_ATTACK, PREFER_NORMAL_ATTACK;
-    }
-
-    enum Tactic{
-        CLOSE_ATTACK, RANGE_ATTACK, MOVE_TO_NEAREST_ENEMY, MOVE_TO_NEAREST_SP, ACTIVATE_SP, RUNAWAY
+        PREFER_CAPTURE, PREFER_RETREAT, PREFER_CAUTIOUS_CAPURE, PREFER_DARE_ATTACK, PREFER_CAUTIOUS_ATTACK, PREFER_NORMAL_ATTACK;
     }
 
     private AI() {}
@@ -90,27 +83,12 @@ public class AI {
         if (myArmyStrength - enemyArmyStrength > 0 && myTotalUnitNumber - enemyTotalUnitNumber > 0){
             strategy = PREFER_NORMAL_ATTACK;
         }else
-        if (myArmyStrength <= enemyArmyStrength && myTotalUnitNumber - enemyTotalUnitNumber < 0){
+        if (myArmyStrength <= enemyArmyStrength && myTotalUnitNumber - enemyTotalUnitNumber < 0 && myTotalUnitNumber > 4){
             strategy = PREFER_CAUTIOUS_ATTACK;
         }else{
-            strategy = PREFER_RETREAT_CAPURE;
+            strategy = PREFER_CAUTIOUS_CAPURE;
         }
         return strategy;
-    }
-
-    public Tactic getTactic(GameCell gameCell){
-        scanBoard();
-// рядом есть враг в зоне поражения дальним оружием - атаковать его дальним оружием (если оно есть и стратегия не ранэвэй)
-// рядом есть враг в зоне поражения ближним оружием - атаковать его ближним оружием (если стратегия не ранэвэй)
-// рядом нет врагов на расстоянии 3*walkingRange и стратегия CaptureIt - двигаться к ближайшей стратегической точке
-// рядом есть СТ в зоне активации и стратегия CaptureIt - активировать СП.
-// рядом есть враги на расстоянии меньше 3*walkingRange, и стратегия не ранэвэй - идти к ближайшему врагу
-// дефолтная идти к ближайшему врагу и тд;
-
-//        int k = getEnemyUnitsInRangeNumber(gameCell, 50);
-//        int n = getStrategicalCellsInSRange(gameCell, 50);
-
-        return tactic=Tactic.RANGE_ATTACK;
     }
 
     public void scanBoard(){
@@ -137,63 +115,242 @@ public class AI {
 
     public void doAction(){
         Thread thread = new Thread(() -> {
-            getStrategy();
-
+            Strategy turnStrategy = getStrategy();
+            System.out.println(turnStrategy.toString() + " STRATEGY IS SELECTED!");
             for(GameCell gc : myUnitGCList){
-                getTactic(gc);
-                GameCell nearestEnemyCell = getNearestEnemyUnitCell(gc, 100);
-                GameCell nearestPassableCell = getNearestPassableCell(gc, nearestEnemyCell);
-                GameCell anyPassableCell = getAnyPassableCell(gc);
-                GameCell furtherShootableCell = getFurtherShootableCell(gc, nearestEnemyCell);
-                GameCell nearestStrategicalCell = getNearestStrategicalCell(gc, 100);
-//                int enemyUnitsInMeleeRange = getEnemyUnitsInRangeNumber(gc, 2);
-//                int enemyUnitsInShotRange = getEnemyUnitsInRangeNumber(gc, gc.getUnit().getShotRange());
-//                int enemyUnitsInRange = getEnemyUnitsInRangeNumber(gc, 10);
-//                int unActivatedSPInRange = getStrategicalCellsInSRange(gc, 10);
-//                Unit currentUnit = gc.getUnit();
-                boolean canAttackRange = haveEnemyUnitsInShootingRange(gc);
-                boolean canAttackMelee = haveEnemyUnitsInMeleeRange(gc);
-                GameCell bestTarget = getBestTarget(gc);
-                if(canAttackMelee || canAttackRange){
-                System.out.println(gc.getUnit().getName() + " can attack " + bestTarget.getUnit().getName());
-                }
-// tactic for meleeMassacre ---------------------------------------------------------------------------------
-                if(gc.getUnit() instanceof MeleeUnit){
-                    runWithDelay(gc,
-                            p->clickOnUnitCell(gc), 1);
-                    if(canAttackMelee){
-                        runWithDelay(bestTarget,
-                                p->clickOnEnemyUnitCell(bestTarget), 1);
-                        System.out.println("Attack performed");
-                    }else
-                    if (nearestPassableCell != null) {
-                        runWithDelay(nearestPassableCell,
-                                p->clickOnFreeCell(nearestPassableCell), 1);
-                    }else{
-                        runWithDelay(anyPassableCell,
-                                p->clickOnFreeCell(anyPassableCell), 1);
-                    }
-                }else{
-                    runWithDelay(gc,
-                            p->clickOnUnitCell(gc), 1);
-                    if(canAttackRange){
-                        runWithDelay(bestTarget,
-                                p->clickOnEnemyUnitCell(bestTarget), 1);
-                        System.out.println("Attack performed");
-                    }else
-                    if (furtherShootableCell != null) {
-                        runWithDelay(furtherShootableCell,
-                                p->clickOnFreeCell(furtherShootableCell), 1);
-                    }else{
-                        runWithDelay(anyPassableCell,
-                                p->clickOnFreeCell(anyPassableCell), 1);
-                    }
-                }
+                applyTactic(turnStrategy, gc);
             }
         });
         thread.setName("AI EXECUTION THREAD");
         thread.start();
-//_____________________________________________________________________________________________________________
+    }
+
+    private void applyTactic(Strategy strategy, GameCell gc){
+//      int enemyUnitsInMeleeRange = getEnemyUnitsInRangeNumber(gc, 2);
+//      int enemyUnitsInShotRange = getEnemyUnitsInRangeNumber(gc, gc.getUnit().getShotRange());
+//      int enemyUnitsInRange = getEnemyUnitsInRangeNumber(gc, 10);
+//      int unActivatedSPInRange = getStrategicalCellsInSRange(gc, 10);
+        GameCell nearestEnemyCell = getNearestEnemyUnitCell(gc, 100);
+        GameCell nearestStrategicalCell = getNearestStrategicalCell(gc, 100);
+        GameCell nearestPassableCellToEnemy = getNearestPassableCell(gc, nearestEnemyCell);
+        GameCell anyPassableCell = getAnyPassableCell(gc);
+        GameCell furtherShootableCell = getFurtherShootableCell(gc, nearestEnemyCell);
+        GameCell furtherFromEnemyCell = getFurtherPassableCell(gc, nearestEnemyCell);
+        GameCell nearestPassableCellToSP = getNearestPassableCell(gc, nearestStrategicalCell);
+        GameCell bestTarget = getBestTarget(gc);
+        Unit currentUnit = gc.getUnit();
+        boolean isFast = (currentUnit.getWalkRange() >= 5);
+        boolean isWeak = (currentUnit.getCost() <= 30);
+        boolean canAttackRange = haveEnemyUnitsInShootingRange(gc);
+        boolean canAttackMelee = haveEnemyUnitsInMeleeRange(gc);
+        boolean canActivateSP = haveSPInActivationRange(gc);
+        if(canAttackMelee || canAttackRange){
+            System.out.println(gc.getUnit().getName() + " can attack " + bestTarget.getUnit().getName());
+        }
+
+        switch (strategy){
+            case PREFER_CAPTURE:{
+                if(gc.getUnit() instanceof MeleeUnit){
+                    unitCellClick(gc);
+                    if(canActivateSP){
+                        strategicalCellClick(nearestStrategicalCell);
+                    }else
+                    if(canAttackMelee){
+                        enemyCellClick(bestTarget);
+                    }else
+                    if (nearestPassableCellToSP != null) {
+                        freeCellClick(nearestPassableCellToSP);
+                    }else
+                    if (nearestPassableCellToEnemy != null) {
+                        freeCellClick(nearestPassableCellToEnemy);
+                    }else{
+                        freeCellClick(anyPassableCell);
+                    }
+                }else{
+                    unitCellClick(gc);
+                    if(canActivateSP){
+                        strategicalCellClick(nearestStrategicalCell);
+                    }else
+                    if(canAttackRange){
+                        enemyCellClick(bestTarget);
+                    }else
+                    if (nearestPassableCellToSP != null) {
+                        freeCellClick(nearestPassableCellToSP);
+                    }else
+                    if (furtherShootableCell != null) {
+                        freeCellClick(furtherShootableCell);
+                    }else{
+                        freeCellClick(anyPassableCell);
+                    }
+                }
+                break;
+            }
+            case PREFER_CAUTIOUS_CAPURE:{
+                if(gc.getUnit() instanceof MeleeUnit){
+                    unitCellClick(gc);
+                    if(canActivateSP){
+                        strategicalCellClick(nearestStrategicalCell);
+                    }else
+                    if(canAttackMelee){
+                        enemyCellClick(bestTarget);
+                    }else{
+                        if (nearestEnemyCell != null && nearestStrategicalCell !=null
+                                && isTargetCloserToEtalonThanSource(gc, nearestEnemyCell, nearestStrategicalCell)) {
+                            freeCellClick(nearestPassableCellToSP);
+                        }else
+                        if (nearestEnemyCell != null && nearestStrategicalCell !=null
+                                && isTargetFurtherToEtalonThanSource(gc, nearestEnemyCell, nearestStrategicalCell)) {
+                            freeCellClick(nearestPassableCellToEnemy);
+                        }else
+                            freeCellClick(anyPassableCell);
+                    }
+                }else{
+                    unitCellClick(gc);
+                    if(canActivateSP){
+                        strategicalCellClick(nearestStrategicalCell);
+                    }else
+                    if(canAttackRange){
+                        enemyCellClick(bestTarget);
+                    }else
+                    if (nearestEnemyCell != null && nearestStrategicalCell !=null
+                            && isTargetCloserToEtalonThanSource(gc, nearestEnemyCell, nearestStrategicalCell)) {
+                        freeCellClick(nearestPassableCellToSP);
+                    }else
+                    if (nearestEnemyCell != null && nearestStrategicalCell !=null
+                            && isTargetFurtherToEtalonThanSource(gc, nearestEnemyCell, nearestStrategicalCell)) {
+                        freeCellClick(furtherShootableCell);
+                    }else
+                        freeCellClick(anyPassableCell);
+                }
+                break;
+            }
+            case PREFER_RETREAT:{
+                if(gc.getUnit() instanceof MeleeUnit){
+                    unitCellClick(gc);
+                    if (furtherFromEnemyCell != null) {
+                        freeCellClick(furtherFromEnemyCell);
+                    }else
+                    if(canAttackMelee){
+                        enemyCellClick(bestTarget);
+                    }else{
+                        freeCellClick(anyPassableCell);
+                    }
+                }else{
+                    unitCellClick(gc);
+                    if (furtherFromEnemyCell != null) {
+                        freeCellClick(furtherFromEnemyCell);
+                    }else
+                    if(canAttackRange){
+                        enemyCellClick(bestTarget);
+                    }else
+                    {
+                        freeCellClick(anyPassableCell);
+                    }
+                }
+                break;
+            }
+            case PREFER_DARE_ATTACK:{
+                if(gc.getUnit() instanceof MeleeUnit){
+                    unitCellClick(gc);
+                    if(canAttackMelee){
+                        enemyCellClick(bestTarget);
+                    }else
+                    if (nearestPassableCellToEnemy != null) {
+                        freeCellClick(nearestPassableCellToEnemy);
+                    }else{
+                        freeCellClick(anyPassableCell);
+                    }
+                }else{
+                    unitCellClick(gc);
+                    if(canAttackRange){
+                        enemyCellClick(bestTarget);
+                    }else
+                    if (furtherShootableCell != null) {
+                        freeCellClick(furtherShootableCell);
+                    }else{
+                        freeCellClick(anyPassableCell);
+                    }
+                }
+                break;
+            }
+            case PREFER_NORMAL_ATTACK:{
+                if(gc.getUnit() instanceof MeleeUnit){
+                    unitCellClick(gc);
+                    if(canActivateSP){
+                        strategicalCellClick(nearestStrategicalCell);
+                    }else
+                    if(canAttackMelee){
+                        enemyCellClick(bestTarget);
+                    }else
+                    if (nearestPassableCellToEnemy != null) {
+                        freeCellClick(nearestPassableCellToEnemy);
+                    }else{
+                        freeCellClick(anyPassableCell);
+                    }
+                }else{
+                    unitCellClick(gc);
+                    if(canActivateSP){
+                        strategicalCellClick(nearestStrategicalCell);
+                    }else
+                    if(canAttackRange){
+                        enemyCellClick(bestTarget);
+                    }else
+                    if (furtherShootableCell != null) {
+                        freeCellClick(furtherShootableCell);
+                    }else{
+                        freeCellClick(anyPassableCell);
+                    }
+                }
+                break;
+            }
+            case PREFER_CAUTIOUS_ATTACK:{
+                if(gc.getUnit() instanceof MeleeUnit){
+                    unitCellClick(gc);
+                    if(canAttackMelee){
+                        enemyCellClick(bestTarget);
+                    }else
+                    if(canActivateSP){
+                        strategicalCellClick(nearestStrategicalCell);
+                    }else
+                    if (nearestPassableCellToEnemy != null) {
+                        freeCellClick(nearestPassableCellToEnemy);
+                    }else{
+                        freeCellClick(anyPassableCell);
+                    }
+                }else{
+                    unitCellClick(gc);
+                    if(canAttackRange){
+                        enemyCellClick(bestTarget);
+                    }else
+                    if(canActivateSP){
+                        strategicalCellClick(nearestStrategicalCell);
+                    }else
+                    if (furtherShootableCell != null) {
+                        freeCellClick(furtherShootableCell);
+                    }else{
+                        freeCellClick(anyPassableCell);
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    private void strategicalCellClick(GameCell gc){
+        runWithDelay(gc,p->clickOnStrategicalCell(gc), 1);
+    }
+
+    private void freeCellClick(GameCell gc){
+        runWithDelay(gc,p->clickOnFreeCell(gc), 1);
+    }
+
+    private void enemyCellClick(GameCell gc){
+        runWithDelay(gc, p->clickOnEnemyUnitCell(gc), 1);
+        System.out.println("Attack performed");
+    }
+
+    private void unitCellClick(GameCell gc){
+        runWithDelay(gc, p->clickOnUnitCell(gc), 1);
     }
 
     private void runWithDelay(GameCell gc, Consumer<GameCell> action, int delayInSec){
