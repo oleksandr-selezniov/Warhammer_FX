@@ -3,7 +3,6 @@ package Board;
 import Size.Size;
 import Units.Unit;
 import javafx.geometry.Insets;
-import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.effect.*;
 import javafx.scene.image.Image;
@@ -15,9 +14,8 @@ import javafx.scene.paint.Color;
 
 import java.net.URL;
 
-import static Board.Board.initializeBottomMenu;
-import static Board.BoardUtils.getStrategicalPoints;
-import static Board.GameCellUtils.*;
+import static Board.Utils.BoardUtils.getStrategicalPoints;
+import static Board.Utils.GameCellUtils.*;
 
 /**
  * Created by Dmitriy on 18.10.2016.
@@ -91,7 +89,7 @@ public class GameCell extends Button {
         this.setGraphic(imageView);
     }
 
-    void activate(Unit activator){
+    public void activate(Unit activator){
         this.setActivated(true);
         this.setOwner(activator.getTeam());
         if(activator.getTeam() == 2){

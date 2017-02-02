@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 import Board.Board;
 import Units.Interfaces.RangeUnit;
 import javafx.geometry.Insets;
-import Board.LoggerUtils;
+import Board.Utils.LoggerUtils;
 
 /**
  * Created by Dmitriy on 03.11.2016.

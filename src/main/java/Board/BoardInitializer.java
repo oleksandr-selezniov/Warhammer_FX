@@ -1,10 +1,11 @@
 package Board;
 
+import Board.Utils.BoardUtils;
 import Units.*;
 import javafx.scene.Scene;
 
-import static Board.GameCellUtils.generateObstacles;
-import static Board.GameCellUtils.makeStrategical;
+import static Board.Utils.GameCellUtils.generateObstacles;
+import static Board.Utils.GameCellUtils.makeStrategical;
 
 /**
  * Created by Dmitriy on 27.10.2016.
@@ -78,19 +79,22 @@ public class BoardInitializer {
 
         generateObstacles(0.15);
 
-        makeStrategical(5,1);
-        makeStrategical(5,17);
+        makeStrategical(9,3);
+        makeStrategical(9,9);
+        makeStrategical(9,15);
 
-        //GameCell.makeStrategical(14,9);
+        makeStrategical(19,6);
+        makeStrategical(19,12);
 
-        makeStrategical(19,1);
-        makeStrategical(19,9);
-        makeStrategical(19,17);
+        makeStrategical(24,9);
 
-        //GameCell.makeStrategical(34,9);
+        makeStrategical(29,6);
+        makeStrategical(29,12);
 
-        makeStrategical(34,1);
-        makeStrategical(34,17);
+        makeStrategical(39,3);
+        makeStrategical(39,9);
+        makeStrategical(39,15);
+
     }
 
     private GameCell getGameCell(String id){

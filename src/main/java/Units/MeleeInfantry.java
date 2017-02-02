@@ -10,7 +10,7 @@ import javafx.scene.image.ImageView;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
-import Board.LoggerUtils;
+import Board.Utils.LoggerUtils;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;

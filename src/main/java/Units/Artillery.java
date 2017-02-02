@@ -1,7 +1,7 @@
 package Units;
 
 import Board.Board;
-import Board.LoggerUtils;
+import Board.Utils.LoggerUtils;
 import Size.Size;
 import Units.Interfaces.RangeUnit;
 import javafx.geometry.Insets;

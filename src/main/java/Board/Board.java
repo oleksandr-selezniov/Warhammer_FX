@@ -1,5 +1,6 @@
 package Board;
 
+import Board.Utils.BoardUtils;
 import MusicPlayer.MusicPlayerLogic;
 import Size.Size;
 import javafx.beans.value.ChangeListener;
@@ -23,16 +24,18 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import static Board.BoardInitializer.getScoreLimit;
-import static Board.GameCellUtils.changeTeamTurn;
-import static Board.GameCellUtils.checkTeamTurn;
+import static Board.ChooseBoard.getElsaThinkingImagePath;
+import static Board.ChooseBoard.isEnableAI;
+import static Board.Utils.GameCellUtils.changeTeamTurn;
+import static Board.Utils.GameCellUtils.checkTeamTurn;
 
 
 /**
  * Created by Dmitriy on 20.10.2016.
  */
 public class Board {
-    private static int boardHeight = 20;
-    private static int boardWidth = 40;
+    private static int boardHeight = 19;
+    private static int boardWidth = 49;
     private static GridPane mainBattlefieldGP;
     private String defaultBackgroundPath = "backgrounds/background_8.jpg";
     private static Scene scene;
@@ -112,9 +115,9 @@ public class Board {
         leftEarGP.add(MusicPlayerLogic.getMusicPlayer(),0,0);
 
         ImageView leftEarIV = new ImageView();
-        leftEarIV.setFitWidth(Size.getSceneWidth()*0.183);
-        leftEarIV.setFitHeight(Size.getSceneHeight()*0.39);
-        leftEarIV.setImage(new BoardUtils().getImage("other/chaos.jpg"));
+        leftEarIV.setFitWidth(Size.getSceneWidth()*0.18);
+        leftEarIV.setFitHeight(Size.getSceneHeight()*0.25);
+        leftEarIV.setImage(new BoardUtils().getImage("gifs/ComissarEmperor.gif"));
         leftEarIV.setId("leftImageView");
 
         ScrollPane scrollPane = new ScrollPane(leftEarIV);
@@ -154,7 +157,7 @@ public class Board {
 
         Button endTurnButton = new Button("End Turn");
         endTurnButton.setId("end_turn");
-        endTurnButton.setMinWidth(70);
+        endTurnButton.setMinWidth(100);
         endTurnButton.setMinHeight(20);
         endTurnButton.setOnAction(p-> {
             checkTeamTurn();
@@ -163,21 +166,26 @@ public class Board {
             BoardUtils.setActiveTeamUnits(GameCell.getTeamTurnValue(), true);
         });
 
-        Button rightButton2 = new Button();
-        rightButton2.setMinWidth(70);
-        rightButton2.setMinHeight(20);
+        ImageView elsaImageView = new ImageView();
+        elsaImageView.setId("elsaImageView");
+        elsaImageView.setImage(new BoardUtils().getImage(getElsaThinkingImagePath()));
+        elsaImageView.setFitHeight(145);
+        elsaImageView.setFitWidth(90);
+        ScrollPane elsaScrollPane = new ScrollPane();
+        if(isEnableAI()){
+            elsaScrollPane.setContent(elsaImageView);
+        }
+        elsaScrollPane.setMaxSize(100, 150);
+        elsaScrollPane.setMinSize(100, 150);
+        elsaScrollPane.setId("elsaScrollPane");
 
-        Button rightButton3 = new Button();
-        rightButton3.setMinWidth(70);
-        rightButton3.setMinHeight(20);
-
-        rightButtonVbox.getChildren().addAll(endTurnButton, rightButton2, rightButton3);
+        rightButtonVbox.getChildren().addAll(elsaScrollPane, endTurnButton);
         rightEarGP.add(rightButtonVbox,2,0);
 
         ImageView rightEarIV = new ImageView();
-        rightEarIV.setFitWidth(Size.getSceneWidth()*0.183);
-        rightEarIV.setFitHeight(Size.getSceneHeight()*0.39);
-        rightEarIV.setImage(new BoardUtils().getImage("other/chaos.jpg"));
+        rightEarIV.setFitWidth(Size.getSceneWidth()*0.18);
+        rightEarIV.setFitHeight(Size.getSceneHeight()*0.25);
+        rightEarIV.setImage(new BoardUtils().getImage("gifs/cultistChan.gif"));
         rightEarIV.setId("rightImageView");
 
         ScrollPane scrollPane = new ScrollPane(rightEarIV);
@@ -220,15 +228,15 @@ public class Board {
         return mainGridPane;
     }
 
-    static Scene getScene(){
+    public static Scene getScene(){
         return scene;
     }
 
-    static GridPane getMainBattlefieldGP(){
+    public static GridPane getMainBattlefieldGP(){
         return mainBattlefieldGP;
     }
 
-    static void writeToTextArea(String id, String text, boolean scrollDowm){
+    public static void writeToTextArea(String id, String text, boolean scrollDowm){
         TextArea textArea = (TextArea)scene.lookup(id);
         textArea.setText(text);
         textArea.setEditable(false);
@@ -238,12 +246,12 @@ public class Board {
         }
     }
 
-    static String getTextFromTextArea(String id){
+    public static String getTextFromTextArea(String id){
         TextArea textArea = (TextArea)scene.lookup(id);
         return textArea.getText();
     }
 
-    static void setImageToImageView(String id, Image image){
+    public static void setImageToImageView(String id, Image image){
         ImageView imageView = (ImageView) scene.lookup(id);
         imageView.setImage(image);
     }
@@ -326,11 +334,11 @@ public class Board {
                 }
             }
         });
-        slider.setValue(0.65);
+        slider.setValue(0.2);
         return slider;
     }
 
-    static void initializeBottomMenu(GameCell gameCell, String direction){
+    public static void initializeBottomMenu(GameCell gameCell, String direction){
         HBox hbox = new HBox(gameCell.getUnit().getImageView(1, 1.1));
         hbox.setMinWidth(Size.getSceneWidth()*0.18);
         hbox.setMinHeight(Size.getSceneHeight()*0.25);

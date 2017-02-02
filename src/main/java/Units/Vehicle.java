@@ -9,7 +9,7 @@ import Units.Interfaces.RangeUnit;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import Board.LoggerUtils;
+import Board.Utils.LoggerUtils;
 
 /**
  * Created by Dmitriy on 02.11.2016.

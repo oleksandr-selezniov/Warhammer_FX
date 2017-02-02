@@ -1,5 +1,6 @@
 package Board;
 
+import Board.Utils.BoardUtils;
 import Size.Size;
 import Units.Unit;
 import javafx.beans.value.ChangeListener;
@@ -29,9 +30,13 @@ import static Board.BoardInitializer.getArmyLimit;
  */
 public class ChooseBoard {
     private String defaultBackgroundPath = "backgrounds/background_7.jpg";
+    private static String elsaSadImagePath = "gifs/elsa/ElsaSad.gif";
+    private static String elsaHappyImagePath = "gifs/elsa/ElsaHappy.gif";
+    private static String elsaThinkingImagePath = "gifs/elsa/ElsaThinking.gif";
     private static Scene scene;
+    private static boolean enableAI;
     private int winHeight = 700;
-    private int winWidth = 800;
+    private int winWidth = 850;
     private int teamOneTotalCost = 0;
     private int teamTwoTotalCost = 0;
     private static Map<String, Unit> humanUnitMap = Unit.getRaceUnitMap("Humans");
@@ -124,9 +129,11 @@ public class ChooseBoard {
         leftScrollPane.setId("leftScrollPane");
 
         TextArea centerTextArea = new TextArea();
+        centerTextArea.setText("Info About Units");
         centerTextArea.setMaxSize(200, 200);
         centerTextArea.setMinSize(200, 200);
         centerTextArea.setId("centerTextArea");
+
         HBox centerHBox = new HBox(centerTextArea);
         centerHBox.setMaxSize(200, 200);
         centerHBox.setMinSize(200, 200);
@@ -145,26 +152,38 @@ public class ChooseBoard {
         Button selectButton = new Button("Select");
         selectButton.setMinWidth(200);
         selectButton.setOnAction(p->{
-
-            if(currentSelectedUnit.getTeam() == 1){
-                if(getTeamTotalCost(1) < getArmyLimit() && (getTeamTotalCost(1)+currentSelectedUnit.getCost())<=getArmyLimit()) {
-                    Button leftB = getUnitButton(currentHumanList, currentSelectedUnit, leftVbox);
-                    leftVbox.getChildren().add(leftB);
-                }else{
-                    showUnitLimitWarning();
-                }
-            }else{
-                if(getTeamTotalCost(2) < getArmyLimit() && (getTeamTotalCost(2)+currentSelectedUnit.getCost())<=getArmyLimit()) {
-                    Button rightB = getUnitButton(currentOrkList, currentSelectedUnit, rightVbox);
-                    rightVbox.getChildren().add(rightB);
-                }else{
-                    showUnitLimitWarning();
+            if(currentSelectedUnit != null) {
+                if (currentSelectedUnit.getTeam() == 1) {
+                    if (getTeamTotalCost(1) < getArmyLimit() && (getTeamTotalCost(1) + currentSelectedUnit.getCost()) <= getArmyLimit()) {
+                        Button leftB = getUnitButton(currentHumanList, currentSelectedUnit, leftVbox);
+                        leftVbox.getChildren().add(leftB);
+                    } else {
+                        showUnitLimitWarning();
+                    }
+                } else {
+                    if (getTeamTotalCost(2) < getArmyLimit() && (getTeamTotalCost(2) + currentSelectedUnit.getCost()) <= getArmyLimit()) {
+                        Button rightB = getUnitButton(currentOrkList, currentSelectedUnit, rightVbox);
+                        rightVbox.getChildren().add(rightB);
+                    } else {
+                        showUnitLimitWarning();
+                    }
                 }
             }
         });
 
+        ImageView elsaImageView = new ImageView();
+        elsaImageView.setId("elsaImageView");
+        elsaImageView.setImage(new BoardUtils().getImage(elsaHappyImagePath));
+        elsaImageView.setFitHeight(180);
+        elsaImageView.setFitWidth(145);
+        ScrollPane elsaScrollPane = new ScrollPane(elsaImageView);
+        elsaScrollPane.setMaxSize(150, 200);
+        elsaScrollPane.setMinSize(150, 200);
+        elsaScrollPane.setId("elsaScrollPane");
+
         ComboBox leftComboBox = getUnitComboBox(humanUnitMap, "Human Units");
         ComboBox rightComboBox = getUnitComboBox(orkUnitMap, "Ork Units");
+        ComboBox elsaComboBox = getElsaComboBox();
 
         HBox hBox1 = new HBox(new VBox(leftComboBox, leftScrollPane, getBoardSizeBlock()));
         hBox1.setPadding(new Insets(5));
@@ -174,11 +193,15 @@ public class ChooseBoard {
         hBox2.setPadding(new Insets(5));
         hBox2.setAlignment(Pos.CENTER);
 
-        HBox hBox3 = new HBox(new VBox(rightComboBox, rightScrollPane, getNextBlock()));
+        HBox hBox3 = new HBox(new VBox(elsaComboBox, elsaScrollPane));
         hBox3.setPadding(new Insets(5));
         hBox3.setAlignment(Pos.CENTER);
 
-        HBox hbox = new HBox(hBox1, hBox2, hBox3);
+        HBox hBox4 = new HBox(new VBox(rightComboBox, rightScrollPane, getNextBlock()));
+        hBox4.setPadding(new Insets(5));
+        hBox4.setAlignment(Pos.CENTER);
+
+        HBox hbox = new HBox(hBox1, hBox2, hBox3, hBox4);
         hbox.setAlignment(Pos.CENTER);
 
         return  hbox;
@@ -209,6 +232,38 @@ public class ChooseBoard {
             currentList.remove(unit);
         });
         return rightB;
+    }
+
+    private ComboBox getElsaComboBox(){
+        ArrayList<String> arrayList = new ArrayList<>();
+        arrayList.add("Play With Elsa");
+        arrayList.add("Ignore Elsa");
+
+        ObservableList<String> observableList = FXCollections.observableArrayList(arrayList);
+        ComboBox elsaComboBox = new ComboBox(observableList);
+        elsaComboBox.setMaxWidth(200);
+        elsaComboBox.valueProperty().addListener(new ChangeListener<String>() {
+            @Override public void changed(ObservableValue ov, String t, String t1) {
+                System.out.println("["+t1 + " is Selected]");
+
+                if(t1.equals("Play With Elsa")){
+                    if(scene != null){
+                        ImageView elsaImageView = (ImageView)scene.lookup("#elsaImageView");
+                        elsaImageView.setImage(new BoardUtils().getImage(elsaHappyImagePath));
+                    }
+                    setEnableAI(true);
+                }else{
+                    if(scene != null){
+                        ImageView elsaImageView = (ImageView)scene.lookup("#elsaImageView");
+                        elsaImageView.setImage(new BoardUtils().getImage(elsaSadImagePath));
+                    }
+                    setEnableAI(false);
+                }
+
+            }
+        });
+        elsaComboBox.setValue("Play With Elsa");
+        return elsaComboBox;
     }
 
     private ComboBox getUnitComboBox(Map<String, Unit> UnitMap, String name){
@@ -275,25 +330,25 @@ public class ChooseBoard {
         });
         resolutionComboBox.setValue("1366/768");
 
-        ComboBox sizeComboBox = new ComboBox(FXCollections.observableArrayList("Small", "Medium", "Large"));
+        ComboBox sizeComboBox = new ComboBox(FXCollections.observableArrayList("Medium"));
         sizeComboBox.setMaxWidth(100);
         sizeComboBox.setMinWidth(100);
         sizeComboBox.valueProperty().addListener(new ChangeListener<String>() {
             @Override public void changed(ObservableValue ov, String t, String t1) {
                 System.out.println("["+t1 + " is Selected]");
 
-                if(t1.equals("Small")){
-                    setBoardWidth(20);
-                    setBoardHeight(10);
-                }
+//                if(t1.equals("Small")){
+//                    setBoardWidth(20);
+//                    setBoardHeight(10);
+//                }
                 if(t1.equals("Medium")){
-                    setBoardWidth(40);
-                    setBoardHeight(20);
+                    setBoardWidth(49);
+                    setBoardHeight(19);
                 }
-                if(t1.equals("Large")){
-                    setBoardWidth(50);
-                    setBoardHeight(30);
-                }
+//                if(t1.equals("Large")){
+//                    setBoardWidth(50);
+//                    setBoardHeight(30);
+//                }
             }
         });
         sizeComboBox.setValue("Medium");
@@ -409,10 +464,6 @@ public class ChooseBoard {
             Board main = new Board();
             main.createUI(stage);
 
-//            if(true){
-//                AI.getInstance().setBoard(main);
-//            }
-
             Stage OldStage = (Stage)scene.getWindow();
             OldStage.close();
         });
@@ -448,4 +499,25 @@ public class ChooseBoard {
     public int getTeamTotalCost(int team) {
         return team == 1? teamOneTotalCost:teamTwoTotalCost;
     }
+
+    public static boolean isEnableAI() {
+        return enableAI;
+    }
+
+    public static void setEnableAI(boolean useAI) {
+        enableAI = useAI;
+    }
+
+    public static String getElsaSadImagePath() {
+        return elsaSadImagePath;
+    }
+
+    public static String getElsaHappyImagePath() {
+        return elsaHappyImagePath;
+    }
+
+    public static String getElsaThinkingImagePath() {
+        return elsaThinkingImagePath;
+    }
+
 }
