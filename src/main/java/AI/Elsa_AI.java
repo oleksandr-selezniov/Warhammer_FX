@@ -51,7 +51,7 @@ public class Elsa_AI {
     private static Elsa_AI elsa = null;
 
     enum Strategy{
-        PREFER_CAPTURE, PREFER_RETREAT, PREFER_CAUTIOUS_CAPURE, PREFER_DARE_ATTACK, PREFER_CAUTIOUS_ATTACK, PREFER_NORMAL_ATTACK;
+        PREFER_CAPTURE, PREFER_RETREAT, PREFER_ATTACK_OR_CAPURE, PREFER_DARE_ATTACK, PREFER_CAUTIOUS_ATTACK, PREFER_NORMAL_ATTACK;
     }
 
     private Elsa_AI() {}
@@ -82,12 +82,12 @@ public class Elsa_AI {
             strategy = PREFER_DARE_ATTACK;
         }else
         if (myArmyStrength - enemyArmyStrength > 0 && myTotalUnitNumber - enemyTotalUnitNumber > 0){
-            strategy = PREFER_NORMAL_ATTACK;
+            strategy = PREFER_ATTACK_OR_CAPURE;
         }else
         if (myArmyStrength <= enemyArmyStrength && myTotalUnitNumber - enemyTotalUnitNumber < 0 && myTotalUnitNumber > 4){
             strategy = PREFER_CAUTIOUS_ATTACK;
         }else{
-            strategy = PREFER_CAUTIOUS_CAPURE;
+            strategy = PREFER_NORMAL_ATTACK;
         }
         return strategy;
     }
@@ -117,7 +117,7 @@ public class Elsa_AI {
     public void doAction(){
         Thread thread = new Thread(() -> {
             Strategy turnStrategy = getStrategy();
-            System.out.println(turnStrategy.toString() + " STRATEGY IS SELECTED!");
+            System.out.println(turnStrategy.toString() + "***************************************************** STRATEGY IS SELECTED!");
             for(GameCell gc : myUnitGCList){
                 applyTactic(turnStrategy, gc);
             }
@@ -202,7 +202,7 @@ public class Elsa_AI {
                 }
                 break;
             }
-            case PREFER_CAUTIOUS_CAPURE:{
+            case PREFER_ATTACK_OR_CAPURE:{
                 if(gc.getUnit() instanceof MeleeUnit){
                     unitCellClick(gc);
                     if(canActivateSP){
@@ -382,3 +382,5 @@ public class Elsa_AI {
 
     }
 }
+
+// определить, что рядом со свободной сп нет моего юнита, который может ее активировать, и если он есть - искать другую.
