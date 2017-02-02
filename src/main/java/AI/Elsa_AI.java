@@ -132,13 +132,29 @@ public class Elsa_AI {
 //      int enemyUnitsInRange = getEnemyUnitsInRangeNumber(gc, 10);
 //      int unActivatedSPInRange = getStrategicalCellsInSRange(gc, 10);
         GameCell nearestEnemyCell = getNearestEnemyUnitCell(gc, 100);
+        if(nearestEnemyCell == null) System.out.println("WARNING! -------------------------- nearestEnemyCell == null");
+
         GameCell nearestStrategicalCell = getNearestStrategicalCell(gc, 100);
+        if(nearestStrategicalCell == null) System.out.println("WARNING! -------------------------- nearestStrategicalCell == null");
+
         GameCell nearestPassableCellToEnemy = getNearestPassableCell(gc, nearestEnemyCell);
+        if(nearestPassableCellToEnemy == null) System.out.println("WARNING! -------------------------- nearestPassableCellToEnemy == null");
+
         GameCell anyPassableCell = getAnyPassableCell(gc);
+        if(anyPassableCell == null) System.out.println("WARNING! -------------------------- anyPassableCell == null");
+
         GameCell furtherShootableCell = getFurtherShootableCell(gc, nearestEnemyCell);
+        if(furtherShootableCell == null) System.out.println("WARNING! -------------------------- furtherShootableCell == null");
+
         GameCell furtherFromEnemyCell = getFurtherPassableCell(gc, nearestEnemyCell);
+        if(furtherFromEnemyCell == null) System.out.println("WARNING! -------------------------- furtherFromEnemyCell == null");
+
         GameCell nearestPassableCellToSP = getNearestPassableCell(gc, nearestStrategicalCell);
+        if(nearestPassableCellToSP == null) System.out.println("WARNING! -------------------------- nearestPassableCellToSP == null");
+
         GameCell bestTarget = getBestTarget(gc);
+        if(bestTarget == null) System.out.println("WARNING! -------------------------- bestTarget == null");
+
         Unit currentUnit = gc.getUnit();
         boolean isFast = (currentUnit.getWalkRange() >= 5);
         boolean isWeak = (currentUnit.getCost() <= 30);
