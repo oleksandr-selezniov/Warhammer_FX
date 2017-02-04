@@ -491,8 +491,7 @@ public class BoardUtils {
             strategicalGCList.forEach(p->{
                 if(isTargetCloserToEtalonThanSource(yourCell, nearestSP[0], p)
                         && (getUnitsInSRange(p, 2, yourCell.getUnit().getTeam()).size() == 0
-                        || ((getUnitsInSRange(p, 2, yourCell.getUnit().getTeam()).size()) == 1
-                        &&  getUnitsInSRange(p, 2, yourCell.getUnit().getTeam()).get(0).equals(yourCell)))){
+                        || ((getUnitsInSRange(p, 2, yourCell.getUnit().getTeam()).contains(yourCell))))){
                     nearestSP[0] = p;
                 }
             });
