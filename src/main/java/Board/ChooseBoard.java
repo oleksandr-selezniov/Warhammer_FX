@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static Board.Board.*;
-import static Board.BoardInitializer.getArmyLimit;
+import static Board.BoardInitializer.*;
 
 
 /**
@@ -193,7 +193,7 @@ public class ChooseBoard {
         hBox2.setPadding(new Insets(5));
         hBox2.setAlignment(Pos.CENTER);
 
-        HBox hBox3 = new HBox(new VBox(elsaComboBox, elsaScrollPane));
+        HBox hBox3 = new HBox(new VBox(elsaComboBox, elsaScrollPane , getLimitBlock()));
         hBox3.setPadding(new Insets(5));
         hBox3.setAlignment(Pos.CENTER);
 
@@ -412,6 +412,71 @@ public class ChooseBoard {
         return gridPane;
     }
 
+    private GridPane getLimitBlock(){
+        GridPane gridPane = new GridPane();
+        gridPane.setMaxSize(200, 50);
+        gridPane.setMaxSize(200, 50);
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setPadding(new Insets(5));
+        gridPane.setHgap(5);
+        gridPane.setVgap(5);
+
+        Label scoreLimitLabel = new Label("Score Limit:");
+        scoreLimitLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        scoreLimitLabel.setTextFill(Color.LIGHTCORAL);
+        scoreLimitLabel.setMaxWidth(90);
+        scoreLimitLabel.setMinWidth(90);
+
+        TextField scoreLimit = new TextField();
+        scoreLimit.setMaxWidth(40);
+        scoreLimit.setMinWidth(40);
+        scoreLimit.setText(Integer.toString(getScoreLimit()));
+        scoreLimit.textProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("textfield changed from " + oldValue + " to " + newValue);
+            try {
+                setScoreLimit(Integer.parseInt(newValue));
+            }catch (NumberFormatException e){ }//ignore exception
+        });
+
+
+
+        Label armyLimitLabel = new Label("Army Limit:");
+        armyLimitLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        armyLimitLabel.setTextFill(Color.LIGHTCORAL);
+        armyLimitLabel.setMaxWidth(90);
+        armyLimitLabel.setMinWidth(90);
+
+        TextField armyLimit = new TextField();
+        armyLimit.setMaxWidth(40);
+        armyLimit.setMinWidth(40);
+        armyLimit.setText(Integer.toString(getArmyLimit()));
+        armyLimit.textProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("textfield changed from " + oldValue + " to " + newValue);
+
+            VBox leftSC = (VBox)scene.lookup("#leftUnitVbox");
+            leftSC.getChildren().remove(0, leftSC.getChildren().size());
+            setTeamTotalCost(1, 0);
+            setCurrentHumanList(new ArrayList<>());
+
+            VBox rightSC = (VBox)scene.lookup("#rightUnitVbox");
+            rightSC.getChildren().remove(0, rightSC.getChildren().size());
+            setTeamTotalCost(2, 0);
+            setCurrentOrkList(new ArrayList<>());
+
+            try {
+                setArmyLimit(Integer.parseInt(newValue));
+            }catch (NumberFormatException e){ }//ignore exception
+
+        });
+
+        gridPane.add(armyLimitLabel, 0,0);
+        gridPane.add(armyLimit, 1,0);
+        gridPane.add(scoreLimitLabel, 0,1);
+        gridPane.add(scoreLimit, 1,1);
+        return gridPane;
+    }
+
+
     private GridPane getNextBlock(){
         GridPane gridPane = new GridPane();
         gridPane.setMaxSize(200, 50);
@@ -421,35 +486,7 @@ public class ChooseBoard {
         gridPane.setHgap(5);
         gridPane.setVgap(5);
 
-        Label armyLimitLabel = new Label("Army Limit:");
-        armyLimitLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
-        armyLimitLabel.setTextFill(Color.LIGHTCORAL);
-        armyLimitLabel.setMaxWidth(100);
-        armyLimitLabel.setMinWidth(100);
 
-        TextField armyLimit = new TextField();
-        armyLimit.setMaxWidth(70);
-        armyLimit.setMinWidth(70);
-        armyLimit.setText(Integer.toString(getArmyLimit()));
-        armyLimit.textProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("textfield changed from " + oldValue + " to " + newValue);
-
-            VBox leftSC = (VBox)scene.lookup("#leftUnitVbox");
-            leftSC.getChildren().remove(0, leftSC.getChildren().size());
-            setTeamTotalCost(1, 0);
-
-            VBox rightSC = (VBox)scene.lookup("#rightUnitVbox");
-            rightSC.getChildren().remove(0, rightSC.getChildren().size());
-            setTeamTotalCost(2, 0);
-
-            try {
-                BoardInitializer.setArmyLimit(Integer.parseInt(newValue));
-            }catch (NumberFormatException e){
-                //    BoardInitializer.setArmyLimit(0);
-                //    armyLimit.setText("0");
-            }
-
-        });
 
         Button nextButton = new Button("Next");
         nextButton.setMinWidth(70);
@@ -468,10 +505,7 @@ public class ChooseBoard {
             OldStage.close();
         });
 
-        gridPane.add(armyLimitLabel, 0,0);
-        gridPane.add(armyLimit, 1,0);
-        gridPane.add(nextButton, 1,1);
-
+        gridPane.add(nextButton, 0,0);
         return gridPane;
     }
 
@@ -480,8 +514,16 @@ public class ChooseBoard {
         return currentHumanList;
     }
 
+    public static void setCurrentHumanList(ArrayList<Unit> list) {
+        currentHumanList = list;
+    }
+
     public static ArrayList<Unit> getCurrentOrkList() {
         return currentOrkList;
+    }
+
+    public static void setCurrentOrkList(ArrayList<Unit> list) {
+        currentOrkList = list;
     }
 
     public void setTeamTotalCost(int team, int teamTotalCost) {

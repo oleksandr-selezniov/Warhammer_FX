@@ -129,6 +129,9 @@ public class BoardInitializer {
         return scoreLimit;
     }
 
+    public static void setScoreLimit(int score) { scoreLimit = score;
+    }
+
     public static int getArmyLimit() {
         return armyLimit;
     }
