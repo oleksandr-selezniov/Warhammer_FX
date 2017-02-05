@@ -112,7 +112,7 @@ public class Board {
         leftEarGP.setGridLinesVisible(true);
         leftEarGP.setMinWidth(Size.getSceneWidth()*0.3);
         leftEarGP.setMinHeight(Size.getSceneHeight()*0.25);
-        //leftEarGP.add(MusicPlayerLogic.getMusicPlayer(),0,0);
+        leftEarGP.add(MusicPlayerLogic.getMusicPlayer(),0,0);
 
         ImageView leftEarIV = new ImageView();
         leftEarIV.setFitWidth(Size.getSceneWidth()*0.18);
