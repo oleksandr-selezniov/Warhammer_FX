@@ -150,9 +150,11 @@ public class Elsa_AI {
         GameCell furtherFromEnemyCell = getFurtherPassableCell(gc, nearestEnemyCell);
         if(furtherFromEnemyCell == null) System.out.println(info + "no further from enemy cell found");
 
-        GameCell nearestPassableCellToSP = getNearestPassableCell(gc, nearestStrategicalCell);
-        if(nearestPassableCellToSP == null) System.out.println(info + "no passable cell near SP found");
-
+        GameCell nearestPassableCellToSP = null;
+        if(nearestStrategicalCell!=null) {
+            nearestPassableCellToSP = getNearestPassableCell(gc, nearestStrategicalCell);
+            if (nearestPassableCellToSP == null) System.out.println(info + "no passable cell near SP found");
+        }
         GameCell bestTarget = getBestTarget(gc);
         if(bestTarget == null) System.out.println(info + "no best target found");
 

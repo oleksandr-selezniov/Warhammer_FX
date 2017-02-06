@@ -168,16 +168,16 @@ public class BoardUtils {
         nodeList.forEach(Node::toFront);
     }
 
-    public static synchronized ArrayList getUnitCellList(int team) {
+    public static synchronized ArrayList<GameCell> getUnitCellList(int team) {
         GridPane gridPane = Board.getMainBattlefieldGP();
         return gridPane.getChildren().stream().filter(p ->
                 (p instanceof GameCell && ((GameCell) p).getUnit() != null && ((GameCell) p).getUnit().getTeam()==team)
-        ).collect(Collectors.toCollection(ArrayList::new));
+        ).map(p->(GameCell)p).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public static synchronized ArrayList<Unit> getUnitList(int team) {
         ArrayList<Unit> unitList = new ArrayList<>();
-        getUnitCellList(team).forEach(p->unitList.add(((GameCell) p).getUnit()));
+        getUnitCellList(team).forEach(p->unitList.add( p.getUnit()));
         return unitList;
     }
 
@@ -216,11 +216,12 @@ public class BoardUtils {
         return (getEnemyUnitsInRangeNumber(gc, range) > 0);
     }
 
-    public static synchronized ArrayList getEnemyUnitsInSRange(GameCell gc, int range) {
+    public static synchronized ArrayList<GameCell> getEnemyUnitsInSRange(GameCell gc, int range) {
         GridPane gridPane = Board.getMainBattlefieldGP();
         return gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
                 isReachable(gc, ((GameCell) p), range)) && !((GameCell) p).isBlocked())
-                .filter(p->((GameCell) p).getUnit()!=null && ((GameCell) p).getUnit().getTeam()!=gc.getUnit().getTeam()).collect(Collectors.toCollection(ArrayList::new));
+                .filter(p->((GameCell) p).getUnit()!=null && ((GameCell) p).getUnit().getTeam()!=gc.getUnit().getTeam()).
+                        map(p->(GameCell)p).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public static synchronized ArrayList getUnitsInSRange(GameCell gc, int range, int team) {

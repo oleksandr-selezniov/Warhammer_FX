@@ -244,7 +244,7 @@ public class ChooseBoard {
 //                – James_D Jun 26 '15 at 2:09
 
         ObservableList<String> observableList = FXCollections.observableArrayList(arrayList);
-        ComboBox<String> elsaComboBox = new ComboBox(observableList);
+        ComboBox<String> elsaComboBox = new ComboBox<>(observableList);
         elsaComboBox.setMaxWidth(200);
         elsaComboBox.valueProperty().addListener((ov, t, t1) -> {
             System.out.println("["+t1 + " is Selected]");
@@ -268,14 +268,14 @@ public class ChooseBoard {
         return elsaComboBox;
     }
 
-    private ComboBox getSPComboBox(){
+    private ComboBox<String> getSPComboBox(){
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("Yes");
         arrayList.add("No");
 
         ObservableList<String> observableList = FXCollections.observableArrayList(arrayList);
         ComboBox<String> strategicalComboBox = new ComboBox<>(observableList);
-        strategicalComboBox.setMaxWidth(50);
+        strategicalComboBox.setMaxWidth(80);
         strategicalComboBox.valueProperty().addListener((ov, t, t1) -> {
             System.out.println("["+t1 + " is Selected]");
 
@@ -503,7 +503,7 @@ public class ChooseBoard {
         gridPane.setVgap(5);
 
         Button nextButton = new Button("Next");
-        nextButton.setMinWidth(70);
+        nextButton.setMinWidth(120);
         nextButton.setOnAction(e -> {
 
             if(Size.getSceneHeight() == 0 || Size.getSceneWidth() == 0){
@@ -522,33 +522,12 @@ public class ChooseBoard {
         Label useStrategicalCellsLabel = new Label("Strategical Cells:");
         useStrategicalCellsLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
         useStrategicalCellsLabel.setTextFill(Color.LIGHTCORAL);
-        useStrategicalCellsLabel.setMaxWidth(50);
-        useStrategicalCellsLabel.setMinWidth(50);
+        useStrategicalCellsLabel.setMaxWidth(120);
+        useStrategicalCellsLabel.setMinWidth(120);
 
-        TextField armyLimit = new TextField();
-        armyLimit.setMaxWidth(40);
-        armyLimit.setMinWidth(40);
-        armyLimit.setText(Integer.toString(getArmyLimit()));
-        armyLimit.textProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("textfield changed from " + oldValue + " to " + newValue);
-
-            VBox leftSC = (VBox)scene.lookup("#leftUnitVbox");
-            leftSC.getChildren().remove(0, leftSC.getChildren().size());
-            setTeamTotalCost(1, 0);
-            setCurrentHumanList(new ArrayList<>());
-
-            VBox rightSC = (VBox)scene.lookup("#rightUnitVbox");
-            rightSC.getChildren().remove(0, rightSC.getChildren().size());
-            setTeamTotalCost(2, 0);
-            setCurrentOrkList(new ArrayList<>());
-
-            try {
-                setArmyLimit(Integer.parseInt(newValue));
-            }catch (NumberFormatException e){ }//ignore exception
-
-        });
-
-        gridPane.add(nextButton, 0,0);
+        gridPane.add(useStrategicalCellsLabel, 0,0);
+        gridPane.add(getSPComboBox(), 1,0);
+        gridPane.add(nextButton, 0,1);
         return gridPane;
     }
 
