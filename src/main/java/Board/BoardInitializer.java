@@ -16,6 +16,7 @@ public class BoardInitializer {
     private static int armyLimit = 400;
     private static int team1Score;
     private static int team2Score;
+    private static boolean useStrategicalCells = true;
 
     void initializeBoard(){
         for(int i=0; i < ChooseBoard.getCurrentHumanList().size(); i++){
@@ -67,33 +68,25 @@ public class BoardInitializer {
 
             placeOnBoard(Board.getBoardWidth()-2,i+1,unit);
         }
-//
-//        placeOnBoard(0,0,new LightInfantry("Assasin", 1));
-//
-//        placeOnBoard(0,1,new LightInfantry("Assasin", 1));
-//
-
 
         BoardUtils.setActiveTeamUnits(1, true);
         BoardUtils.setActiveTeamUnits(2, false);
-
         generateObstacles(0.15);
 
-        makeStrategical(9,3);
-        makeStrategical(9,9);
-        makeStrategical(9,15);
+        if(isUseStrategicalCells()){
 
-        makeStrategical(19,6);
-        makeStrategical(19,12);
-
-        makeStrategical(24,9);
-
-        makeStrategical(29,6);
-        makeStrategical(29,12);
-
-        makeStrategical(39,3);
-        makeStrategical(39,9);
-        makeStrategical(39,15);
+            makeStrategical(9,3);
+            makeStrategical(9,9);
+            makeStrategical(9,15);
+            makeStrategical(19,6);
+            makeStrategical(19,12);
+            makeStrategical(24,9);
+            makeStrategical(29,6);
+            makeStrategical(29,12);
+            makeStrategical(39,3);
+            makeStrategical(39,9);
+            makeStrategical(39,15);
+        }
 
     }
 
@@ -107,7 +100,6 @@ public class BoardInitializer {
         gameCell.setGraphic(gameCell.getUnit().getImageView(1.0));
         gameCell.setPadding(gameCell.getUnit().getInsetsY());
     }
-
 
     public static int getTeam1Score() {
         return team1Score;
@@ -129,8 +121,7 @@ public class BoardInitializer {
         return scoreLimit;
     }
 
-    public static void setScoreLimit(int score) { scoreLimit = score;
-    }
+    public static void setScoreLimit(int score) { scoreLimit = score; }
 
     public static int getArmyLimit() {
         return armyLimit;
@@ -138,6 +129,14 @@ public class BoardInitializer {
 
     public static void setArmyLimit(int armyLimit) {
         BoardInitializer.armyLimit = armyLimit;
+    }
+
+    public static boolean isUseStrategicalCells() {
+        return useStrategicalCells;
+    }
+
+    public static void setUseStrategicalCells(boolean useSP) {
+        useStrategicalCells = useSP;
     }
 
 }

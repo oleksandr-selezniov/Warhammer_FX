@@ -239,57 +239,79 @@ public class ChooseBoard {
         arrayList.add("Play With Elsa");
         arrayList.add("Ignore Elsa");
 
+//        ComboBox<Something> automatonSelection ... ; and automatonSelection.valueProperty()
+//                .addListener((ObservableVa‌​lue<Something> observable, Something oldValue, Something newValue) -> ...);
+//                – James_D Jun 26 '15 at 2:09
+
         ObservableList<String> observableList = FXCollections.observableArrayList(arrayList);
-        ComboBox elsaComboBox = new ComboBox(observableList);
+        ComboBox<String> elsaComboBox = new ComboBox(observableList);
         elsaComboBox.setMaxWidth(200);
-        elsaComboBox.valueProperty().addListener(new ChangeListener<String>() {
-            @Override public void changed(ObservableValue ov, String t, String t1) {
-                System.out.println("["+t1 + " is Selected]");
+        elsaComboBox.valueProperty().addListener((ov, t, t1) -> {
+            System.out.println("["+t1 + " is Selected]");
 
-                if(t1.equals("Play With Elsa")){
-                    if(scene != null){
-                        ImageView elsaImageView = (ImageView)scene.lookup("#elsaImageView");
-                        elsaImageView.setImage(new BoardUtils().getImage(elsaHappyImagePath));
-                    }
-                    setEnableAI(true);
-                }else{
-                    if(scene != null){
-                        ImageView elsaImageView = (ImageView)scene.lookup("#elsaImageView");
-                        elsaImageView.setImage(new BoardUtils().getImage(elsaSadImagePath));
-                    }
-                    setEnableAI(false);
+            if(t1.equals("Play With Elsa")){
+                if(scene != null){
+                    ImageView elsaImageView = (ImageView)scene.lookup("#elsaImageView");
+                    elsaImageView.setImage(new BoardUtils().getImage(elsaHappyImagePath));
                 }
-
+                setEnableAI(true);
+            }else{
+                if(scene != null){
+                    ImageView elsaImageView = (ImageView)scene.lookup("#elsaImageView");
+                    elsaImageView.setImage(new BoardUtils().getImage(elsaSadImagePath));
+                }
+                setEnableAI(false);
             }
+
         });
         elsaComboBox.setValue("Play With Elsa");
         return elsaComboBox;
+    }
+
+    private ComboBox getSPComboBox(){
+        ArrayList<String> arrayList = new ArrayList<>();
+        arrayList.add("Yes");
+        arrayList.add("No");
+
+        ObservableList<String> observableList = FXCollections.observableArrayList(arrayList);
+        ComboBox<String> strategicalComboBox = new ComboBox<>(observableList);
+        strategicalComboBox.setMaxWidth(50);
+        strategicalComboBox.valueProperty().addListener((ov, t, t1) -> {
+            System.out.println("["+t1 + " is Selected]");
+
+            if(t1.equals("Yes")){
+                setUseStrategicalCells(true);
+            }else{
+                setUseStrategicalCells(false);
+            }
+
+        });
+        strategicalComboBox.setValue("Yes");
+        return strategicalComboBox;
     }
 
     private ComboBox getUnitComboBox(Map<String, Unit> UnitMap, String name){
         ArrayList<String> arrayListO= new ArrayList<>();
         arrayListO.addAll(UnitMap.keySet());
         ObservableList<String> orkNameList = FXCollections.observableArrayList(arrayListO);
-        ComboBox unitComboBox = new ComboBox(orkNameList);
+        ComboBox<String> unitComboBox = new ComboBox<>(orkNameList);
         unitComboBox.setMaxWidth(200);
         unitComboBox.setValue(name);
-        unitComboBox.valueProperty().addListener(new ChangeListener<String>() {
-            @Override public void changed(ObservableValue ov, String t, String t1) {
-                System.out.println("["+t1 + " is Selected]");
+        unitComboBox.valueProperty().addListener((ov, t, t1) -> {
+            System.out.println("["+t1 + " is Selected]");
 
-                VBox vbox = (VBox) scene.lookup("#centerImageVbox");
-                vbox.getChildren().clear();
-                vbox.getChildren().add(UnitMap.get(t1).getImageView(1, 1.8));
+            VBox vbox = (VBox) scene.lookup("#centerImageVbox");
+            vbox.getChildren().clear();
+            vbox.getChildren().add(UnitMap.get(t1).getImageView(1, 1.8));
 
-                VBox leftInfoBox = (VBox)scene.lookup("#leftInfoVbox");
-                leftInfoBox.getChildren().clear();
-                leftInfoBox.getChildren().add(UnitMap.get(t1).getLeftInfoGridPane());
+            VBox leftInfoBox = (VBox)scene.lookup("#leftInfoVbox");
+            leftInfoBox.getChildren().clear();
+            leftInfoBox.getChildren().add(UnitMap.get(t1).getLeftInfoGridPane());
 
-                VBox rightInfoBox = (VBox)scene.lookup("#rightInfoVbox");
-                rightInfoBox.getChildren().clear();
-                rightInfoBox.getChildren().add(UnitMap.get(t1).getRightInfoGridPane());
-                currentSelectedUnit = UnitMap.get(t1);
-            }
+            VBox rightInfoBox = (VBox)scene.lookup("#rightInfoVbox");
+            rightInfoBox.getChildren().clear();
+            rightInfoBox.getChildren().add(UnitMap.get(t1).getRightInfoGridPane());
+            currentSelectedUnit = UnitMap.get(t1);
         });
         return unitComboBox;
     }
@@ -303,53 +325,49 @@ public class ChooseBoard {
         gridPane.setHgap(5);
         gridPane.setVgap(5);
 
-        ComboBox resolutionComboBox = new ComboBox(FXCollections.observableArrayList("1024/768", "1366/768", "1600/900", "1920/1080"));
+        ComboBox<String> resolutionComboBox = new ComboBox<>(FXCollections.observableArrayList("1024/768", "1366/768", "1600/900", "1920/1080"));
         resolutionComboBox.setMaxWidth(100);
         resolutionComboBox.setMinWidth(100);
-        resolutionComboBox.valueProperty().addListener(new ChangeListener<String>() {
-            @Override public void changed(ObservableValue ov, String t, String t1) {
-                System.out.println("["+t1 + " is Selected]");
+        resolutionComboBox.valueProperty().addListener((ov, t, t1) -> {
+            System.out.println("["+t1 + " is Selected]");
 
-                if(t1.equals("1024/768")){
-                    Size.setSceneWidth(1024);
-                    Size.setSceneHeight(768);
-                }
-                if(t1.equals("1366/768")){
-                    Size.setSceneWidth(1366);
-                    Size.setSceneHeight(768);
-                }
-                if(t1.equals("1600/900")){
-                    Size.setSceneWidth(1600);
-                    Size.setSceneHeight(900);
-                }
-                if(t1.equals("1920/1080")){
-                    Size.setSceneWidth(1920);
-                    Size.setSceneHeight(1080);
-                }
+            if(t1.equals("1024/768")){
+                Size.setSceneWidth(1024);
+                Size.setSceneHeight(768);
+            }
+            if(t1.equals("1366/768")){
+                Size.setSceneWidth(1366);
+                Size.setSceneHeight(768);
+            }
+            if(t1.equals("1600/900")){
+                Size.setSceneWidth(1600);
+                Size.setSceneHeight(900);
+            }
+            if(t1.equals("1920/1080")){
+                Size.setSceneWidth(1920);
+                Size.setSceneHeight(1080);
             }
         });
         resolutionComboBox.setValue("1366/768");
 
-        ComboBox sizeComboBox = new ComboBox(FXCollections.observableArrayList("Medium"));
+        ComboBox<String> sizeComboBox = new ComboBox<>(FXCollections.observableArrayList("Medium"));
         sizeComboBox.setMaxWidth(100);
         sizeComboBox.setMinWidth(100);
-        sizeComboBox.valueProperty().addListener(new ChangeListener<String>() {
-            @Override public void changed(ObservableValue ov, String t, String t1) {
-                System.out.println("["+t1 + " is Selected]");
+        sizeComboBox.valueProperty().addListener((ov, t, t1) -> {
+            System.out.println("["+t1 + " is Selected]");
 
 //                if(t1.equals("Small")){
 //                    setBoardWidth(20);
 //                    setBoardHeight(10);
 //                }
-                if(t1.equals("Medium")){
-                    setBoardWidth(49);
-                    setBoardHeight(19);
-                }
+            if(t1.equals("Medium")){
+                setBoardWidth(49);
+                setBoardHeight(19);
+            }
 //                if(t1.equals("Large")){
 //                    setBoardWidth(50);
 //                    setBoardHeight(30);
 //                }
-            }
         });
         sizeComboBox.setValue("Medium");
 
@@ -438,8 +456,6 @@ public class ChooseBoard {
             }catch (NumberFormatException e){ }//ignore exception
         });
 
-
-
         Label armyLimitLabel = new Label("Army Limit:");
         armyLimitLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
         armyLimitLabel.setTextFill(Color.LIGHTCORAL);
@@ -486,8 +502,6 @@ public class ChooseBoard {
         gridPane.setHgap(5);
         gridPane.setVgap(5);
 
-
-
         Button nextButton = new Button("Next");
         nextButton.setMinWidth(70);
         nextButton.setOnAction(e -> {
@@ -503,6 +517,35 @@ public class ChooseBoard {
 
             Stage OldStage = (Stage)scene.getWindow();
             OldStage.close();
+        });
+
+        Label useStrategicalCellsLabel = new Label("Strategical Cells:");
+        useStrategicalCellsLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        useStrategicalCellsLabel.setTextFill(Color.LIGHTCORAL);
+        useStrategicalCellsLabel.setMaxWidth(50);
+        useStrategicalCellsLabel.setMinWidth(50);
+
+        TextField armyLimit = new TextField();
+        armyLimit.setMaxWidth(40);
+        armyLimit.setMinWidth(40);
+        armyLimit.setText(Integer.toString(getArmyLimit()));
+        armyLimit.textProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("textfield changed from " + oldValue + " to " + newValue);
+
+            VBox leftSC = (VBox)scene.lookup("#leftUnitVbox");
+            leftSC.getChildren().remove(0, leftSC.getChildren().size());
+            setTeamTotalCost(1, 0);
+            setCurrentHumanList(new ArrayList<>());
+
+            VBox rightSC = (VBox)scene.lookup("#rightUnitVbox");
+            rightSC.getChildren().remove(0, rightSC.getChildren().size());
+            setTeamTotalCost(2, 0);
+            setCurrentOrkList(new ArrayList<>());
+
+            try {
+                setArmyLimit(Integer.parseInt(newValue));
+            }catch (NumberFormatException e){ }//ignore exception
+
         });
 
         gridPane.add(nextButton, 0,0);

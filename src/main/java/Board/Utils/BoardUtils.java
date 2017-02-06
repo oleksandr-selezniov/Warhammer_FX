@@ -175,7 +175,7 @@ public class BoardUtils {
         ).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public static synchronized ArrayList getUnitList(int team) {
+    public static synchronized ArrayList<Unit> getUnitList(int team) {
         ArrayList<Unit> unitList = new ArrayList<>();
         getUnitCellList(team).forEach(p->unitList.add(((GameCell) p).getUnit()));
         return unitList;
@@ -218,16 +218,17 @@ public class BoardUtils {
 
     public static synchronized ArrayList getEnemyUnitsInSRange(GameCell gc, int range) {
         GridPane gridPane = Board.getMainBattlefieldGP();
-        return (ArrayList) gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
+        return gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
                 isReachable(gc, ((GameCell) p), range)) && !((GameCell) p).isBlocked())
-                .filter(p->((GameCell) p).getUnit()!=null && ((GameCell) p).getUnit().getTeam()!=gc.getUnit().getTeam()).collect(Collectors.toList());
+                .filter(p->((GameCell) p).getUnit()!=null && ((GameCell) p).getUnit().getTeam()!=gc.getUnit().getTeam()).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public static synchronized ArrayList getUnitsInSRange(GameCell gc, int range, int team) {
         GridPane gridPane = Board.getMainBattlefieldGP();
-        return (ArrayList) gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
+        return gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
                 isReachable(gc, ((GameCell) p), range)) && !((GameCell) p).isBlocked())
-                .filter(p->((GameCell) p).getUnit()!=null && ((GameCell) p).getUnit().getTeam()==team).collect(Collectors.toList());
+                .filter(p->((GameCell) p).getUnit()!=null && ((GameCell) p).getUnit().getTeam()==team).collect(Collectors.toCollection(ArrayList::new));
+                        //collect(Collectors.toList());
     }
 
     public static synchronized int getUnitsInSRangeNumber(GameCell gc, int range, int team) {
