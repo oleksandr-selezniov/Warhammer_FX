@@ -3,6 +3,7 @@ package Board.Utils;
 import AI.Elsa_AI;
 import Board.Board;
 import Units.MeleeInfantry;
+import Units.Unit;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
@@ -14,6 +15,10 @@ import static Board.Board.initializeBottomMenu;
 import static Board.BoardInitializer.*;
 import static Board.ChooseBoard.*;
 import static Board.GameCell.*;
+import static Board.Utils.BoardUtils.getBestTarget;
+import static Board.Utils.BoardUtils.haveEnemyUnitsInMeleeRange;
+import static Board.Utils.BoardUtils.isOnNeighbouringCellPlusDiagonal;
+
 import Board.BoardInitializer;
 import Units.Interfaces.RangeUnit;
 import  Board.GameCell;
@@ -83,13 +88,26 @@ public class GameCellUtils {
             getPreviousGameCell().setEffect(null);
             setTemporaryUnit(null);
         }
-        setIsSelected(false);
+
         if (!(getPreviousGameCell().equals(gc))) {
             getPreviousGameCell().setCellImage(gc.getDefaultCellImagePath(), 0.6);
             getPreviousGameCell().setPadding(new Insets(1));
+
+            if(gc.getUnit() instanceof MeleeInfantry && haveEnemyUnitsInMeleeRange(gc)){
+                if (getCurrentTarget() != null && getCurrentTarget().getUnit()!=null
+                        && getCurrentTarget().getUnit().getTeam() != gc.getUnit().getTeam()){
+                    performRapidMeleeAttack(gc, getCurrentTarget());
+                }else{
+                    if(getBestTarget(gc)!=null){
+                        performRapidMeleeAttack(gc, getBestTarget(gc));
+                    }
+                }
+            }
+
             gc.getUnit().setActive(false);
             checkTeamTurn();
         }
+        setIsSelected(false);
         abortRangesAndPassability();
     }
 
@@ -97,11 +115,12 @@ public class GameCellUtils {
         getPreviousGameCell().setUnit(getTemporaryUnit());
         getPreviousGameCell().setGraphic(getTemporaryUnit().getImageView(1.0));
         setIsSelected(false);
-        if (gc.isInShootingRange() || (BoardUtils.isOnNeighbouringCellPlusDiagonal(getPreviousGameCell(), gc))) {
-            performAttack(getPreviousGameCell(), gc);
+        if (gc.isInShootingRange() || (isOnNeighbouringCellPlusDiagonal(getPreviousGameCell(), gc))) {
+            performGeneralAttack(getPreviousGameCell(), gc);
         }
         abortRangesAndPassability();
         setTemporaryUnit(null);
+        checkTeamTurn();
     }
 
     public static boolean canSkipTurn(GameCell gc){
@@ -130,14 +149,14 @@ public class GameCellUtils {
         getPreviousGameCell().setUnit(getTemporaryUnit());
         getPreviousGameCell().setGraphic(getTemporaryUnit().getImageView(1.0));
         setIsSelected(false);
-        if (BoardUtils.isOnNeighbouringCellPlusDiagonal(getPreviousGameCell(), gc)){
+        if (isOnNeighbouringCellPlusDiagonal(getPreviousGameCell(), gc)){
             if (gc.getOwner() != getTemporaryUnit().getTeam()){
                 gc.activate(getTemporaryUnit());
                 getTemporaryUnit().setActive(false);
-                checkTeamTurn();
             }
         }
         abortRangesAndPassability();
+        checkTeamTurn();
     }
 
     public static void abortRangesAndPassability(){
@@ -167,23 +186,36 @@ public class GameCellUtils {
         }
     }
 
-    private static void performAttack(GameCell hunter_GC, GameCell victim_CG){
+    private static void performGeneralAttack(GameCell hunter_GC, GameCell victim_CG){
         if (victim_CG.getUnit().getHealth() > 0) {
             victim_CG.getGraphic().setEffect(new SepiaTone());
 
-            if (BoardUtils.isOnNeighbouringCellPlusDiagonal(hunter_GC, victim_CG)) {
+            if (isOnNeighbouringCellPlusDiagonal(hunter_GC, victim_CG)) {
                 getTemporaryUnit().performCloseAttack(victim_CG.getUnit());
             } else if(!(getTemporaryUnit() instanceof MeleeInfantry)){
                 getTemporaryUnit().performRangeAttack(victim_CG.getUnit());
             }
         }
+        checkForDeath(getTemporaryUnit(), victim_CG);
+    }
+
+    private static void performRapidMeleeAttack(GameCell hunter_GC, GameCell victim_CG){
+        if (hunter_GC.getUnit() instanceof MeleeInfantry && victim_CG.getUnit().getHealth() > 0
+                && isOnNeighbouringCellPlusDiagonal(hunter_GC, victim_CG)) {
+            victim_CG.getGraphic().setEffect(new SepiaTone());
+            ((MeleeInfantry)hunter_GC.getUnit()).performRapidMeleeAttack(victim_CG.getUnit());
+        }
+        checkForDeath(hunter_GC.getUnit(), victim_CG);
+    }
+
+    private static void checkForDeath(Unit killer, GameCell victim_CG){
         if (victim_CG.getUnit().getHealth() <= 0) {
-            LoggerUtils.writeDeadLog(getTemporaryUnit(), victim_CG.getUnit());
+            victim_CG.getUnit().setHealth(0);
+            LoggerUtils.writeDeadLog(killer, victim_CG.getUnit());
             victim_CG.setCellImage(getDeadCellImagePath(), 0.6);
             victim_CG.setUnit(null);
-            checkTeamTurn();
+          //  checkTeamTurn();
         }
-        checkTeamTurn();
     }
 
     public static void highlightEnemyUnit(GameCell gc){
@@ -211,6 +243,7 @@ public class GameCellUtils {
 
     public static void mouseEntered(GameCell gc){
         if (gc.getUnit() != null) {
+            setCurrentTarget(gc);
             gc.setTooltip(getToolTip(gc));
             if(gc.getUnit().getTeam()==1){
                 initializeBottomMenu(gc, "left");

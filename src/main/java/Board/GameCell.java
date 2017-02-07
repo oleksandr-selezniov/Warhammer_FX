@@ -22,6 +22,7 @@ import static Board.Utils.GameCellUtils.*;
  */
 public class GameCell extends Button {
     private static GameCell previousGameCell;
+    private static GameCell currentTarget;
     private static Unit temporaryUnit;
     private static boolean isSelected;
     private static int teamTurnValue = 1;
@@ -59,7 +60,7 @@ public class GameCell extends Button {
     public void actionMode() {
         this.setOnMouseClicked(e -> {
 
-            if (!this.isSelected) { // first step
+            if (!isSelected) { // first step
                 clickOnUnitCell(this);
             } else if (this.isPassable() && this.unit == null) { // second step
                 clickOnFreeCell(this);
@@ -266,6 +267,14 @@ public class GameCell extends Button {
 
     public Boolean getStrategical() {
         return isStrategical;
+    }
+
+    public static GameCell getCurrentTarget() {
+        return currentTarget;
+    }
+
+    public static void setCurrentTarget(GameCell currentTarget) {
+        GameCell.currentTarget = currentTarget;
     }
 
 }

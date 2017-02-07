@@ -66,6 +66,13 @@ public class MeleeInfantry extends Unit implements MeleeUnit {
         this.setActive(false);
     }
 
+    public void performRapidMeleeAttack(Unit victim){
+        int rapidCloseDamage = getCloseDamage(victim)/2;  //two times less damage
+        victim.setHealth(victim.getHealth() - rapidCloseDamage);
+        LoggerUtils.writeCloseAttackLog(this, victim, rapidCloseDamage);
+        //this.setActive(false);
+    }
+
     public int getCloseDamage(Unit victim){
         double efficiency = getCurrentCloseEfficiency(victim);
         int minActualDamage = minCloseDamage;
@@ -89,6 +96,7 @@ public class MeleeInfantry extends Unit implements MeleeUnit {
         double HE = Double.parseDouble(splited[1]);
         double VE = Double.parseDouble(splited[2]);
 
+        if(victim instanceof MeleeInfantry){return LE;}
         if(victim instanceof LightInfantry){return LE;}
         if(victim instanceof HeavyInfantry){return HE;}
         if(victim instanceof Vehicle){return VE;}

@@ -289,6 +289,7 @@ public abstract class Unit implements Serializable{
         double HE = Double.parseDouble(splited[1]);
         double VE = Double.parseDouble(splited[2]);
 
+        if(victim instanceof MeleeInfantry){return LE;}
         if(victim instanceof LightInfantry){return LE;}
         if(victim instanceof HeavyInfantry){return HE;}
         if(victim instanceof Vehicle){return VE;}
@@ -304,6 +305,7 @@ public abstract class Unit implements Serializable{
         double HA = Double.parseDouble(splited[1]);
         double VA = Double.parseDouble(splited[2]);
 
+        if(victim instanceof MeleeInfantry){return LA;}
         if(victim instanceof LightInfantry){return LA;}
         if(victim instanceof HeavyInfantry){return HA;}
         if(victim instanceof Vehicle){return VA;}

@@ -7,5 +7,6 @@ import Units.Unit;
  */
 public interface MeleeUnit {
     void performCloseAttack(Unit victim);
+    void performRapidMeleeAttack(Unit victim);
     int  getCloseDamage(Unit victim);
 }
