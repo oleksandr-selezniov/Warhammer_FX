@@ -452,10 +452,10 @@ public class BoardUtils {
 
         if(anyPassableGC.size() > 0) {
             if (anyPassableGC.size() <= 1) {
-                System.out.println(sourceCell.getUnit().getName() + " goes on ANY cell");
+                System.out.println(sourceCell.getUnit().getName() + ": random cell is chosen");
                 return anyPassableGC.get(0);
             } else if (anyPassableGC.size() > 1) {
-                System.out.println(sourceCell.getUnit().getName() + " goes on ANY cell");
+                System.out.println(sourceCell.getUnit().getName() + ": random cell is chosen");
                 return anyPassableGC.get(GameCellUtils.generateRandomNumber(0, anyPassableGC.size()-1));
             }
         }

@@ -117,7 +117,7 @@ public class Elsa_AI {
     public void doAction(){
         Thread thread = new Thread(() -> {
             Strategy turnStrategy = getStrategy();
-            System.out.println(turnStrategy.toString() + "***************************************************** STRATEGY IS SELECTED!");
+            System.out.println("[Elsa STRATEGY]: " + turnStrategy.toString());
             for(GameCell gc : myUnitGCList){
                 applyTactic(turnStrategy, gc);
             }
@@ -131,7 +131,7 @@ public class Elsa_AI {
 //      int enemyUnitsInShotRange = getEnemyUnitsInRangeNumber(gc, gc.getUnit().getShotRange());
 //      int enemyUnitsInRange = getEnemyUnitsInRangeNumber(gc, 10);
 //      int unActivatedSPInRange = getStrategicalCellsInSRange(gc, 10);
-        String info = "[info] -------------------------- ";
+        String info = "[Elsa info] ";
         GameCell nearestEnemyCell = getNearestEnemyUnitCell(gc, 100);
         if(nearestEnemyCell == null) System.out.println(info + "no enemy in range of 100 found");
 
