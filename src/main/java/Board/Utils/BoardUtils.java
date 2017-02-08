@@ -314,7 +314,7 @@ public class BoardUtils {
 
         if(enemyGCList.size() > 0) {
             if (enemyGCList.size() <= 1) {
-                System.out.println("Nearest Enemy Unit for " + yourCell.getUnit().getName() + " is " +enemyGCList.get(0).getUnit().getName());
+                //System.out.println("Nearest Enemy Unit for " + yourCell.getUnit().getName() + " is " +enemyGCList.get(0).getUnit().getName());
                 return enemyGCList.get(0);
             } else if (enemyGCList.size() > 1) {
                 final GameCell[] nearestGC = {enemyGCList.get(0)};
@@ -324,7 +324,7 @@ public class BoardUtils {
                         nearestGC[0] = p;  // костыль чтобы запихнуть а лямбду НЕ final переменную
                     }
                 });
-                System.out.println("Nearest Enemy Unit for " + yourCell.getUnit().getName() + " is " +nearestGC[0].getUnit().getName());
+                //System.out.println("Nearest Enemy Unit for " + yourCell.getUnit().getName() + " is " +nearestGC[0].getUnit().getName());
                 return nearestGC[0];
             }
         }
@@ -371,7 +371,7 @@ public class BoardUtils {
         });
 
         if(!nearestGC[0].equals(sourceCell)){
-            System.out.println("Nearest Passable cell equals X="+ nearestGC[0].getxCoord() + " Y=" +nearestGC[0].getyCoord());
+            //System.out.println("Nearest Passable cell equals X="+ nearestGC[0].getxCoord() + " Y=" +nearestGC[0].getyCoord());
             return nearestGC[0];
         }
         return null;
@@ -390,7 +390,7 @@ public class BoardUtils {
         });
 
         if(!nearestGC[0].equals(sourceCell)){
-            System.out.println("Nearest Passable cell equals X="+ nearestGC[0].getxCoord() + " Y=" +nearestGC[0].getyCoord());
+            //System.out.println("Nearest Passable cell equals X="+ nearestGC[0].getxCoord() + " Y=" +nearestGC[0].getyCoord());
             return nearestGC[0];
         }
         return null;
@@ -424,19 +424,19 @@ public class BoardUtils {
                         }
                     });
                     System.out.println(sourceCell.getUnit().getName() + " is going to attack "+ targetCell.getUnit().getName());
-                    System.out.println("Further Shootable cell equals X=" + furtherGC[0].getxCoord() + " Y=" + furtherGC[0].getyCoord());
+                    //System.out.println("Further Shootable cell equals X=" + furtherGC[0].getxCoord() + " Y=" + furtherGC[0].getyCoord());
                     return furtherGC[0];
                 }
             }
 
             if (!nearGC.equals(sourceCell)) {
-                System.out.println("Nearest (RANGE)Passable cell equals X=" + nearGC.getxCoord() + " Y=" + nearGC.getyCoord());
+                //System.out.println("Nearest (RANGE)Passable cell equals X=" + nearGC.getxCoord() + " Y=" + nearGC.getyCoord());
                 return nearGC;
             }
-            System.out.println(sourceCell.getUnit().getName() + " Reporting: no suitable cells detected!");
+            //System.out.println(sourceCell.getUnit().getName() + " Reporting: no suitable cells detected!");
             return null;
         }
-        System.out.println("Not Suitable for Melee units!");
+        //System.out.println("Not Suitable for Melee units!");
         return null;
     }
 
@@ -452,10 +452,10 @@ public class BoardUtils {
 
         if(anyPassableGC.size() > 0) {
             if (anyPassableGC.size() <= 1) {
-                System.out.println(sourceCell.getUnit().getName() + ": random cell is chosen");
+//                System.out.println(sourceCell.getUnit().getName() + ": random cell is chosen");
                 return anyPassableGC.get(0);
             } else if (anyPassableGC.size() > 1) {
-                System.out.println(sourceCell.getUnit().getName() + ": random cell is chosen");
+//                System.out.println(sourceCell.getUnit().getName() + ": random cell is chosen");
                 return anyPassableGC.get(GameCellUtils.generateRandomNumber(0, anyPassableGC.size()-1));
             }
         }
@@ -497,7 +497,7 @@ public class BoardUtils {
                     nearestSP[0] = p;
                 }
             });
-            System.out.println("Nearest SP equals X=" + nearestSP[0].getxCoord() + " Y=" + nearestSP[0].getyCoord());
+            //System.out.println("Nearest SP equals X=" + nearestSP[0].getxCoord() + " Y=" + nearestSP[0].getyCoord());
             return nearestSP[0];
         }
         return null;

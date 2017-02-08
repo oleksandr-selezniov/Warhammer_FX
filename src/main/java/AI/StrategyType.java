@@ -1,0 +1,8 @@
+package AI;
+
+/**
+ * Created by Dmitriy on 07.02.2017.
+ */
+public enum StrategyType {
+    PREFER_CAPTURE, PREFER_RETREAT, PREFER_ATTACK_OR_CAPURE, PREFER_DARE_ATTACK, PREFER_CAUTIOUS_ATTACK, PREFER_NORMAL_ATTACK
+}
