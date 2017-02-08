@@ -293,7 +293,7 @@ public abstract class Unit implements Serializable{
         if(victim instanceof LightInfantry){return LE;}
         if(victim instanceof HeavyInfantry){return HE;}
         if(victim instanceof Vehicle){return VE;}
-        return 1;
+        return 0;
     }
 
     protected double getCurrentAccuracy(Unit victim){
@@ -309,7 +309,7 @@ public abstract class Unit implements Serializable{
         if(victim instanceof LightInfantry){return LA;}
         if(victim instanceof HeavyInfantry){return HA;}
         if(victim instanceof Vehicle){return VA;}
-        return 0.5;
+        return 0;
     }
 
     public String getInfo(){
