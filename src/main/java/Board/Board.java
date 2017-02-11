@@ -222,6 +222,7 @@ public class Board {
 
         TextArea centerTextArea = new TextArea();
         centerTextArea.setMinWidth(Size.getSceneWidth()*0.153);
+        centerTextArea.setMaxWidth(Size.getSceneWidth()*0.153);
         centerTextArea.setId("centerTextArea");
         mainGridPane.add(centerTextArea, 0,0);
 

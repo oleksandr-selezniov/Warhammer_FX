@@ -208,7 +208,7 @@ public class MeleeInfantry extends Unit implements MeleeUnit {
         infoGP.add(nameLabel, 1,0);
 
         ImageView healthImV = getIcon("icons/icon_7.png", 25);
-        ProgressBar healthPB = getNewProgressbar(0, "red", 110, 12);
+        ProgressBar healthPB = getNewProgressbar(0, "red", 90, 12);
         healthPB.progressProperty().bind(healthPercentageProperty());
         HBox healthHBox = new HBox();
         Label currentHealthLabel = getLabel("", 10);

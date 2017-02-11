@@ -199,7 +199,7 @@ public class Artillery extends Vehicle implements RangeUnit {
         infoGP.add(nameLabel, 1,0);
 
         ImageView healthImV = getIcon("icons/icon_7.png", 25);
-        ProgressBar healthPB = getNewProgressbar(0, "red", 110, 12);
+        ProgressBar healthPB = getNewProgressbar(0, "red", 90, 12);
         healthPB.progressProperty().bind(healthPercentageProperty());
         HBox healthHBox = new HBox();
         Label currentHealthLabel = getLabel("", 10);
@@ -211,9 +211,8 @@ public class Artillery extends Vehicle implements RangeUnit {
         infoGP.add(healthHBox, 1,1);
 
         ImageView ammoIV = getIcon("icons/icon_12.png", 25);
-        ProgressBar ammoPB = getNewProgressbar(0, "orange", 110, 12);
+        ProgressBar ammoPB = getNewProgressbar(0, "orange", 90, 12);
         ammoPB.progressProperty().bind(ammoPercentageProperty());
-        ammoPB.setMaxSize(100, 10);
         HBox ammoHBox = new HBox();
         Label currentAmmoLabel = getLabel("", 10);
         ammoHBox.setAlignment(Pos.CENTER_LEFT);
