@@ -276,6 +276,7 @@ public class ChooseBoard {
         ObservableList<String> observableList = FXCollections.observableArrayList(arrayList);
         ComboBox<String> strategicalComboBox = new ComboBox<>(observableList);
         strategicalComboBox.setMaxWidth(80);
+        strategicalComboBox.setId("strategicalCB");
         strategicalComboBox.valueProperty().addListener((ov, t, t1) -> {
             System.out.println("["+t1 + " is Selected]");
 
@@ -284,9 +285,8 @@ public class ChooseBoard {
             }else{
                 setUseStrategicalCells(false);
             }
-
         });
-        strategicalComboBox.setValue("Yes");
+        strategicalComboBox.setValue("No");
         return strategicalComboBox;
     }
 
@@ -354,26 +354,31 @@ public class ChooseBoard {
         });
         resolutionComboBox.setValue("1366/768");
 
-        ComboBox<String> sizeComboBox = new ComboBox<>(FXCollections.observableArrayList("Medium"));
+        ComboBox<String> sizeComboBox = new ComboBox<>(FXCollections.observableArrayList("Small","Medium","Large"));
         sizeComboBox.setMaxWidth(100);
         sizeComboBox.setMinWidth(100);
         sizeComboBox.valueProperty().addListener((ov, t, t1) -> {
             System.out.println("["+t1 + " is Selected]");
 
-//                if(t1.equals("Small")){
-//                    setBoardWidth(20);
-//                    setBoardHeight(10);
-//                }
+            if(t1.equals("Small")){
+                setBoardWidth(19);
+                setBoardHeight(9);
+                setBoardSise(BoardType.SMALL);
+            }
+
             if(t1.equals("Medium")){
+                setBoardWidth(34);
+                setBoardHeight(14);
+                setBoardSise(BoardType.MEDIUM);
+            }
+
+            if(t1.equals("Large")){
                 setBoardWidth(49);
                 setBoardHeight(19);
+                setBoardSise(BoardType.LARGE);
             }
-//                if(t1.equals("Large")){
-//                    setBoardWidth(50);
-//                    setBoardHeight(30);
-//                }
         });
-        sizeComboBox.setValue("Medium");
+        sizeComboBox.setValue("Large");
 
         Label boardHeightLabel = new Label("Board Size:");
         boardHeightLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));

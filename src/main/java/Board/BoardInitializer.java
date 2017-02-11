@@ -17,6 +17,11 @@ public class BoardInitializer {
     private static int team1Score;
     private static int team2Score;
     private static boolean useStrategicalCells = true;
+    private static BoardType boardSise;
+
+    public enum BoardType{
+        SMALL,MEDIUM,LARGE
+    }
 
     void initializeBoard(){
         for(int i=0; i < ChooseBoard.getCurrentHumanList().size(); i++){
@@ -74,20 +79,32 @@ public class BoardInitializer {
         generateObstacles(0.15);
 
         if(isUseStrategicalCells()){
-
-            makeStrategical(9,3);
-            makeStrategical(9,9);
-            makeStrategical(9,15);
-            makeStrategical(19,6);
-            makeStrategical(19,12);
-            makeStrategical(24,9);
-            makeStrategical(29,6);
-            makeStrategical(29,12);
-            makeStrategical(39,3);
-            makeStrategical(39,9);
-            makeStrategical(39,15);
+            switch (boardSise){
+                case SMALL: //19\9
+                    makeStrategical(9,1);
+                    makeStrategical(9,7);
+                    break;
+                case MEDIUM: //34\14
+                    makeStrategical(11,3);
+                    makeStrategical(11,10);
+                    makeStrategical(22,3);
+                    makeStrategical(22,10);
+                    break;
+                case LARGE: //49\19
+                    makeStrategical(9,3);
+                    makeStrategical(9,9);
+                    makeStrategical(9,15);
+                    makeStrategical(19,6);
+                    makeStrategical(19,12);
+                    makeStrategical(24,9);
+                    makeStrategical(29,6);
+                    makeStrategical(29,12);
+                    makeStrategical(39,3);
+                    makeStrategical(39,9);
+                    makeStrategical(39,15);
+                    break;
+            }
         }
-
     }
 
     private GameCell getGameCell(String id){
@@ -137,6 +154,10 @@ public class BoardInitializer {
 
     public static void setUseStrategicalCells(boolean useSP) {
         useStrategicalCells = useSP;
+    }
+
+    public static void setBoardSise(BoardType boardSise) {
+        BoardInitializer.boardSise = boardSise;
     }
 
 }
