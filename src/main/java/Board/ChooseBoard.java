@@ -325,7 +325,7 @@ public class ChooseBoard {
         gridPane.setHgap(5);
         gridPane.setVgap(5);
 
-        ComboBox<String> resolutionComboBox = new ComboBox<>(FXCollections.observableArrayList("1024/768", "1366/768", "1600/900", "1920/1080"));
+        ComboBox<String> resolutionComboBox = new ComboBox<>(FXCollections.observableArrayList("1024/768", "1280/800", "1366/768", "1600/900", "1920/1080"));
         resolutionComboBox.setMaxWidth(100);
         resolutionComboBox.setMinWidth(100);
         resolutionComboBox.valueProperty().addListener((ov, t, t1) -> {
@@ -334,6 +334,10 @@ public class ChooseBoard {
             if(t1.equals("1024/768")){
                 Size.setSceneWidth(1024);
                 Size.setSceneHeight(768);
+            }
+            if(t1.equals("1280/800")){
+                Size.setSceneWidth(1280);
+                Size.setSceneHeight(800);
             }
             if(t1.equals("1366/768")){
                 Size.setSceneWidth(1366);

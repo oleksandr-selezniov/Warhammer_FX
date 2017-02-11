@@ -1,24 +1,10 @@
-1) too many setImage() methods. Optimization needed. Remove unnecessary ones and optimize 1-2 best ones (Almost fixed)
+Идеи
 
-2) UI - Test on higher resolutions -> replace all hard-coded numbers with coefficients
+сделать Advanced Hunting Mode - best target для каждого юнита выбирается по всей доске
 
-3) Refactor mouse listeners in GameCell (hard & risky)
+починить начисление очков после ДВУХ ходов(сделано)
 
-4) Replace highlight for shooting range (was setEffect(new OuterShadow) needed Button filled with color)  - FIXED
-4)' Replace innerShadow to outerShadow if mouse on enemy unit (AFTER 4 is done)   - FIXED
-
-5) Create normal attack method
-
-6) Create events and listeners for bottom panel
-
-7) Create classes for EVERY unit. Make Units.Unit abstract.(even if all methods are the same - it's for future use) DEPRECATED
-
-8) do something with image directioning. Humans are always looking to the right, orks to the left. This must be fixed (or at leat make 2 images for each unit, and change them in the right moment)
-
-9999) Think about the rules at last, motherfucker -> change turn-based gameplay
-
-
-
+сделать еще один анализаотр армии для более корректного распределения ролей на поле
 
 
 TIP: how to create exe in javaFX

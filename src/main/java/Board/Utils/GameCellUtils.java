@@ -15,6 +15,7 @@ import static Board.Board.initializeBottomMenu;
 import static Board.BoardInitializer.*;
 import static Board.ChooseBoard.*;
 import static Board.GameCell.*;
+import static Board.GameCell.getTeamTurnValue;
 import static Board.Utils.BoardUtils.getBestTarget;
 import static Board.Utils.BoardUtils.haveEnemyUnitsInMeleeRange;
 import static Board.Utils.BoardUtils.isOnNeighbouringCellPlusDiagonal;
@@ -94,16 +95,10 @@ public class GameCellUtils {
             getPreviousGameCell().setPadding(new Insets(1));
 
             if(gc.getUnit() instanceof MeleeInfantry && haveEnemyUnitsInMeleeRange(gc)){
-                if (getCurrentTarget() != null && getCurrentTarget().getUnit()!=null
-                        && getCurrentTarget().getUnit().getTeam() != gc.getUnit().getTeam()){
-                    performRapidMeleeAttack(gc, getCurrentTarget());
-                }else{
-                    if(getBestTarget(gc)!=null){
-                        performRapidMeleeAttack(gc, getBestTarget(gc));
-                    }
+                if(getBestTarget(gc)!=null){
+                    performRapidMeleeAttack(gc, getBestTarget(gc));
                 }
             }
-
             gc.getUnit().setActive(false);
             checkTeamTurn();
         }
@@ -133,7 +128,7 @@ public class GameCellUtils {
                 return true;
             }
         }
-       else{
+        else{
             if(!BoardUtils.canWalkSomewhere(gc) && !BoardUtils.canHitSomebody(gc)){
                 setIsSelected(false);
                 abortRangesAndPassability();
@@ -214,7 +209,7 @@ public class GameCellUtils {
             LoggerUtils.writeDeadLog(killer, victim_CG.getUnit());
             victim_CG.setCellImage(getDeadCellImagePath(), 0.6);
             victim_CG.setUnit(null);
-          //  checkTeamTurn();
+            //  checkTeamTurn();
         }
     }
 
@@ -229,10 +224,16 @@ public class GameCellUtils {
     }
 
     public static void changeTeamTurn(){
+        if (getTeamTurnValue()==2){
+            increaseScore();
+        }
+        setTeamTurnValue( getTeamTurnValue()==1? 2:1);
+    }
+
+    public static void increaseScore(){
         setTeam1Score(BoardUtils.getStrategicalPoints(1));
         setTeam2Score(BoardUtils.getStrategicalPoints(2));
         Board.setScore(getTeam1Score() + " : " + getTeam2Score());
-        setTeamTurnValue( getTeamTurnValue()==1? 2:1);
     }
 
     public static void mouseExited(GameCell gc){
@@ -243,7 +244,6 @@ public class GameCellUtils {
 
     public static void mouseEntered(GameCell gc){
         if (gc.getUnit() != null) {
-            setCurrentTarget(gc);
             gc.setTooltip(getToolTip(gc));
             if(gc.getUnit().getTeam()==1){
                 initializeBottomMenu(gc, "left");
