@@ -16,9 +16,7 @@ import static Board.BoardInitializer.*;
 import static Board.ChooseBoard.*;
 import static Board.GameCell.*;
 import static Board.GameCell.getTeamTurnValue;
-import static Board.Utils.BoardUtils.getBestTarget;
-import static Board.Utils.BoardUtils.haveEnemyUnitsInMeleeRange;
-import static Board.Utils.BoardUtils.isOnNeighbouringCellPlusDiagonal;
+import static Board.Utils.BoardUtils.*;
 import static Board.Utils.LoggerUtils.getRAMConsumptionStatus;
 
 import Board.BoardInitializer;
@@ -105,6 +103,8 @@ public class GameCellUtils {
         }
         setIsSelected(false);
         abortRangesAndPassability();
+        refreshZOrder();
+        refreshZOrderUnderGC(gc);
     }
 
     public static void clickOnEnemyUnitCell(GameCell gc){
@@ -156,7 +156,7 @@ public class GameCellUtils {
     }
 
     public static void abortRangesAndPassability(){
-        BoardUtils.refreshZOrder();
+        //BoardUtils.refreshZOrder();
         BoardUtils.abortFieldPassability();
         BoardUtils.abortShootingRange();
     }

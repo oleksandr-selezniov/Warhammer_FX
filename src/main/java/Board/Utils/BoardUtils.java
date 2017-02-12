@@ -168,6 +168,15 @@ public class BoardUtils {
         nodeList.forEach(Node::toFront);
     }
 
+    public static synchronized void refreshZOrderUnderGC(GameCell gc) {
+        gc.toFront();
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        ArrayList<Node> nodeList = gridPane.getChildren().stream().filter(p ->
+                (p instanceof GameCell && ((GameCell) p).getUnit() != null && ((GameCell) p).getyCoord() > gc.getyCoord())
+        ).collect(Collectors.toCollection(ArrayList::new));
+        nodeList.forEach(Node::toFront);
+    }
+
     public static synchronized ArrayList<GameCell> getUnitCellList(int team) {
         GridPane gridPane = Board.getMainBattlefieldGP();
         return gridPane.getChildren().stream().filter(p ->
@@ -636,12 +645,6 @@ public class BoardUtils {
         gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).getUnit() != null))
                 .filter(p->((GameCell)p).getUnit().getTeam()==team)
                 .forEach(p->((GameCell)p).getUnit().setActive(state));
-    }
-
-    public synchronized static void setDefaultOpacity(){
-        GridPane gridPane = Board.getMainBattlefieldGP();
-        gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell)p).getUnit() != null))
-                .forEach(p->((GameCell)p).setGraphic(((GameCell) p).getUnit().getImageView(1.0)));
     }
 
     public synchronized static void showAllThreads(){

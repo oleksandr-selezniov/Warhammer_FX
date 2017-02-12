@@ -26,14 +26,6 @@ public class BoardInitializer {
     }
 
     void initializeBoard(){
-
-        //если координата i = высота доски, k=k++(один раз), но при этом
-        //координаты считаются теперь как placeOnBoard(1,i-1, unit);
-
-        //если координата == 0, k++(один раз), но при этом
-        //координаты считаются теперь как placeOnBoard(1,i+1, unit);
-
-
         for(int i=0; i < ChooseBoard.getCurrentHumanList().size(); i++){
             Unit currentUnit = ChooseBoard.getCurrentHumanList().get(i);
             Unit unit = getNewUnitSameAsGiven(currentUnit); // to avoid cloning th SAME unit many times
@@ -49,7 +41,6 @@ public class BoardInitializer {
                 }
             } //18 14
         }
-
         for(int i=0; i < ChooseBoard.getCurrentOrkList().size(); i++){
             Unit currentUnit = ChooseBoard.getCurrentOrkList().get(i);
             Unit unit = getNewUnitSameAsGiven(currentUnit); // to avoid cloning th SAME unit many times

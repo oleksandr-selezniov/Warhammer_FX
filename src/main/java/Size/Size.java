@@ -9,6 +9,7 @@ public class Size {
 
     private static final double unitHeight = 120.0;
     private static final double unitWidth = 80.0;
+    private static final double VehicleSize = 125.0;
     private static final double cellSize = 125.0;
     private static double sceneWidth = 0;
     private static double sceneHeight = 0;
@@ -39,5 +40,9 @@ public class Size {
 
     public static double getCellSize() {
         return cellSize;
+    }
+
+    public static double getVehicleSize() {
+        return VehicleSize;
     }
 }
