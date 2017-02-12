@@ -3,6 +3,8 @@ package Board.Utils;
 import Board.Board;
 import Units.Unit;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by Glazyrin.D on 11/7/2016.
  */
@@ -48,6 +50,14 @@ public class LoggerUtils {
 
     public static void writeTurnLog(int team){
         Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\nTEAM'S " + team + " TURN", true);
+    }
+
+    public static String getRAMConsumptionStatus() {
+        double currentMemory = (((double) (Runtime.getRuntime().totalMemory() / 1024) / 1024)) - (((double) (Runtime.getRuntime().freeMemory() / 1024) / 1024));
+        DecimalFormat myFormatter = new DecimalFormat("###.#");
+        String output = myFormatter.format(currentMemory);
+        String memoryInMB = "Used amount of RAM: " + output + " MB ";
+        return memoryInMB;
     }
 
 }

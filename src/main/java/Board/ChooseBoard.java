@@ -23,6 +23,7 @@ import java.util.Map;
 
 import static Board.Board.*;
 import static Board.BoardInitializer.*;
+import static Board.Utils.LoggerUtils.getRAMConsumptionStatus;
 
 
 /**
@@ -254,12 +255,14 @@ public class ChooseBoard {
                     ImageView elsaImageView = (ImageView)scene.lookup("#elsaImageView");
                     elsaImageView.setImage(new BoardUtils().getImage(elsaHappyImagePath));
                 }
+                System.out.println(getRAMConsumptionStatus());
                 setEnableAI(true);
             }else{
                 if(scene != null){
                     ImageView elsaImageView = (ImageView)scene.lookup("#elsaImageView");
                     elsaImageView.setImage(new BoardUtils().getImage(elsaSadImagePath));
                 }
+                System.out.println(getRAMConsumptionStatus());
                 setEnableAI(false);
             }
 
@@ -334,22 +337,27 @@ public class ChooseBoard {
             if(t1.equals("1024/768")){
                 Size.setSceneWidth(1024);
                 Size.setSceneHeight(768);
+                System.out.println(getRAMConsumptionStatus());
             }
             if(t1.equals("1280/800")){
                 Size.setSceneWidth(1280);
                 Size.setSceneHeight(800);
+                System.out.println(getRAMConsumptionStatus());
             }
             if(t1.equals("1366/768")){
                 Size.setSceneWidth(1366);
                 Size.setSceneHeight(768);
+                System.out.println(getRAMConsumptionStatus());
             }
             if(t1.equals("1600/900")){
                 Size.setSceneWidth(1600);
                 Size.setSceneHeight(900);
+                System.out.println(getRAMConsumptionStatus());
             }
             if(t1.equals("1920/1080")){
                 Size.setSceneWidth(1920);
                 Size.setSceneHeight(1080);
+                System.out.println(getRAMConsumptionStatus());
             }
         });
         resolutionComboBox.setValue("1366/768");
@@ -364,18 +372,21 @@ public class ChooseBoard {
                 setBoardWidth(19);
                 setBoardHeight(9);
                 setBoardSise(BoardType.SMALL);
+                System.out.println(getRAMConsumptionStatus());
             }
 
             if(t1.equals("Medium")){
                 setBoardWidth(34);
                 setBoardHeight(14);
                 setBoardSise(BoardType.MEDIUM);
+                System.out.println(getRAMConsumptionStatus());
             }
 
             if(t1.equals("Large")){
                 setBoardWidth(49);
                 setBoardHeight(19);
                 setBoardSise(BoardType.LARGE);
+                System.out.println(getRAMConsumptionStatus());
             }
         });
         sizeComboBox.setValue("Large");

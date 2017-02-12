@@ -19,6 +19,7 @@ import static Board.GameCell.getTeamTurnValue;
 import static Board.Utils.BoardUtils.getBestTarget;
 import static Board.Utils.BoardUtils.haveEnemyUnitsInMeleeRange;
 import static Board.Utils.BoardUtils.isOnNeighbouringCellPlusDiagonal;
+import static Board.Utils.LoggerUtils.getRAMConsumptionStatus;
 
 import Board.BoardInitializer;
 import Units.Interfaces.RangeUnit;
@@ -228,6 +229,7 @@ public class GameCellUtils {
             increaseScore();
         }
         setTeamTurnValue( getTeamTurnValue()==1? 2:1);
+        System.out.println(getRAMConsumptionStatus());
     }
 
     public static void increaseScore(){
