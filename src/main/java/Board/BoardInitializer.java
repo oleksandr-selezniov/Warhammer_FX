@@ -4,6 +4,8 @@ import Board.Utils.BoardUtils;
 import Units.*;
 import javafx.scene.Scene;
 
+import static Board.Board.getBoardHeight;
+import static Board.Board.getBoardWidth;
 import static Board.Utils.GameCellUtils.generateObstacles;
 import static Board.Utils.GameCellUtils.makeStrategical;
 
@@ -24,54 +26,44 @@ public class BoardInitializer {
     }
 
     void initializeBoard(){
+
+        //если координата i = высота доски, k=k++(один раз), но при этом
+        //координаты считаются теперь как placeOnBoard(1,i-1, unit);
+
+        //если координата == 0, k++(один раз), но при этом
+        //координаты считаются теперь как placeOnBoard(1,i+1, unit);
+
+
         for(int i=0; i < ChooseBoard.getCurrentHumanList().size(); i++){
             Unit currentUnit = ChooseBoard.getCurrentHumanList().get(i);
-            Unit unit = null;
+            Unit unit = getNewUnitSameAsGiven(currentUnit); // to avoid cloning th SAME unit many times
 
-            if(currentUnit instanceof MeleeInfantry){
-                unit = new MeleeInfantry(currentUnit.getKey(), currentUnit.getTeam());
-            }else
-            if(currentUnit instanceof Artillery){
-                unit = new Artillery(currentUnit.getKey(), currentUnit.getTeam());
-            }else
-            if(currentUnit instanceof LightInfantry){
-                unit = new LightInfantry(currentUnit.getKey(), currentUnit.getTeam());
-            }else
-            if(currentUnit instanceof HeavyInfantry){
-                unit = new HeavyInfantry(currentUnit.getKey(), currentUnit.getTeam());
-            }else
-            if(currentUnit instanceof Vehicle){
-                unit = new Vehicle(currentUnit.getKey(), currentUnit.getTeam());
+            if(i < getBoardHeight()-2) {
+                    placeOnBoard(1, i+1, unit);
             }else{
-                System.out.println("Wrong Unit Type Detected");
-            }
-
-            placeOnBoard(1,i+1, unit);
+                if(i < getBoardHeight()*2-4){
+                    placeOnBoard(2, i+3-getBoardHeight(), unit);
+                }else{
+                    System.out.println("[ WARNING! ] Too many units for 2 rows!");
+                    break;
+                }
+            } //18 14
         }
 
         for(int i=0; i < ChooseBoard.getCurrentOrkList().size(); i++){
             Unit currentUnit = ChooseBoard.getCurrentOrkList().get(i);
-            Unit unit = null;
+            Unit unit = getNewUnitSameAsGiven(currentUnit); // to avoid cloning th SAME unit many times
 
-            if(currentUnit instanceof MeleeInfantry){
-                unit = new MeleeInfantry(currentUnit.getKey(), currentUnit.getTeam());
-            }else
-            if(currentUnit instanceof Artillery){
-                unit = new Artillery(currentUnit.getKey(), currentUnit.getTeam());
-            }else
-            if(currentUnit instanceof LightInfantry){
-                unit = new LightInfantry(currentUnit.getKey(), currentUnit.getTeam());
-            }else
-            if(currentUnit instanceof HeavyInfantry){
-                unit = new HeavyInfantry(currentUnit.getKey(), currentUnit.getTeam());
-            }else
-            if(currentUnit instanceof Vehicle){
-                unit = new Vehicle(currentUnit.getKey(), currentUnit.getTeam());
+            if(i < getBoardHeight()-2) {
+                    placeOnBoard(getBoardWidth()-2, i+1, unit);
             }else{
-                System.out.println("Wrong Unit Type Detected");
+                if(i < getBoardHeight()*2-4){
+                        placeOnBoard(getBoardWidth()-3, i+3-getBoardHeight(), unit);
+                    }else{
+                    System.out.println("[ WARNING! ] Too many units for 2 rows!");
+                    break;
+                }
             }
-
-            placeOnBoard(Board.getBoardWidth()-2,i+1,unit);
         }
 
         BoardUtils.setActiveTeamUnits(1, true);
@@ -116,6 +108,28 @@ public class BoardInitializer {
         gameCell.setUnit(unit);
         gameCell.setGraphic(gameCell.getUnit().getImageView(1.0));
         gameCell.setPadding(gameCell.getUnit().getInsetsY());
+    }
+
+    private Unit getNewUnitSameAsGiven(Unit currentUnit){
+        Unit unit = null;
+        if(currentUnit instanceof MeleeInfantry){
+            unit = new MeleeInfantry(currentUnit.getKey(), currentUnit.getTeam());
+        }else
+        if(currentUnit instanceof Artillery){
+            unit = new Artillery(currentUnit.getKey(), currentUnit.getTeam());
+        }else
+        if(currentUnit instanceof LightInfantry){
+            unit = new LightInfantry(currentUnit.getKey(), currentUnit.getTeam());
+        }else
+        if(currentUnit instanceof HeavyInfantry){
+            unit = new HeavyInfantry(currentUnit.getKey(), currentUnit.getTeam());
+        }else
+        if(currentUnit instanceof Vehicle){
+            unit = new Vehicle(currentUnit.getKey(), currentUnit.getTeam());
+        }else{
+            System.out.println("Wrong Unit Type Detected");
+        }
+        return unit;
     }
 
     public static int getTeam1Score() {
