@@ -22,7 +22,9 @@ public class Elsa_AI {
         Thread thread = new Thread(() -> {
             StrategyType turnStrategy = strategicalAnalyzer.getStrategy();
             System.out.println("[Elsa STRATEGY]: " + turnStrategy.toString());
-            for(GameCell gc : getUnitCellList(2)){
+
+
+            for(GameCell gc : getActiveUnitCellList(2)){
                 TacticalAnalyzer tacticalAnalyzer = new TacticalAnalyzer(gc);
                 tacticalAnalyzer.applyTactic(turnStrategy);
             }

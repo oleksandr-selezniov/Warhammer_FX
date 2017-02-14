@@ -186,6 +186,14 @@ public class BoardUtils {
         ).map(p->(GameCell)p).collect(Collectors.toCollection(ArrayList::new));
     }
 
+    public static synchronized ArrayList<GameCell> getActiveUnitCellList(int team) {
+        GridPane gridPane = Board.getMainBattlefieldGP();
+        return gridPane.getChildren().stream().filter(p ->
+                (p instanceof GameCell && ((GameCell) p).getUnit() != null && ((GameCell) p).getUnit().getTeam()==team
+                        && ((GameCell) p).getUnit().isActive())
+        ).map(p->(GameCell)p).collect(Collectors.toCollection(ArrayList::new));
+    }
+
     public static synchronized ArrayList<Unit> getUnitList(int team) {
         ArrayList<Unit> unitList = new ArrayList<>();
         getUnitCellList(team).forEach(p->unitList.add( p.getUnit()));
@@ -215,6 +223,18 @@ public class BoardUtils {
         return false;
     }
 
+    public static synchronized boolean canPerformRangeAttackEfficiently(GameCell gc) {
+        if(haveEnemyUnitsInShootingRange(gc)){
+            if(getTotalUnitNumber(gc.getUnit().getTeam()) > 4) {
+                ArrayList<GameCell> targetList = getEnemyUnitsInSRange(gc, gc.getUnit().getShotRange());
+                long targetNumber = targetList.stream().filter(p -> gc.getUnit().getCurrentRangeEfficiency(p.getUnit()) > 0.5 && gc.getUnit().getCurrentAccuracy(p.getUnit()) > 0.5).count();
+                return targetNumber > 0;
+            }
+            return true;
+        }
+        return false;
+    }
+
     public static synchronized boolean haveEnemyUnitsInMeleeRange(GameCell gc) {
         return (getEnemyUnitsInRangeNumber(gc, 2) > 0);
     }
@@ -240,7 +260,7 @@ public class BoardUtils {
         return gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
                 isReachable(gc, ((GameCell) p), range)) && !((GameCell) p).isBlocked())
                 .filter(p->((GameCell) p).getUnit()!=null && ((GameCell) p).getUnit().getTeam()==team).collect(Collectors.toCollection(ArrayList::new));
-                        //collect(Collectors.toList());
+        //collect(Collectors.toList());
     }
 
     public static synchronized int getUnitsInSRangeNumber(GameCell gc, int range, int team) {
@@ -326,18 +346,18 @@ public class BoardUtils {
                 }
             });
         }else {
-                ArrayList<GameCell> targetList = getEnemyUnitsInSRange(source, getBoardWidth());
-                bestTarget[0] = targetList.get(0);
-                targetList.forEach(p -> {
+            ArrayList<GameCell> targetList = getEnemyUnitsInSRange(source, getBoardWidth());
+            bestTarget[0] = targetList.get(0);
+            targetList.forEach(p -> {
 
-                    MeleeUnit hunter = ((MeleeUnit)source.getUnit());
-                    Unit oldVictim = bestTarget[0].getUnit();
-                    Unit newVictim = p.getUnit();
+                MeleeUnit hunter = ((MeleeUnit)source.getUnit());
+                Unit oldVictim = bestTarget[0].getUnit();
+                Unit newVictim = p.getUnit();
 
-                    if(hunter.getCloseDamage(oldVictim) < hunter.getCloseDamage(newVictim)){
-                        bestTarget[0]=p;
-                    }
-                });
+                if(hunter.getCloseDamage(oldVictim) < hunter.getCloseDamage(newVictim)){
+                    bestTarget[0]=p;
+                }
+            });
         }
         return bestTarget[0];
     }

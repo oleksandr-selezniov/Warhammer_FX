@@ -31,9 +31,9 @@ public class TacticalAnalyzer {
     private Unit currentUnit;
     private boolean isFast;
     private boolean isWeak;
-    private boolean canAttackRange;
     private boolean canAttackMelee;
     private boolean canActivateSP;
+    private boolean canAttackRangeEffectively;
 
     TacticalAnalyzer(GameCell gc){
         currentGameCell = gc;
@@ -53,7 +53,7 @@ public class TacticalAnalyzer {
         currentUnit = gc.getUnit();
         isFast = (currentUnit.getWalkRange() >= 5);
         isWeak = (currentUnit.getCost() <= 30);
-        canAttackRange = haveEnemyUnitsInShootingRange(gc);
+        canAttackRangeEffectively = canPerformRangeAttackEfficiently(gc);
         canAttackMelee = haveEnemyUnitsInMeleeRange(gc);
         canActivateSP = haveSPInActivationRange(gc);
     }
@@ -63,10 +63,22 @@ public class TacticalAnalyzer {
 
         switch (strategy){
             case PREFER_CAPTURE:{
-                if(currentUnit instanceof MeleeUnit){
-                    executor.preferCaptureMelee();
-                }else executor.preferCaptureRange();
-                break;
+                if(isFast && isWeak){
+                    if(currentUnit instanceof MeleeUnit){
+                        executor.preferCaptureMelee();
+                    }else executor.preferCaptureRange();
+                    break;
+                }else if(isFast || isWeak){
+                    if(currentUnit instanceof MeleeUnit){
+                        executor.preferAttackOrCaptureMelee();
+                    }else executor.preferAttackOrCaptureRange();
+                    break;
+                }else{
+                    if(currentUnit instanceof MeleeUnit){
+                        executor.preferNormalAttackMelee();
+                    }else executor.preferNormalAttackRange();
+                    break;
+                }
             }
             case PREFER_ATTACK_OR_CAPURE:{
                 if(currentUnit instanceof MeleeUnit){
@@ -124,7 +136,7 @@ public class TacticalAnalyzer {
     }
 
     boolean tryToAttackRange(){
-        if(canAttackRange){
+        if(canAttackRangeEffectively){
             enemyCellClick(bestTargetInAttackRange);
             return true;
         }
