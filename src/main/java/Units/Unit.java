@@ -280,7 +280,7 @@ public abstract class Unit implements Serializable{
         return key;
     }
 
-    protected double getCurrentRangeEfficiency(Unit victim){
+    public double getCurrentRangeEfficiency(Unit victim){
         String effString = getRangeEfficiency();
         String tokens = "/";
         String[] splited = effString.split(tokens);
@@ -296,7 +296,7 @@ public abstract class Unit implements Serializable{
         return 0;
     }
 
-    protected double getCurrentAccuracy(Unit victim){
+    public double getCurrentAccuracy(Unit victim){
         String effString = getAccuracy();
         String tokens = "/";
         String[] splited = effString.split(tokens);

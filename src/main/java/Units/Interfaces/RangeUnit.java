@@ -9,5 +9,7 @@ public interface RangeUnit {
     void performRangeAttack(Unit victim);
     int getRangeDamage(Unit victim);
     void performCloseAttack(Unit victim);
+    double getCurrentRangeEfficiency(Unit victim);
+    double getCurrentAccuracy(Unit victim);
     int getCloseDamage();
 }

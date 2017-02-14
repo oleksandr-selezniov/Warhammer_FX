@@ -16,10 +16,13 @@ public class Logger { //work in progress
     public static final String PREFER_NORMAL_ATTACK_RANGE = "[-TACTICAL-][-PREFER_NORMAL_ATTACK_RANGE-] ";
     public static final String PREFER_CAUTIOUS_ATTACK_MELEE = "[-TACTICAL-][-PREFER_CAUTIOUS_ATTACK_MELEE-] ";
     public static final String PREFER_CAUTIOUS_ATTACK_RANGE = "[-TACTICAL-][-PREFER_CAUTIOUS_ATTACK_RANGE-] ";
+    public static final String PREFER_ADVANCED_ATTACK_RANGE = "[-TACTICAL-][-PREFER_ADVANCED_ATTACK_RANGE-] ";
+    public static final String PREFER_ADVANCED_ATTACK_MELEE = "[-TACTICAL-][-PREFER_ADVANCED_ATTACK_MELEE-] ";
     public static final String ACTIVATED_SP = " Activated SP";
     public static final String ATTACKED_IN_MELEE = " Successfully Attacked in Melee";
     public static final String WENT_TO_SP = " Went to Nearest SP";
     public static final String WENT_TO_ENEMY = " Went to Nearest Enemy";
+    public static final String WENT_TO_BEST_ENEMY = " Went to Best Enemy Target";
     public static final String WENT_ON_ANY_CELL = " Went on Any Cell";
     public static final String ATTACKED_FROM_RANGE = " Successfully Attacked from Range";
     public static final String WENT_TO_SP_LOWER_DISTANCE = " Went to Nearest SP (Enemy is Too Far)";

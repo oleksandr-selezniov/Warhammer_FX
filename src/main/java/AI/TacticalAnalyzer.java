@@ -21,10 +21,13 @@ public class TacticalAnalyzer {
     private GameCell nearestStrategicalCell;
     private GameCell nearestPassableCellToEnemy;
     private GameCell anyPassableCell;
-    private GameCell furtherShootableCell;
+    private GameCell furtherShootableCellToNearestEnemy;
     private GameCell furtherFromEnemyCell;
+    private GameCell nearestPassableCellToBestTarget;
+    private GameCell furtherShootableCellToBestTarget;
     private GameCell nearestPassableCellToSP;
-    private GameCell bestTarget;
+    private GameCell bestTargetInAttackRange;
+    private GameCell bestTargetOnBoard;
     private Unit currentUnit;
     private boolean isFast;
     private boolean isWeak;
@@ -35,15 +38,18 @@ public class TacticalAnalyzer {
     TacticalAnalyzer(GameCell gc){
         currentGameCell = gc;
         nearestEnemyCell = getNearestEnemyUnitCell(gc, 100);
+        bestTargetOnBoard = getBestTargetOnBoard(gc);
         nearestStrategicalCell = getNearestStrategicalCell(gc, 100);
         nearestPassableCellToEnemy = getNearestPassableCell(gc, nearestEnemyCell);
+        nearestPassableCellToBestTarget = getNearestPassableCell(gc, bestTargetOnBoard);
+        furtherShootableCellToBestTarget =  getFurtherShootableCell(gc, bestTargetOnBoard);
         anyPassableCell = getAnyPassableCell(gc);
-        furtherShootableCell = getFurtherShootableCell(gc, nearestEnemyCell);
+        furtherShootableCellToNearestEnemy = getFurtherShootableCell(gc, nearestEnemyCell);
         furtherFromEnemyCell = getFurtherPassableCell(gc, nearestEnemyCell);
         if(nearestStrategicalCell!=null) {
             nearestPassableCellToSP = getNearestPassableCell(gc, nearestStrategicalCell);
         }
-        bestTarget = getBestTarget(gc);
+        bestTargetInAttackRange = getBestTargetInAttackRange(gc);
         currentUnit = gc.getUnit();
         isFast = (currentUnit.getWalkRange() >= 5);
         isWeak = (currentUnit.getCost() <= 30);
@@ -92,6 +98,12 @@ public class TacticalAnalyzer {
                 }else executor.preferCautiousAttackRange();
                 break;
             }
+            case PREFER_ADVANCED_TARGETING:{
+                if(currentUnit instanceof MeleeUnit){
+                    executor.preferAdvancedAttackMelee();
+                }else executor.preferAdvancedAttackRange();
+                break;
+            }
         }
     }
 
@@ -105,7 +117,7 @@ public class TacticalAnalyzer {
 
     boolean tryToAttackMelee(){
         if(canAttackMelee){
-            enemyCellClick(bestTarget);
+            enemyCellClick(bestTargetInAttackRange);
             return true;
         }
         return false;
@@ -113,7 +125,7 @@ public class TacticalAnalyzer {
 
     boolean tryToAttackRange(){
         if(canAttackRange){
-            enemyCellClick(bestTarget);
+            enemyCellClick(bestTargetInAttackRange);
             return true;
         }
         return false;
@@ -148,7 +160,7 @@ public class TacticalAnalyzer {
     boolean tryGoToNearestEnemyIfCloserThanSPForRangeAttack(){
         if (nearestEnemyCell != null && nearestStrategicalCell !=null
                 && isTargetFurtherToEtalonThanSource(currentGameCell, nearestEnemyCell, nearestStrategicalCell)) {
-            freeCellClick(furtherShootableCell);
+            freeCellClick(furtherShootableCellToNearestEnemy);
             return true;
         }
         return false;
@@ -163,8 +175,24 @@ public class TacticalAnalyzer {
     }
 
     boolean tryGoToNearestEnemyForRangeAttack(){
-        if (furtherShootableCell != null) {
-            freeCellClick(furtherShootableCell);
+        if (furtherShootableCellToNearestEnemy != null) {
+            freeCellClick(furtherShootableCellToNearestEnemy);
+            return true;
+        }
+        return false;
+    }
+
+    boolean tryGoToBestTargetOnBoardForMeleeAttack(){
+        if (nearestPassableCellToBestTarget != null) {
+            freeCellClick(nearestPassableCellToBestTarget);
+            return true;
+        }
+        return false;
+    }
+
+    boolean tryGoToBestTargetOnBoardForRangeAttack(){
+        if (furtherShootableCellToBestTarget != null) {
+            freeCellClick(furtherShootableCellToBestTarget);
             return true;
         }
         return false;

@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static Board.Board.getBoardHeight;
+import static Board.Board.getBoardWidth;
 import static Units.Enums.UnitClassNames.*;
 import static Units.Enums.UnitTypeNames.MELEE;
 import static Units.Enums.UnitTypeNames.RANGE;
@@ -249,7 +251,7 @@ public class BoardUtils {
                         ((GameCell) p).getUnit()!=null && ((GameCell) p).getUnit().getTeam()==team).count();
     }
 
-    public static GameCell getBestTarget(GameCell source){
+    public static GameCell getBestTargetInAttackRange(GameCell source){
         final GameCell[] bestTarget = {null};
 
         if (source.getUnit() instanceof RangeUnit && haveEnemyUnitsInShootingRange(source)){
@@ -309,56 +311,33 @@ public class BoardUtils {
     public static GameCell getBestTargetOnBoard(GameCell source){
         final GameCell[] bestTarget = {null};
 
-        if (source.getUnit() instanceof RangeUnit && haveEnemyUnitsInShootingRange(source)){
-            ArrayList<GameCell> targetList = getEnemyUnitsInSRange(source, source.getUnit().getShotRange());
+        if (source.getUnit() instanceof RangeUnit){
+            ArrayList<GameCell> targetList = getEnemyUnitsInSRange(source, getBoardWidth());
             bestTarget[0] = targetList.get(0);
             targetList.forEach(p->{
 
-                if(isOnNeighbouringCellPlusDiagonal(p, source)){
-                    if(p.getUnit().getHealth() < ((RangeUnit) source.getUnit()).getCloseDamage()){
-                        bestTarget[0]=p;
-                    }
-                }else{
-                    if(p.getUnit().getHealth() < ((RangeUnit) source.getUnit()).getRangeDamage(p.getUnit())
-                            && p.getUnit().getMaxHealth() > ((RangeUnit) source.getUnit()).getRangeDamage(p.getUnit())){
-                        bestTarget[0]=p;
-                        return;
-                    }
-                    if(p.getUnit().getHealth() < ((RangeUnit) source.getUnit()).getRangeDamage(p.getUnit())
-                            && p.getUnit().getCost() > (source.getUnit().getCost())){
-                        bestTarget[0]=p;
-                        return;
-                    }
-                    if(((RangeUnit) source.getUnit()).getRangeDamage(bestTarget[0].getUnit()) < ((RangeUnit) source.getUnit()).getRangeDamage(p.getUnit())
-                            && !isOnNeighbouringCellPlusDiagonal(bestTarget[0], source)){
-                        bestTarget[0]=p;
-                        return;
-                    }
-                    if(isOnNeighbouringCellPlusDiagonal(bestTarget[0], source) && !isOnNeighbouringCellPlusDiagonal(p, source)){
-                        bestTarget[0]=p;
-                    }
+                RangeUnit hunter = ((RangeUnit)source.getUnit());
+                Unit oldVictim = bestTarget[0].getUnit();
+                Unit newVictim = p.getUnit();
+
+                if(hunter.getRangeDamage(oldVictim)*hunter.getCurrentAccuracy(oldVictim) <
+                        hunter.getRangeDamage(newVictim)*hunter.getCurrentAccuracy(newVictim)){
+                    bestTarget[0]=p;
                 }
             });
         }else {
-            if (haveEnemyUnitsInMeleeRange(source)) {
-                ArrayList<GameCell> targetList = getEnemyUnitsInSRange(source, 2);
+                ArrayList<GameCell> targetList = getEnemyUnitsInSRange(source, getBoardWidth());
                 bestTarget[0] = targetList.get(0);
                 targetList.forEach(p -> {
-                    if (p.getUnit().getHealth() < ((MeleeUnit) source.getUnit()).getCloseDamage(p.getUnit())
-                            && p.getUnit().getMaxHealth() > ((MeleeUnit) source.getUnit()).getCloseDamage(p.getUnit())) {
-                        bestTarget[0] = p;
-                        return;
-                    }
-                    if (p.getUnit().getHealth() < ((MeleeUnit) source.getUnit()).getCloseDamage(p.getUnit())
-                            && p.getUnit().getCost() > source.getUnit().getCost()) {
-                        bestTarget[0] = p;
-                        return;
-                    }
-                    if (((MeleeUnit) source.getUnit()).getCloseDamage(bestTarget[0].getUnit()) < ((MeleeUnit) source.getUnit()).getCloseDamage(p.getUnit())) {
-                        bestTarget[0] = p;
+
+                    MeleeUnit hunter = ((MeleeUnit)source.getUnit());
+                    Unit oldVictim = bestTarget[0].getUnit();
+                    Unit newVictim = p.getUnit();
+
+                    if(hunter.getCloseDamage(oldVictim) < hunter.getCloseDamage(newVictim)){
+                        bestTarget[0]=p;
                     }
                 });
-            }
         }
         return bestTarget[0];
     }

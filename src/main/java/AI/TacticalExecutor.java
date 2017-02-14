@@ -237,4 +237,34 @@ public class TacticalExecutor {
             System.out.println(unitName + WENT_ON_ANY_CELL);
         }
     }
+
+    void preferAdvancedAttackRange(){
+        String unitName = PREFER_ADVANCED_ATTACK_RANGE + currentCell.getUnit().getName();
+
+        t.clickOnCurrentCell();
+        if(t.tryToAttackRange()){
+            System.out.println(unitName + ATTACKED_FROM_RANGE);
+        }else
+        if (t.tryGoToBestTargetOnBoardForRangeAttack()) {
+            System.out.println(unitName + WENT_TO_BEST_ENEMY);
+        }else{
+            t.goOnAnyFreeCell();
+            System.out.println(unitName + WENT_ON_ANY_CELL);
+        }
+    }
+
+    void preferAdvancedAttackMelee(){
+        String unitName = PREFER_ADVANCED_ATTACK_MELEE + currentCell.getUnit().getName();
+
+        t.clickOnCurrentCell();
+        if(t.tryToAttackMelee()){
+            System.out.println(unitName + ATTACKED_IN_MELEE);
+        }else
+        if (t.tryGoToBestTargetOnBoardForMeleeAttack()) {
+            System.out.println(unitName + WENT_TO_BEST_ENEMY);
+        }else{
+            t.goOnAnyFreeCell();
+            System.out.println(unitName + WENT_ON_ANY_CELL);
+        }
+    }
 }

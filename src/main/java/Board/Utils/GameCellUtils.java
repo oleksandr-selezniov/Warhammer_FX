@@ -94,8 +94,8 @@ public class GameCellUtils {
             getPreviousGameCell().setPadding(new Insets(1));
 
             if(gc.getUnit() instanceof MeleeInfantry && haveEnemyUnitsInMeleeRange(gc)){
-                if(getBestTarget(gc)!=null){
-                    performRapidMeleeAttack(gc, getBestTarget(gc));
+                if(getBestTargetInAttackRange(gc)!=null){
+                    performRapidMeleeAttack(gc, getBestTargetInAttackRange(gc));
                 }
             }
             gc.getUnit().setActive(false);

@@ -72,7 +72,7 @@ public class StrategicalAnalyzer {
                 strategy = PREFER_NORMAL_ATTACK;
             }
         }else{
-            strategy = PREFER_DARE_ATTACK;
+            strategy = PREFER_ADVANCED_TARGETING;
         }
         return strategy;
     }
