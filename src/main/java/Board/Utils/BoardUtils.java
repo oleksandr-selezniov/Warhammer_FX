@@ -398,7 +398,7 @@ public class BoardUtils {
     public static synchronized ArrayList<GameCell> getPotentialHunters(GameCell gc, Unit victim){
         GridPane gridPane = Board.getMainBattlefieldGP();
         return gridPane.getChildren().stream().filter(p->p instanceof GameCell).map(p->(GameCell)p)
-                .filter(p->p.getUnit().getTeam()!=victim.getTeam()
+                .filter(p->p.getUnit()!=null).filter(p->p.getUnit().getTeam()!=victim.getTeam()
                         && (getEnemyUnitCellsInSRange(p, p.getUnit().getShotRange()).contains(gc) || isOnNeighbouringCellPlusDiagonal(p,gc)))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
