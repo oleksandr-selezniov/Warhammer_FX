@@ -4,6 +4,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import Board.Board;
+import Units.Enums.UnitClassNames;
 import Units.Interfaces.RangeUnit;
 import javafx.geometry.Insets;
 import Board.Utils.LoggerUtils;
@@ -18,6 +19,7 @@ public class HeavyInfantry extends Unit implements RangeUnit {
     public HeavyInfantry(){}
 
     public HeavyInfantry(String unitName, int team){
+        this.unitClassName = UnitClassNames.HEAVY_INFANTRY;
         this.team = team;
         this.name = resourceBundle.getString(unitName+".name");
         this.setHealth(Integer.parseInt(resourceBundle.getString(unitName+".health")));
@@ -99,5 +101,9 @@ public class HeavyInfantry extends Unit implements RangeUnit {
 
     public int getCloseDamage(){
         return minCloseDamage + (int)(Math.random() * ((maxCloseDamage - minCloseDamage) + 1));
+    }
+
+    public HeavyInfantry copy(HeavyInfantry unit) {
+        return new HeavyInfantry(unit.getKey(), unit.getTeam());
     }
 }

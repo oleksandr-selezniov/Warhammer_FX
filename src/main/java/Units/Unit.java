@@ -3,6 +3,7 @@ package Units;
 import Board.Board;
 import Board.Utils.BoardUtils;
 import Size.Size;
+import Units.Enums.UnitClassNames;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
@@ -28,6 +29,7 @@ import java.util.*;
  */
 public abstract class Unit implements Serializable{
 
+    UnitClassNames unitClassName;
     String name;
     String key;
     String accuracy;
@@ -275,6 +277,13 @@ public abstract class Unit implements Serializable{
         this.cost = cost;
     }
 
+    public UnitClassNames getUnitClassName() {
+        return unitClassName;
+    }
+
+    public void setUnitClassName(UnitClassNames unitClassName) {
+        this.unitClassName = unitClassName;
+    }
 
     public String getKey() {
         return key;

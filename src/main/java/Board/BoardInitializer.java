@@ -2,6 +2,7 @@ package Board;
 
 import Board.Utils.BoardUtils;
 import Units.*;
+import Units.Factories.UnitFactory;
 import javafx.scene.Scene;
 
 import static Board.Board.getBoardHeight;
@@ -59,7 +60,7 @@ public class BoardInitializer {
 
         BoardUtils.setActiveTeamUnits(1, true);
         BoardUtils.setActiveTeamUnits(2, false);
-        generateObstacles(0.15);
+    //    generateObstacles(0.15);
 
         if(isUseStrategicalCells()){
             switch (boardSise){
@@ -102,25 +103,30 @@ public class BoardInitializer {
     }
 
     private Unit getNewUnitSameAsGiven(Unit currentUnit){
-        Unit unit = null;
-        if(currentUnit instanceof MeleeInfantry){
-            unit = new MeleeInfantry(currentUnit.getKey(), currentUnit.getTeam());
-        }else
-        if(currentUnit instanceof Artillery){
-            unit = new Artillery(currentUnit.getKey(), currentUnit.getTeam());
-        }else
-        if(currentUnit instanceof LightInfantry){
-            unit = new LightInfantry(currentUnit.getKey(), currentUnit.getTeam());
-        }else
-        if(currentUnit instanceof HeavyInfantry){
-            unit = new HeavyInfantry(currentUnit.getKey(), currentUnit.getTeam());
-        }else
-        if(currentUnit instanceof Vehicle){
-            unit = new Vehicle(currentUnit.getKey(), currentUnit.getTeam());
-        }else{
-            System.out.println("Wrong Unit Type Detected");
-        }
-        return unit;
+        UnitFactory factory = UnitFactory.getUnitFactory(currentUnit.getUnitClassName());
+        return factory.copy(currentUnit);
+
+
+//
+//        Unit unit = null;
+//        if(currentUnit instanceof MeleeInfantry){
+//            unit = new MeleeInfantry(currentUnit.getKey(), currentUnit.getTeam());
+//        }else
+//        if(currentUnit instanceof Artillery){
+//            unit = new Artillery(currentUnit.getKey(), currentUnit.getTeam());
+//        }else
+//        if(currentUnit instanceof LightInfantry){
+//            unit = new LightInfantry(currentUnit.getKey(), currentUnit.getTeam());
+//        }else
+//        if(currentUnit instanceof HeavyInfantry){
+//            unit = new HeavyInfantry(currentUnit.getKey(), currentUnit.getTeam());
+//        }else
+//        if(currentUnit instanceof Vehicle){
+//            unit = new Vehicle(currentUnit.getKey(), currentUnit.getTeam());
+//        }else{
+//            System.out.println("Wrong Unit Type Detected");
+//        }
+//        return unit;
     }
 
     public static int getTeam1Score() {

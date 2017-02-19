@@ -3,6 +3,7 @@ package Units;
 import Board.Board;
 import Board.Utils.LoggerUtils;
 import Size.Size;
+import Units.Enums.UnitClassNames;
 import Units.Interfaces.RangeUnit;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -28,6 +29,7 @@ public class Artillery extends Vehicle implements RangeUnit {
     public Artillery(){}
 
     public Artillery(String unitName, int team){
+        this.unitClassName = UnitClassNames.ARTILLERY;
         this.team = team;
         this.name = resourceBundle.getString(unitName+".name");
         this.setHealth(Integer.parseInt(resourceBundle.getString(unitName+".health")));
@@ -265,5 +267,9 @@ public class Artillery extends Vehicle implements RangeUnit {
         hBox.getChildren().addAll(infoGPLowLeft, infoGPLowRight);
         vBox.getChildren().addAll(infoGP,hBox);
         return vBox;
+    }
+
+    public Artillery copy(Artillery unit) {
+        return new Artillery(unit.getKey(), unit.getTeam());
     }
 }

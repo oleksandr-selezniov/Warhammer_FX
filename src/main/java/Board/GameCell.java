@@ -25,7 +25,7 @@ public class GameCell extends Button {
     private static Unit temporaryUnit;
     private static boolean isSelected;
     private static int teamTurnValue = 1;
-    private String defaultCellImagePath = "cellBackground/"+generateRandomNumber(1,25)+".jpg";
+    private String defaultCellImagePath = "cellBackground/LowRes/"+generateRandomNumber(1,25)+".jpg";
     private static String deadCellImagePath = "other/dead.jpg";
     private String name = this.getText();
     private int xCoord;

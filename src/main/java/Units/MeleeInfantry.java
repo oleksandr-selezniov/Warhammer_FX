@@ -1,6 +1,7 @@
 package Units;
 
 import Board.Board;
+import Units.Enums.UnitClassNames;
 import Units.Interfaces.MeleeUnit;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,6 +15,7 @@ import Board.Utils.LoggerUtils;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
 
 /**
  * Created by Glazyrin.D on 11/9/2016.
@@ -26,6 +28,7 @@ public class MeleeInfantry extends Unit implements MeleeUnit {
     public MeleeInfantry(){}
 
     public MeleeInfantry(String unitName, int team){
+        this.unitClassName = UnitClassNames.MELEE_INFANTRY;
         this.team = team;
         this.name = resourceBundle.getString(unitName+".name");
         this.setHealth(Integer.parseInt(resourceBundle.getString(unitName+".health")));
@@ -242,5 +245,9 @@ public class MeleeInfantry extends Unit implements MeleeUnit {
         hBox.getChildren().addAll(infoGPLowLeft, infoGPLowRight);
         vBox.getChildren().addAll(infoGP,hBox);
         return vBox;
+    }
+
+    public MeleeInfantry copy(MeleeInfantry unit) {
+        return new MeleeInfantry(unit.getKey(), unit.getTeam());
     }
 }

@@ -117,7 +117,7 @@ public class Board {
         ImageView leftEarIV = new ImageView();
         leftEarIV.setFitWidth(Size.getSceneWidth()*0.18);
         leftEarIV.setFitHeight(Size.getSceneHeight()*0.25);
-        leftEarIV.setImage(new BoardUtils().getImage("gifs/ComissarEmperor.gif"));
+        //leftEarIV.setImage(new BoardUtils().getImage("gifs/ComissarEmperor.gif"));
         leftEarIV.setId("leftImageView");
 
         ScrollPane scrollPane = new ScrollPane(leftEarIV);

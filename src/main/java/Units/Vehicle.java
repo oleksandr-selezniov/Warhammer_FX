@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import Size.Size;
 import Board.Board;
+import Units.Enums.UnitClassNames;
 import Units.Interfaces.RangeUnit;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
@@ -22,6 +23,7 @@ public class Vehicle extends Unit implements RangeUnit {
     public Vehicle(){}
 
     public Vehicle(String unitName, int team){
+        this.unitClassName = UnitClassNames.VEHICLE;
         this.team = team;
         this.name = resourceBundle.getString(unitName+".name");
         this.setHealth(Integer.parseInt(resourceBundle.getString(unitName+".health")));
@@ -135,5 +137,9 @@ public class Vehicle extends Unit implements RangeUnit {
 
     public int getCloseDamage(){
         return minCloseDamage + (int)(Math.random() * ((maxCloseDamage - minCloseDamage) + 1));
+    }
+
+    public Vehicle copy(Vehicle unit) {
+        return new Vehicle(unit.getKey(), unit.getTeam());
     }
 }
