@@ -60,7 +60,7 @@ public class BoardInitializer {
 
         BoardUtils.setActiveTeamUnits(1, true);
         BoardUtils.setActiveTeamUnits(2, false);
-    //    generateObstacles(0.15);
+        generateObstacles(0.15);
 
         if(isUseStrategicalCells()){
             switch (boardSise){
