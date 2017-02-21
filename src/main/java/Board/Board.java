@@ -237,6 +237,12 @@ public class Board {
         return mainBattlefieldGP;
     }
 
+    public static GridPane getSimpleBattlefieldGP(){
+        GridPane simpleGP = new GridPane();
+        getMainBattlefieldGP().getChildren().forEach(p->simpleGP.getChildren().add(new SimpleGameCell(((GameCell) p))));
+        return simpleGP;
+    }
+
     public static void writeToTextArea(String id, String text, boolean scrollDowm){
         TextArea textArea = (TextArea)scene.lookup(id);
         textArea.setText(text);

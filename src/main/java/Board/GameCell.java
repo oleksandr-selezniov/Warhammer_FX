@@ -27,7 +27,7 @@ public class GameCell extends SimpleGameCell {
     private static String deadCellImagePath = "other/dead.jpg";
     private Unit unit;
 
-    GameCell() {
+    public GameCell() {
         this.setPadding(new Insets(50));
         this.setSize(Size.getCellSize());
         this.setCellImage(defaultCellImagePath, 0.6);
@@ -36,10 +36,17 @@ public class GameCell extends SimpleGameCell {
         mouseMovementMode();
     }
 
-    GameCell(SimpleGameCell gc){
-        this.unit = new Unit(gc.getUnit());
-        temporaryUnit = new Unit(getTemporarySimpleUnit());
-        previousGameCell = new GameCell(getPreviousSimpleGameCell());
+    public GameCell(SimpleGameCell gc){
+        if(gc.getSimpleUnit() != null){
+            this.unit = new Unit(gc.getSimpleUnit());
+        }
+        if(getTemporarySimpleUnit() != null){
+            temporaryUnit = new Unit(getTemporarySimpleUnit());
+        }
+        if(getPreviousSimpleGameCell() != null){
+            previousGameCell = new GameCell(getPreviousSimpleGameCell());
+        }
+
         isSelected = SimpleGameCell.isSelected();
         teamTurnValue = SimpleGameCell.getTeamTurnValue();
         this.name = gc.getText();

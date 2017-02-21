@@ -26,15 +26,20 @@ public class SimpleGameCell extends Button{
     boolean isActivated = false;
     int owner = 0;
 
-    SimpleGameCell(){}
+    public SimpleGameCell(){}
 
-    SimpleGameCell(GameCell gc){
-        simpleUnit = new SimpleUnit(gc.getUnit());
-        temporarySimpleUnit = new SimpleUnit(GameCell.getTemporaryUnit());
-        previousSimpleGameCell = new SimpleGameCell(GameCell.getPreviousGameCell());
+    public SimpleGameCell(GameCell gc){
+        if (gc.getUnit() !=null ){
+            simpleUnit = new SimpleUnit(gc.getUnit());
+        }
+        if (GameCell.getTemporaryUnit() != null){
+            temporarySimpleUnit = new SimpleUnit(GameCell.getTemporaryUnit());
+        }
+        if(GameCell.getPreviousGameCell() !=null ){
+            previousSimpleGameCell = new SimpleGameCell(GameCell.getPreviousGameCell());
+        }
         isSelected = GameCell.isSelected();
         teamTurnValue = GameCell.getTeamTurnValue();
-        temporarySimpleUnit = GameCell.getTemporaryUnit();
         this.name = gc.getText();
         this.imageNumber = gc.getImageNumber();
         this.simpleUnit = gc.getUnit();
@@ -50,7 +55,7 @@ public class SimpleGameCell extends Button{
         this.owner = gc.getOwner();
     }
 
-    public SimpleUnit getUnit() {
+    public SimpleUnit getSimpleUnit() {
         return simpleUnit;
     }
 
