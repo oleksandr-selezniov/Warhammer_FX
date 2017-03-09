@@ -17,7 +17,7 @@ public class TacticalExecutor {
     }
 
      void preferCaptureMelee(){
-        String unitName = PREFER_CAPTURE_MELEE + currentCell.getUnit().getName();
+        String unitName = PREFER_CAPTURE_MELEE + currentCell.getGUnit().getName();
 
          t.clickOnCurrentCell();
         if(t.tryToActivateSP()){
@@ -38,7 +38,7 @@ public class TacticalExecutor {
     }
 
      void preferCaptureRange(){
-        String unitName = PREFER_CAPTURE_RANGE + currentCell.getUnit().getName();
+        String unitName = PREFER_CAPTURE_RANGE + currentCell.getGUnit().getName();
 
          t.clickOnCurrentCell();
         if(t.tryToActivateSP()){
@@ -59,7 +59,7 @@ public class TacticalExecutor {
     }
 
     void preferAttackOrCaptureMelee(){
-        String unitName = PREFER_ATTACK_OR_CAPTURE_MELEE + currentCell.getUnit().getName();
+        String unitName = PREFER_ATTACK_OR_CAPTURE_MELEE + currentCell.getGUnit().getName();
 
         t.clickOnCurrentCell();
         if(t.tryToAttackMelee()){
@@ -83,7 +83,7 @@ public class TacticalExecutor {
     }
 
     void preferAttackOrCaptureRange(){
-        String unitName = PREFER_ATTACK_OR_CAPTURE_RANGE + currentCell.getUnit().getName();
+        String unitName = PREFER_ATTACK_OR_CAPTURE_RANGE + currentCell.getGUnit().getName();
 
         t.clickOnCurrentCell();
         if(t.tryToAttackMelee()){
@@ -107,7 +107,7 @@ public class TacticalExecutor {
     }
 
     void preferRetreatMelee(){
-        String unitName = PREFER_RETREAT_MELEE + currentCell.getUnit().getName();
+        String unitName = PREFER_RETREAT_MELEE + currentCell.getGUnit().getName();
 
         t.clickOnCurrentCell();
         if (t.tryToRunaway()) {
@@ -122,7 +122,7 @@ public class TacticalExecutor {
     }
 
     void preferRetreatRange(){
-        String unitName = PREFER_RETREAT_RANGE + currentCell.getUnit().getName();
+        String unitName = PREFER_RETREAT_RANGE + currentCell.getGUnit().getName();
 
         t.clickOnCurrentCell();
         if (t.tryToRunaway()) {
@@ -137,7 +137,7 @@ public class TacticalExecutor {
     }
 
     void preferDareAttackMelee(){
-        String unitName = PREFER_DARE_ATTACK_MELEE + currentCell.getUnit().getName();
+        String unitName = PREFER_DARE_ATTACK_MELEE + currentCell.getGUnit().getName();
 
         t.clickOnCurrentCell();
         if(t.tryToAttackMelee()){
@@ -152,7 +152,7 @@ public class TacticalExecutor {
     }
 
     void preferDareAttackRange(){
-        String unitName = PREFER_DARE_ATTACK_RANGE + currentCell.getUnit().getName();
+        String unitName = PREFER_DARE_ATTACK_RANGE + currentCell.getGUnit().getName();
 
         t.clickOnCurrentCell();
         if(t.tryToAttackRange()){
@@ -167,7 +167,7 @@ public class TacticalExecutor {
     }
 
     void preferNormalAttackMelee(){
-        String unitName = PREFER_NORMAL_ATTACK_MELEE + currentCell.getUnit().getName();
+        String unitName = PREFER_NORMAL_ATTACK_MELEE + currentCell.getGUnit().getName();
 
         t.clickOnCurrentCell();
         if(t.tryToActivateSP()){
@@ -185,7 +185,7 @@ public class TacticalExecutor {
     }
 
     void preferNormalAttackRange(){
-        String unitName = PREFER_NORMAL_ATTACK_RANGE + currentCell.getUnit().getName();
+        String unitName = PREFER_NORMAL_ATTACK_RANGE + currentCell.getGUnit().getName();
 
         t.clickOnCurrentCell();
         if(t.tryToActivateSP()){
@@ -203,7 +203,7 @@ public class TacticalExecutor {
     }
 
     void preferCautiousAttackMelee(){
-        String unitName = PREFER_CAUTIOUS_ATTACK_MELEE + currentCell.getUnit().getName();
+        String unitName = PREFER_CAUTIOUS_ATTACK_MELEE + currentCell.getGUnit().getName();
 
         t.clickOnCurrentCell();
         if(t.tryToAttackMelee()){
@@ -221,7 +221,7 @@ public class TacticalExecutor {
     }
 
     void preferCautiousAttackRange(){
-        String unitName = PREFER_CAUTIOUS_ATTACK_RANGE + currentCell.getUnit().getName();
+        String unitName = PREFER_CAUTIOUS_ATTACK_RANGE + currentCell.getGUnit().getName();
 
         t.clickOnCurrentCell();
         if(t.tryToAttackRange()){
@@ -239,7 +239,7 @@ public class TacticalExecutor {
     }
 
     void preferAdvancedAttackRange(){
-        String unitName = PREFER_ADVANCED_ATTACK_RANGE + currentCell.getUnit().getName();
+        String unitName = PREFER_ADVANCED_ATTACK_RANGE + currentCell.getGUnit().getName();
 
         t.clickOnCurrentCell();
         if(t.tryToAttackRange()){
@@ -254,7 +254,7 @@ public class TacticalExecutor {
     }
 
     void preferAdvancedAttackMelee(){
-        String unitName = PREFER_ADVANCED_ATTACK_MELEE + currentCell.getUnit().getName();
+        String unitName = PREFER_ADVANCED_ATTACK_MELEE + currentCell.getGUnit().getName();
 
         t.clickOnCurrentCell();
         if(t.tryToAttackMelee()){

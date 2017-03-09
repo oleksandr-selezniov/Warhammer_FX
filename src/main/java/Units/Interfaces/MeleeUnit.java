@@ -1,12 +1,12 @@
 package Units.Interfaces;
 
-import Units.Unit;
+import Units.Gui_Unit;
 
 /**
  * Created by Dmitriy on 22.01.2017.
  */
 public interface MeleeUnit {
-    void performCloseAttack(Unit victim);
-    void performRapidMeleeAttack(Unit victim);
-    int  getCloseDamage(Unit victim);
+    void performCloseAttack(Gui_Unit victim);
+    void performRapidMeleeAttack(Gui_Unit victim);
+    int  getCloseDamage(Gui_Unit victim);
 }

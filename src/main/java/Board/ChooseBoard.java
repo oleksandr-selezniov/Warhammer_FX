@@ -2,9 +2,7 @@ package Board;
 
 import Board.Utils.BoardUtils;
 import Size.Size;
-import Units.Unit;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import Units.Gui_Unit;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -40,11 +38,11 @@ public class ChooseBoard {
     private int winWidth = 850;
     private int teamOneTotalCost = 0;
     private int teamTwoTotalCost = 0;
-    private static Map<String, Unit> humanUnitMap = Unit.getRaceUnitMap("Humans");
-    private static Map<String, Unit> orkUnitMap = Unit.getRaceUnitMap("Orks");
-    private static Unit currentSelectedUnit;
-    private static ArrayList<Unit> currentHumanList = new ArrayList<>();
-    private static ArrayList<Unit> currentOrkList = new ArrayList<>();
+    private static Map<String, Gui_Unit> humanUnitMap = Gui_Unit.getRaceUnitMap("Humans");
+    private static Map<String, Gui_Unit> orkUnitMap = Gui_Unit.getRaceUnitMap("Orks");
+    private static Gui_Unit currentSelectedGuiUnit;
+    private static ArrayList<Gui_Unit> currentHumanList = new ArrayList<>();
+    private static ArrayList<Gui_Unit> currentOrkList = new ArrayList<>();
 
     public void createUI(Stage primaryStage){
         primaryStage.setTitle("WarhammerFX ChooseBoard");
@@ -153,17 +151,17 @@ public class ChooseBoard {
         Button selectButton = new Button("Select");
         selectButton.setMinWidth(200);
         selectButton.setOnAction(p->{
-            if(currentSelectedUnit != null) {
-                if (currentSelectedUnit.getTeam() == 1) {
-                    if (getTeamTotalCost(1) < getArmyLimit() && (getTeamTotalCost(1) + currentSelectedUnit.getCost()) <= getArmyLimit()) {
-                        Button leftB = getUnitButton(currentHumanList, currentSelectedUnit, leftVbox);
+            if(currentSelectedGuiUnit != null) {
+                if (currentSelectedGuiUnit.getTeam() == 1) {
+                    if (getTeamTotalCost(1) < getArmyLimit() && (getTeamTotalCost(1) + currentSelectedGuiUnit.getCost()) <= getArmyLimit()) {
+                        Button leftB = getUnitButton(currentHumanList, currentSelectedGuiUnit, leftVbox);
                         leftVbox.getChildren().add(leftB);
                     } else {
                         showUnitLimitWarning();
                     }
                 } else {
-                    if (getTeamTotalCost(2) < getArmyLimit() && (getTeamTotalCost(2) + currentSelectedUnit.getCost()) <= getArmyLimit()) {
-                        Button rightB = getUnitButton(currentOrkList, currentSelectedUnit, rightVbox);
+                    if (getTeamTotalCost(2) < getArmyLimit() && (getTeamTotalCost(2) + currentSelectedGuiUnit.getCost()) <= getArmyLimit()) {
+                        Button rightB = getUnitButton(currentOrkList, currentSelectedGuiUnit, rightVbox);
                         rightVbox.getChildren().add(rightB);
                     } else {
                         showUnitLimitWarning();
@@ -211,26 +209,26 @@ public class ChooseBoard {
     private void showUnitLimitWarning(){
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Warning");
-        alert.setHeaderText("Unit Limit Reached!");
+        alert.setHeaderText("Gui_Unit Limit Reached!");
         alert.setContentText("You can't increase your army");
         alert.showAndWait();
     }
 
-    private Button getUnitButton(ArrayList<Unit> currentList, Unit currentSelectedUnit, VBox vBox){
-        Button rightB = new Button(currentSelectedUnit.getName());
-        currentList.add(currentSelectedUnit);
-        setTeamTotalCost( currentSelectedUnit.getTeam(), (getTeamTotalCost(currentSelectedUnit.getTeam())+currentSelectedUnit.getCost()));
+    private Button getUnitButton(ArrayList<Gui_Unit> currentList, Gui_Unit currentSelectedGuiUnit, VBox vBox){
+        Button rightB = new Button(currentSelectedGuiUnit.getName());
+        currentList.add(currentSelectedGuiUnit);
+        setTeamTotalCost( currentSelectedGuiUnit.getTeam(), (getTeamTotalCost(currentSelectedGuiUnit.getTeam())+ currentSelectedGuiUnit.getCost()));
         rightB.setMaxWidth(150);
         rightB.setMinWidth(150);
         rightB.setMaxHeight(40);
         rightB.setMinHeight(40);
         rightB.setAlignment(Pos.BASELINE_LEFT);
-        rightB.setGraphic(currentSelectedUnit.getImageView(1, 0.25));
+        rightB.setGraphic(currentSelectedGuiUnit.getImageView(1, 0.25));
         rightB.setOnAction(s->{
             vBox.getChildren().remove(rightB);
-            Unit unit = currentList.stream().filter(k->k.getName().equals(rightB.getText())).findFirst().orElse(null);
-            setTeamTotalCost(currentSelectedUnit.getTeam(),(getTeamTotalCost(currentSelectedUnit.getTeam())-unit.getCost()));
-            currentList.remove(unit);
+            Gui_Unit guiUnit = currentList.stream().filter(k->k.getName().equals(rightB.getText())).findFirst().orElse(null);
+            setTeamTotalCost(currentSelectedGuiUnit.getTeam(),(getTeamTotalCost(currentSelectedGuiUnit.getTeam())- guiUnit.getCost()));
+            currentList.remove(guiUnit);
         });
         return rightB;
     }
@@ -293,7 +291,7 @@ public class ChooseBoard {
         return strategicalComboBox;
     }
 
-    private ComboBox getUnitComboBox(Map<String, Unit> UnitMap, String name){
+    private ComboBox getUnitComboBox(Map<String, Gui_Unit> UnitMap, String name){
         ArrayList<String> arrayListO= new ArrayList<>();
         arrayListO.addAll(UnitMap.keySet());
         ObservableList<String> orkNameList = FXCollections.observableArrayList(arrayListO);
@@ -314,7 +312,7 @@ public class ChooseBoard {
             VBox rightInfoBox = (VBox)scene.lookup("#rightInfoVbox");
             rightInfoBox.getChildren().clear();
             rightInfoBox.getChildren().add(UnitMap.get(t1).getRightInfoGridPane());
-            currentSelectedUnit = UnitMap.get(t1);
+            currentSelectedGuiUnit = UnitMap.get(t1);
         });
         return unitComboBox;
     }
@@ -552,19 +550,19 @@ public class ChooseBoard {
     }
 
 
-    public static  ArrayList<Unit> getCurrentHumanList() {
+    public static  ArrayList<Gui_Unit> getCurrentHumanList() {
         return currentHumanList;
     }
 
-    public static void setCurrentHumanList(ArrayList<Unit> list) {
+    public static void setCurrentHumanList(ArrayList<Gui_Unit> list) {
         currentHumanList = list;
     }
 
-    public static ArrayList<Unit> getCurrentOrkList() {
+    public static ArrayList<Gui_Unit> getCurrentOrkList() {
         return currentOrkList;
     }
 
-    public static void setCurrentOrkList(ArrayList<Unit> list) {
+    public static void setCurrentOrkList(ArrayList<Gui_Unit> list) {
         currentOrkList = list;
     }
 

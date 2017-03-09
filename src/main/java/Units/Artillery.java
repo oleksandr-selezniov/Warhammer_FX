@@ -71,14 +71,14 @@ public class Artillery extends Vehicle implements RangeUnit {
         return new Insets(2,2, insetsY,2);
     }
 
-    public void performCloseAttack(Unit victim){
+    public void performCloseAttack(Gui_Unit victim){
         int closeDamage = getCloseDamage();
         victim.setHealth(victim.getHealth() - closeDamage);
         LoggerUtils.writeCloseAttackLog(this, victim, closeDamage);
         this.setActive(false);
     }
 
-    public void performRangeAttack(Unit victim){
+    public void performRangeAttack(Gui_Unit victim){
         int rangeDamage = getRangeDamage(victim);
         double chance = Math.random();
         if (this.getAmmo() > 0) {
@@ -97,7 +97,7 @@ public class Artillery extends Vehicle implements RangeUnit {
         }
     }
 
-     public int getRangeDamage(Unit victim){
+     public int getRangeDamage(Gui_Unit victim){
         double efficiency = getCurrentRangeEfficiency(victim);
         int minActualDamage = minRangeDamage;
         int maxActualDamage = maxRangeDamage;

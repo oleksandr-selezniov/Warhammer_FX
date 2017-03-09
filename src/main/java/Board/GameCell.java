@@ -1,8 +1,9 @@
 package Board;
 
 import Size.Size;
-import Units.Unit;
+import Units.Gui_Unit;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.effect.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,13 +20,26 @@ import static Board.Utils.GameCellUtils.*;
 /**
  * Created by Dmitriy on 18.10.2016.
  */
-public class GameCell extends SimpleGameCell {
+public class GameCell extends Button {
     private static GameCell previousGameCell;
-    private static Unit temporaryUnit;
+    private static Gui_Unit temporaryGuiUnit;
     private int imageNumber = generateRandomNumber(1,25);
     private String defaultCellImagePath = "cellBackground/LowRes/" + imageNumber + ".jpg";
     private static String deadCellImagePath = "other/dead.jpg";
-    private Unit unit;
+    private Gui_Unit guiUnit;
+    private static boolean isSelected;
+    private static int teamTurnValue = 1;
+    private String name = this.getText();
+    private int xCoord;
+    private int yCoord;
+    private boolean isBlocked = false;
+    private boolean isPassable = false;
+    private boolean isInShootingRange = false;
+    private boolean isSafe = true;
+    private boolean isDangerous = false;
+    private boolean isStrategical = false;
+    private boolean isActivated = false;
+    private int owner = 0;
 
     public GameCell() {
         this.setPadding(new Insets(50));
@@ -36,32 +50,32 @@ public class GameCell extends SimpleGameCell {
         mouseMovementMode();
     }
 
-    public GameCell(SimpleGameCell gc){
-        if(gc.getSimpleUnit() != null){
-            this.unit = new Unit(gc.getSimpleUnit());
-        }
-        if(getTemporarySimpleUnit() != null){
-            temporaryUnit = new Unit(getTemporarySimpleUnit());
-        }
-        if(getPreviousSimpleGameCell() != null){
-            previousGameCell = new GameCell(getPreviousSimpleGameCell());
-        }
-
-        isSelected = SimpleGameCell.isSelected();
-        teamTurnValue = SimpleGameCell.getTeamTurnValue();
-        this.name = gc.getText();
-        this.imageNumber = gc.getImageNumber();
-        this.xCoord = gc.getxCoord();
-        this.yCoord = gc.getyCoord();
-        this.isBlocked = gc.isBlocked();
-        this.isPassable = gc.isPassable();
-        this.isInShootingRange = gc.isInShootingRange();
-        this.isSafe = gc.isSafe();
-        this.isDangerous = gc.isDangerous();
-        this.isStrategical = gc.isStrategical();
-        this.isActivated = gc.isActivated();
-        this.owner = gc.getOwner();
-    }
+//    public GameCell(SimpleGameCell gc){
+//        if(gc.getUnit() != null){
+//            this.guiUnit = new Gui_Unit(gc.getUnit());
+//        }
+//        if(getTemporaryUnit() != null){
+//            temporaryGuiUnit = new Gui_Unit(getTemporaryUnit());
+//        }
+//        if(getPreviousSimpleGameCell() != null){
+//            previousGameCell = new GameCell(getPreviousSimpleGameCell());
+//        }
+//
+//        isSelected = SimpleGameCell.isSelected();
+//        teamTurnValue = SimpleGameCell.getTeamTurnValue();
+//        this.name = gc.getText();
+//        this.imageNumber = gc.getImageNumber();
+//        this.xCoord = gc.getxCoord();
+//        this.yCoord = gc.getyCoord();
+//        this.isBlocked = gc.isBlocked();
+//        this.isPassable = gc.isPassable();
+//        this.isInShootingRange = gc.isInShootingRange();
+//        this.isSafe = gc.isSafe();
+//        this.isDangerous = gc.isDangerous();
+//        this.isStrategical = gc.isStrategical();
+//        this.isActivated = gc.isActivated();
+//        this.owner = gc.getOwner();
+//    }
 
     public void setSize(Double size){
         this.setMaxHeight(size);
@@ -75,11 +89,11 @@ public class GameCell extends SimpleGameCell {
 
             if (!isSelected) { // first step
                 clickOnUnitCell(this);
-            } else if (this.isPassable() && this.unit == null) { // second step
+            } else if (this.isPassable() && this.guiUnit == null) { // second step
                 clickOnFreeCell(this);
-            } else if (this.isStrategical() && this.unit == null) { // activate strategical cell
+            } else if (this.isStrategical() && this.guiUnit == null) { // activate strategical cell
                 clickOnStrategicalCell(this);
-            } else if (this.unit != null && temporaryUnit.isEnemyUnit(this.unit) && isTeamTurn(temporaryUnit.getTeam())) { // attack
+            } else if (this.guiUnit != null && temporaryGuiUnit.isEnemyUnit(this.guiUnit) && isTeamTurn(temporaryGuiUnit.getTeam())) { // attack
                 clickOnEnemyUnitCell(this);
             }
         });
@@ -103,7 +117,7 @@ public class GameCell extends SimpleGameCell {
         this.setGraphic(imageView);
     }
 
-    public void activate(Unit activator){
+    public void activate(Gui_Unit activator){
         this.setActivated(true);
         this.setOwner(activator.getTeam());
         if(activator.getTeam() == 2){
@@ -121,24 +135,24 @@ public class GameCell extends SimpleGameCell {
         return (team == teamTurnValue);
     }
 
-    public Unit getUnit() {
-        return unit;
+    public Gui_Unit getGUnit() {
+        return guiUnit;
     }
 
-    public void setUnit(Unit unit) {
-        this.unit = unit;
+    public void setGuiUnit(Gui_Unit guiUnit) {
+        this.guiUnit = guiUnit;
     }
 
     public static String getDeadCellImagePath() {
         return deadCellImagePath;
     }
 
-    public static Unit getTemporaryUnit() {
-        return temporaryUnit;
+    public static Gui_Unit getTemporaryGuiUnit() {
+        return temporaryGuiUnit;
     }
 
-    public static void setTemporaryUnit(Unit temporaryUnit) {
-        GameCell.temporaryUnit = temporaryUnit;
+    public static void setTemporaryGuiUnit(Gui_Unit temporaryGuiUnit) {
+        GameCell.temporaryGuiUnit = temporaryGuiUnit;
     }
 
     public static GameCell getPreviousGameCell() {
@@ -161,6 +175,30 @@ public class GameCell extends SimpleGameCell {
         GameCell.deadCellImagePath = deadCellImagePath;
     }
 
+    public static boolean isSelected() {
+        return isSelected;
+    }
+
+    public static void setIsSelected(boolean Selected) {
+        isSelected = Selected;
+    }
+
+    public static int getTeamTurnValue() {
+        return teamTurnValue;
+    }
+
+    public static void setTeamTurnValue(int tTurnValue) {
+        teamTurnValue = tTurnValue;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getImageNumber() {
         return imageNumber;
     }
@@ -169,4 +207,83 @@ public class GameCell extends SimpleGameCell {
         this.imageNumber = imageNumber;
     }
 
+    public int getxCoord() {
+        return xCoord;
+    }
+
+    public void setxCoord(int xCoord) {
+        this.xCoord = xCoord;
+    }
+
+    public int getyCoord() {
+        return yCoord;
+    }
+
+    public void setyCoord(int yCoord) {
+        this.yCoord = yCoord;
+    }
+
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
+    }
+
+    public boolean isPassable() {
+        return isPassable;
+    }
+
+    public void setPassable(boolean passable) {
+        isPassable = passable;
+    }
+
+    public boolean isInShootingRange() {
+        return isInShootingRange;
+    }
+
+    public void setInShootingRange(boolean inShootingRange) {
+        isInShootingRange = inShootingRange;
+    }
+
+    public boolean isSafe() {
+        return isSafe;
+    }
+
+    public void setSafe(boolean safe) {
+        isSafe = safe;
+    }
+
+    public boolean isDangerous() {
+        return isDangerous;
+    }
+
+    public void setDangerous(boolean dangerous) {
+        isDangerous = dangerous;
+    }
+
+    public boolean isStrategical() {
+        return isStrategical;
+    }
+
+    public void setStrategical(boolean strategical) {
+        isStrategical = strategical;
+    }
+
+    public boolean isActivated() {
+        return isActivated;
+    }
+
+    public void setActivated(boolean activated) {
+        isActivated = activated;
+    }
+
+    public int getOwner() {
+        return owner;
+    }
+
+    public void setOwner(int owner) {
+        this.owner = owner;
+    }
 }
