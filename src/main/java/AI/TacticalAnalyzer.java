@@ -1,8 +1,8 @@
 package AI;
 
 import Board.GameCell;
+import Units.Gui_Unit;
 import Units.Interfaces.MeleeUnit;
-import Units.Unit;
 import javafx.application.Platform;
 import java.util.function.Consumer;
 
@@ -28,7 +28,7 @@ public class TacticalAnalyzer {
     private GameCell nearestPassableCellToSP;
     private GameCell bestTargetInAttackRange;
     private GameCell bestTargetOnBoard;
-    private Unit currentUnit;
+    private Gui_Unit currentGuiUnit;
     private boolean isFast;
     private boolean isWeak;
     private boolean canAttackMelee;
@@ -50,9 +50,9 @@ public class TacticalAnalyzer {
             nearestPassableCellToSP = getNearestPassableCell(gc, nearestStrategicalCell);
         }
         bestTargetInAttackRange = getBestTargetInAttackRange(gc);
-        currentUnit = gc.getUnit();
-        isFast = (currentUnit.getWalkRange() >= 5);
-        isWeak = (currentUnit.getCost() <= 30);
+        currentGuiUnit = gc.getGUnit();
+        isFast = (currentGuiUnit.getWalkRange() >= 5);
+        isWeak = (currentGuiUnit.getCost() <= 30);
         canAttackRangeEffectively = canPerformRangeAttackEfficiently(gc);
         canAttackMelee = haveEnemyUnitsInMeleeRange(gc);
         canActivateSP = haveSPInActivationRange(gc);
@@ -64,54 +64,54 @@ public class TacticalAnalyzer {
         switch (strategy){
             case PREFER_CAPTURE:{
                 if(isFast && isWeak){
-                    if(currentUnit instanceof MeleeUnit){
+                    if(currentGuiUnit instanceof MeleeUnit){
                         executor.preferCaptureMelee();
                     }else executor.preferCaptureRange();
                     break;
                 }else if(isFast || isWeak){
-                    if(currentUnit instanceof MeleeUnit){
+                    if(currentGuiUnit instanceof MeleeUnit){
                         executor.preferAttackOrCaptureMelee();
                     }else executor.preferAttackOrCaptureRange();
                     break;
                 }else{
-                    if(currentUnit instanceof MeleeUnit){
+                    if(currentGuiUnit instanceof MeleeUnit){
                         executor.preferNormalAttackMelee();
                     }else executor.preferNormalAttackRange();
                     break;
                 }
             }
             case PREFER_ATTACK_OR_CAPURE:{
-                if(currentUnit instanceof MeleeUnit){
+                if(currentGuiUnit instanceof MeleeUnit){
                     executor.preferAttackOrCaptureMelee();
                 }else executor.preferAttackOrCaptureRange();
                 break;
             }
             case PREFER_RETREAT:{
-                if(currentUnit instanceof MeleeUnit){
+                if(currentGuiUnit instanceof MeleeUnit){
                     executor.preferRetreatMelee();
                 }else executor.preferRetreatRange();
                 break;
             }
             case PREFER_DARE_ATTACK:{
-                if(currentUnit instanceof MeleeUnit){
+                if(currentGuiUnit instanceof MeleeUnit){
                     executor.preferDareAttackMelee();
                 }else executor.preferDareAttackRange();
                 break;
             }
             case PREFER_NORMAL_ATTACK:{
-                if(currentUnit instanceof MeleeUnit){
+                if(currentGuiUnit instanceof MeleeUnit){
                     executor.preferNormalAttackMelee();
                 }else executor.preferNormalAttackRange();
                 break;
             }
             case PREFER_CAUTIOUS_ATTACK:{
-                if(currentUnit instanceof MeleeUnit){
+                if(currentGuiUnit instanceof MeleeUnit){
                     executor.preferCautiousAttackMelee();
                 }else executor.preferCautiousAttackRange();
                 break;
             }
             case PREFER_ADVANCED_TARGETING:{
-                if(currentUnit instanceof MeleeUnit){
+                if(currentGuiUnit instanceof MeleeUnit){
                     executor.preferAdvancedAttackMelee();
                 }else executor.preferAdvancedAttackRange();
                 break;

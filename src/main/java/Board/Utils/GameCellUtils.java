@@ -3,7 +3,7 @@ package Board.Utils;
 import AI.Elsa_AI;
 import Board.Board;
 import Units.MeleeInfantry;
-import Units.Unit;
+import Units.Gui_Unit;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
@@ -29,7 +29,7 @@ import  Board.GameCell;
 public class GameCellUtils {
 
     public static Tooltip getToolTip(GameCell gameCell){
-        Tooltip tooltip = new Tooltip(gameCell.getUnit().getInfo());
+        Tooltip tooltip = new Tooltip(gameCell.getGUnit().getInfo());
         tooltip.setAutoHide(false);
         return tooltip;
     }
@@ -55,7 +55,7 @@ public class GameCellUtils {
     public static void generateObstacles(double density){
         Board.getMainBattlefieldGP().getChildren().stream().filter(p->p instanceof GameCell).forEach(p->{
             double chance = Math.random();
-            if(((GameCell)p).getUnit()==null && !((GameCell)p).isBlocked()
+            if(((GameCell)p).getGUnit()==null && !((GameCell)p).isBlocked()
                     && ((GameCell)p).getxCoord()>1 && ((GameCell)p).getyCoord()>1
                     && ((GameCell)p).getxCoord()<(Board.getBoardWidth()-2)
                     && ((GameCell)p).getyCoord()<(Board.getBoardHeight()-2)){
@@ -68,37 +68,37 @@ public class GameCellUtils {
     }
 
     public static void clickOnUnitCell(GameCell gc){
-        if(gc.getUnit() != null &&!canSkipTurn(gc)) {
-            if (isTeamTurn(gc.getUnit().getTeam()) && gc.getUnit().isActive()) {
+        if(gc.getGUnit() != null &&!canSkipTurn(gc)) {
+            if (isTeamTurn(gc.getGUnit().getTeam()) && gc.getGUnit().isActive()) {
                 setIsSelected(true);
-                setTemporaryUnit(gc.getUnit());
+                setTemporaryGuiUnit(gc.getGUnit());
                 BoardUtils.calculateRanges(gc);
-                gc.setGraphic(gc.getUnit().getImageView(0.7));
+                gc.setGraphic(gc.getGUnit().getImageView(0.7));
                 setPreviousGameCell(gc);
-                gc.setUnit(null);
+                gc.setGuiUnit(null);
             }
         }
     }
 
     public static void clickOnFreeCell(GameCell gc){
-        if (getTemporaryUnit() != null) {
-            gc.setUnit(getTemporaryUnit());
-            gc.setGraphic(getTemporaryUnit().getImageView(1.0));
-            gc.setPadding(getTemporaryUnit().getInsetsY());
+        if (getTemporaryGuiUnit() != null) {
+            gc.setGuiUnit(getTemporaryGuiUnit());
+            gc.setGraphic(getTemporaryGuiUnit().getImageView(1.0));
+            gc.setPadding(getTemporaryGuiUnit().getInsetsY());
             getPreviousGameCell().setEffect(null);
-            setTemporaryUnit(null);
+            setTemporaryGuiUnit(null);
         }
 
         if (!(getPreviousGameCell().equals(gc))) {
             getPreviousGameCell().setGraphic(null);
             getPreviousGameCell().setPadding(new Insets(1));
 
-            if(gc.getUnit() instanceof MeleeInfantry && haveEnemyUnitsInMeleeRange(gc)){
+            if(gc.getGUnit() instanceof MeleeInfantry && haveEnemyUnitsInMeleeRange(gc)){
                 if(getBestTargetInAttackRange(gc)!=null){
                     performRapidMeleeAttack(gc, getBestTargetInAttackRange(gc));
                 }
             }
-            gc.getUnit().setActive(false);
+            gc.getGUnit().setActive(false);
             checkTeamTurn();
         }
         setIsSelected(false);
@@ -108,24 +108,24 @@ public class GameCellUtils {
     }
 
     public static void clickOnEnemyUnitCell(GameCell gc){
-        getPreviousGameCell().setUnit(getTemporaryUnit());
-        getPreviousGameCell().setGraphic(getTemporaryUnit().getImageView(1.0));
+        getPreviousGameCell().setGuiUnit(getTemporaryGuiUnit());
+        getPreviousGameCell().setGraphic(getTemporaryGuiUnit().getImageView(1.0));
         setIsSelected(false);
         if (gc.isInShootingRange() || (isOnNeighbouringCellPlusDiagonal(getPreviousGameCell(), gc))) {
             performGeneralAttack(getPreviousGameCell(), gc);
         }
         abortRangesAndPassability();
-        setTemporaryUnit(null);
+        setTemporaryGuiUnit(null);
         checkTeamTurn();
     }
 
     public static boolean canSkipTurn(GameCell gc){
-        if(gc.getUnit() instanceof RangeUnit){
+        if(gc.getGUnit() instanceof RangeUnit){
             if(!BoardUtils.canWalkSomewhere(gc) && !BoardUtils.canShootSomebody(gc) && !BoardUtils.canHitSomebody(gc)){
                 setIsSelected(false);
                 abortRangesAndPassability();
                 checkTeamTurn();
-                System.out.println(gc.getUnit().getName() + " Skipped Turn");
+                System.out.println(gc.getGUnit().getName() + " Skipped Turn");
                 return true;
             }
         }
@@ -134,7 +134,7 @@ public class GameCellUtils {
                 setIsSelected(false);
                 abortRangesAndPassability();
                 checkTeamTurn();
-                System.out.println(gc.getUnit().getName() + " Skipped Turn");
+                System.out.println(gc.getGUnit().getName() + " Skipped Turn");
                 return true;
             }
         }
@@ -142,13 +142,13 @@ public class GameCellUtils {
     }
 
     public static void clickOnStrategicalCell(GameCell gc){
-        getPreviousGameCell().setUnit(getTemporaryUnit());
-        getPreviousGameCell().setGraphic(getTemporaryUnit().getImageView(1.0));
+        getPreviousGameCell().setGuiUnit(getTemporaryGuiUnit());
+        getPreviousGameCell().setGraphic(getTemporaryGuiUnit().getImageView(1.0));
         setIsSelected(false);
         if (isOnNeighbouringCellPlusDiagonal(getPreviousGameCell(), gc)){
-            if (gc.getOwner() != getTemporaryUnit().getTeam()){
-                gc.activate(getTemporaryUnit());
-                getTemporaryUnit().setActive(false);
+            if (gc.getOwner() != getTemporaryGuiUnit().getTeam()){
+                gc.activate(getTemporaryGuiUnit());
+                getTemporaryGuiUnit().setActive(false);
             }
         }
         abortRangesAndPassability();
@@ -183,33 +183,33 @@ public class GameCellUtils {
     }
 
     private static void performGeneralAttack(GameCell hunter_GC, GameCell victim_CG){
-        if (victim_CG.getUnit().getHealth() > 0) {
+        if (victim_CG.getGUnit().getHealth() > 0) {
             victim_CG.getGraphic().setEffect(new SepiaTone());
 
             if (isOnNeighbouringCellPlusDiagonal(hunter_GC, victim_CG)) {
-                getTemporaryUnit().performCloseAttack(victim_CG.getUnit());
-            } else if(!(getTemporaryUnit() instanceof MeleeInfantry)){
-                getTemporaryUnit().performRangeAttack(victim_CG.getUnit());
+                getTemporaryGuiUnit().performCloseAttack(victim_CG.getGUnit());
+            } else if(!(getTemporaryGuiUnit() instanceof MeleeInfantry)){
+                getTemporaryGuiUnit().performRangeAttack(victim_CG.getGUnit());
             }
         }
-        checkForDeath(getTemporaryUnit(), victim_CG);
+        checkForDeath(getTemporaryGuiUnit(), victim_CG);
     }
 
     private static void performRapidMeleeAttack(GameCell hunter_GC, GameCell victim_CG){
-        if (hunter_GC.getUnit() instanceof MeleeInfantry && victim_CG.getUnit().getHealth() > 0
+        if (hunter_GC.getGUnit() instanceof MeleeInfantry && victim_CG.getGUnit().getHealth() > 0
                 && isOnNeighbouringCellPlusDiagonal(hunter_GC, victim_CG)) {
             victim_CG.getGraphic().setEffect(new SepiaTone());
-            ((MeleeInfantry)hunter_GC.getUnit()).performRapidMeleeAttack(victim_CG.getUnit());
+            ((MeleeInfantry)hunter_GC.getGUnit()).performRapidMeleeAttack(victim_CG.getGUnit());
         }
-        checkForDeath(hunter_GC.getUnit(), victim_CG);
+        checkForDeath(hunter_GC.getGUnit(), victim_CG);
     }
 
-    private static void checkForDeath(Unit killer, GameCell victim_CG){
-        if (victim_CG.getUnit().getHealth() <= 0) {
-            victim_CG.getUnit().setHealth(0);
-            LoggerUtils.writeDeadLog(killer, victim_CG.getUnit());
+    private static void checkForDeath(Gui_Unit killer, GameCell victim_CG){
+        if (victim_CG.getGUnit().getHealth() <= 0) {
+            victim_CG.getGUnit().setHealth(0);
+            LoggerUtils.writeDeadLog(killer, victim_CG.getGUnit());
             victim_CG.setCellImage(getDeadCellImagePath(), 0.6);
-            victim_CG.setUnit(null);
+            victim_CG.setGuiUnit(null);
             //  checkTeamTurn();
         }
     }
@@ -245,9 +245,9 @@ public class GameCellUtils {
     }
 
     public static void mouseEntered(GameCell gc){
-        if (gc.getUnit() != null) {
+        if (gc.getGUnit() != null) {
             gc.setTooltip(getToolTip(gc));
-            if(gc.getUnit().getTeam()==1){
+            if(gc.getGUnit().getTeam()==1){
                 initializeBottomMenu(gc, "left");
             }else{
                 initializeBottomMenu(gc, "right");
@@ -259,15 +259,15 @@ public class GameCellUtils {
             if (isAlreadyUsedCurrentTeamUnit(gc))
                 paintUnitWithBlack(gc);
         }
-        if (getTemporaryUnit() != null && gc.getUnit() != null){
-            if (gc.getUnit().isEnemyUnit(getTemporaryUnit())) {
+        if (getTemporaryGuiUnit() != null && gc.getGUnit() != null){
+            if (gc.getGUnit().isEnemyUnit(getTemporaryGuiUnit())) {
                 highlightEnemyUnit(gc);
             }
         }
     }
 
     private static boolean isAlreadyUsedCurrentTeamUnit(GameCell gc){
-        return (gc.getUnit()!=null && !gc.getUnit().isActive() && gc.getUnit().getTeam()==getTeamTurnValue());
+        return (gc.getGUnit()!=null && !gc.getGUnit().isActive() && gc.getGUnit().getTeam()==getTeamTurnValue());
     }
 
     public static void paintUnitWithBlack(GameCell gc){

@@ -238,11 +238,11 @@ public class Board {
         return mainBattlefieldGP;
     }
 
-    public static GridPane getSimpleBattlefieldGP(){
-        GridPane simpleGP = new GridPane();
-        getMainBattlefieldGP().getChildren().forEach(p->simpleGP.getChildren().add(new SimpleGameCell(((GameCell) p))));
-        return simpleGP;
-    }
+//    public static GridPane getSimpleBattlefieldGP(){
+//        GridPane simpleGP = new GridPane();
+//        getMainBattlefieldGP().getChildren().forEach(p->simpleGP.getChildren().add(new SimpleGameCell(((GameCell) p))));
+//        return simpleGP;
+//    }
 
     public static void writeToTextArea(String id, String text, boolean scrollDowm){
         TextArea textArea = (TextArea)scene.lookup(id);
@@ -332,9 +332,9 @@ public class Board {
                             GameCell gc = (GameCell)node;
                             gc.setSize(Size.getCellSize()*newValue.doubleValue());
                             setScaleCoefficient(newValue.doubleValue());
-                            if(gc.getUnit()!=null){
-                                gc.setGraphic(gc.getUnit().getImageView(1.0));
-                                gc.setPadding(gc.getUnit().getInsetsY());
+                            if(gc.getGUnit()!=null){
+                                gc.setGraphic(gc.getGUnit().getImageView(1.0));
+                                gc.setPadding(gc.getGUnit().getInsetsY());
                             }
                         }
                     }
@@ -346,19 +346,19 @@ public class Board {
     }
 
     public static void initializeBottomMenu(GameCell gameCell, String direction){
-        HBox hbox = new HBox(gameCell.getUnit().getImageView(1, 1.1));
+        HBox hbox = new HBox(gameCell.getGUnit().getImageView(1, 1.1));
         hbox.setMinWidth(Size.getSceneWidth()*0.18);
         hbox.setMinHeight(Size.getSceneHeight()*0.25);
         if(direction.equals("left")){
             hbox.setStyle("-fx-background-color: linear-gradient(from 25% 100% to 100% 25%, #703D66, #99FFFF)");
             VBox vBox = (VBox)scene.lookup("#leftVBox");
             vBox.getChildren().clear();
-            vBox.getChildren().add(gameCell.getUnit().getBattleInfoGridPane());
+            vBox.getChildren().add(gameCell.getGUnit().getBattleInfoGridPane());
         }else{
             hbox.setStyle("-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #99FFFF, #703D66)");
             VBox vBox = (VBox)scene.lookup("#rightVBox");
             vBox.getChildren().clear();
-            vBox.getChildren().add(gameCell.getUnit().getBattleInfoGridPane());
+            vBox.getChildren().add(gameCell.getGUnit().getBattleInfoGridPane());
         }
         hbox.setAlignment(Pos.CENTER);
         ScrollPane scrollPane = (ScrollPane)scene.lookup("#"+direction+"ScrollPane");

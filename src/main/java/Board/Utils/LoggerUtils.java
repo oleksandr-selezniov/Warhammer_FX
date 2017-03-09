@@ -1,7 +1,7 @@
 package Board.Utils;
 
 import Board.Board;
-import Units.Unit;
+import Units.Gui_Unit;
 
 import java.text.DecimalFormat;
 
@@ -9,7 +9,7 @@ import java.text.DecimalFormat;
  * Created by Glazyrin.D on 11/7/2016.
  */
 public class LoggerUtils {
-    public static void writeCloseAttackLog(Unit attacker, Unit victim, int closeDamage){
+    public static void writeCloseAttackLog(Gui_Unit attacker, Gui_Unit victim, int closeDamage){
         Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
                 + attacker.getName() + "\n"
                 + "made " + (closeDamage) + "\n"
@@ -17,7 +17,7 @@ public class LoggerUtils {
                 + victim.getName() + "\n", true);
     }
 
-    public static void writeRangeAttackLog(Unit attacker, Unit victim, int rangeDamage){
+    public static void writeRangeAttackLog(Gui_Unit attacker, Gui_Unit victim, int rangeDamage){
         Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
                 + attacker.getName() + "\n"
                 + "made " + (rangeDamage) + "\n"
@@ -25,19 +25,19 @@ public class LoggerUtils {
                 + victim.getName() + "\n", true);
     }
 
-    public static void writeMissedLog(Unit unit){
+    public static void writeMissedLog(Gui_Unit guiUnit){
         Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
-                + unit.getName() + "\n"
+                + guiUnit.getName() + "\n"
                 + "missed!" + "\n", true);
     }
 
-    public static void writeOutOfAmmoLog(Unit unit){
+    public static void writeOutOfAmmoLog(Gui_Unit guiUnit){
         Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
-                + unit.getName() + "\n"
+                + guiUnit.getName() + "\n"
                 + "is out of ammunition!" + "\n", true);
     }
 
-    public static void writeDeadLog(Unit hunter, Unit victim){
+    public static void writeDeadLog(Gui_Unit hunter, Gui_Unit victim){
         Board.writeToTextArea("#centerTextArea", Board.getTextFromTextArea("#centerTextArea") + "\n"
                 + victim.getName() + "\n"
                 + "is killed by" + "\n"

@@ -12,7 +12,7 @@ import Board.Utils.LoggerUtils;
 /**
  * Created by Dmitriy on 03.11.2016.
  */
-public class HeavyInfantry extends Unit implements RangeUnit {
+public class HeavyInfantry extends Gui_Unit implements RangeUnit {
     private static Locale locale = new Locale("en", "US");
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("HeavyInfantry", locale);
     private double insetsY = 1.0;
@@ -59,14 +59,14 @@ public class HeavyInfantry extends Unit implements RangeUnit {
         return new Insets(2,2,insetsY,2);
     }
 
-    public void performCloseAttack(Unit victim){
+    public void performCloseAttack(Gui_Unit victim){
         int closeDamage = getCloseDamage();
         victim.setHealth(victim.getHealth() - closeDamage);
         LoggerUtils.writeCloseAttackLog(this, victim, closeDamage);
         this.setActive(false);
     }
 
-    public void performRangeAttack(Unit victim){
+    public void performRangeAttack(Gui_Unit victim){
         int rangeDamage = getRangeDamage(victim);
         double chance = Math.random();
         if (this.getAmmo() > 0) {
@@ -85,7 +85,7 @@ public class HeavyInfantry extends Unit implements RangeUnit {
         }
     }
 
-    public int getRangeDamage(Unit victim){
+    public int getRangeDamage(Gui_Unit victim){
         double efficiency = getCurrentRangeEfficiency(victim);
         int minActualDamage = minRangeDamage;
         int maxActualDamage = maxRangeDamage;

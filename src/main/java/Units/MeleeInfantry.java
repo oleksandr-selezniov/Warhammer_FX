@@ -15,12 +15,11 @@ import Board.Utils.LoggerUtils;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.Media;
 
 /**
  * Created by Glazyrin.D on 11/9/2016.
  */
-public class MeleeInfantry extends Unit implements MeleeUnit {
+public class MeleeInfantry extends Gui_Unit implements MeleeUnit {
     private static Locale locale = new Locale("en", "US");
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle("MeleeInfantry", locale);
     private double insetsY = 2.0;
@@ -62,21 +61,21 @@ public class MeleeInfantry extends Unit implements MeleeUnit {
         return new Insets(2,2,insetsY,2);
     }
 
-    public void performCloseAttack(Unit victim){
+    public void performCloseAttack(Gui_Unit victim){
         int closeDamage = getCloseDamage(victim);
         victim.setHealth(victim.getHealth() - closeDamage);
         LoggerUtils.writeCloseAttackLog(this, victim, closeDamage);
         this.setActive(false);
     }
 
-    public void performRapidMeleeAttack(Unit victim){
+    public void performRapidMeleeAttack(Gui_Unit victim){
         int rapidCloseDamage = getCloseDamage(victim)/2;  //two times less damage
         victim.setHealth(victim.getHealth() - rapidCloseDamage);
         LoggerUtils.writeCloseAttackLog(this, victim, rapidCloseDamage);
         //this.setActive(false);
     }
 
-    public int getCloseDamage(Unit victim){
+    public int getCloseDamage(Gui_Unit victim){
         double efficiency = getCurrentCloseEfficiency(victim);
         int minActualDamage = minCloseDamage;
         int maxActualDamage = maxCloseDamage;
@@ -90,7 +89,7 @@ public class MeleeInfantry extends Unit implements MeleeUnit {
         return minActualDamage + (int)(Math.random() * ((maxActualDamage - minActualDamage) + 1));
     }
 
-    private double getCurrentCloseEfficiency(Unit victim){
+    private double getCurrentCloseEfficiency(Gui_Unit victim){
         String effString = getCloseEfficiency();
         String tokens = "/";
         String[] splited = effString.split(tokens);

@@ -1,20 +1,20 @@
 package Units.Factories;
 
 import Units.MeleeInfantry;
-import Units.Unit;
+import Units.Gui_Unit;
 
 /**
  * Created by Dmitriy on 19.02.2017.
  */
 public class MeleeInfantryFactory implements UnitFactory {
     @Override
-    public Unit createUnit(String name, int team) {
+    public Gui_Unit createUnit(String name, int team) {
         return new MeleeInfantry(name, team);
     }
 
     @Override
-    public Unit copy(Unit unit) {
+    public Gui_Unit copy(Gui_Unit guiUnit) {
         MeleeInfantry meleeInfantry = new MeleeInfantry();
-        return meleeInfantry.copy(((MeleeInfantry) unit));
+        return meleeInfantry.copy(((MeleeInfantry) guiUnit));
     }
 }

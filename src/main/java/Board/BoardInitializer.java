@@ -28,14 +28,14 @@ public class BoardInitializer {
 
     void initializeBoard(){
         for(int i=0; i < ChooseBoard.getCurrentHumanList().size(); i++){
-            Unit currentUnit = ChooseBoard.getCurrentHumanList().get(i);
-            Unit unit = getNewUnitSameAsGiven(currentUnit); // to avoid cloning th SAME unit many times
+            Gui_Unit currentGuiUnit = ChooseBoard.getCurrentHumanList().get(i);
+            Gui_Unit guiUnit = getNewUnitSameAsGiven(currentGuiUnit); // to avoid cloning th SAME guiUnit many times
 
             if(i < getBoardHeight()-2) {
-                    placeOnBoard(1, i+1, unit);
+                    placeOnBoard(1, i+1, guiUnit);
             }else{
                 if(i < getBoardHeight()*2-4){
-                    placeOnBoard(2, i+3-getBoardHeight(), unit);
+                    placeOnBoard(2, i+3-getBoardHeight(), guiUnit);
                 }else{
                     System.out.println("[ WARNING! ] Too many units for 2 rows!");
                     break;
@@ -43,14 +43,14 @@ public class BoardInitializer {
             } //18 14
         }
         for(int i=0; i < ChooseBoard.getCurrentOrkList().size(); i++){
-            Unit currentUnit = ChooseBoard.getCurrentOrkList().get(i);
-            Unit unit = getNewUnitSameAsGiven(currentUnit); // to avoid cloning th SAME unit many times
+            Gui_Unit currentGuiUnit = ChooseBoard.getCurrentOrkList().get(i);
+            Gui_Unit guiUnit = getNewUnitSameAsGiven(currentGuiUnit); // to avoid cloning th SAME guiUnit many times
 
             if(i < getBoardHeight()-2) {
-                    placeOnBoard(getBoardWidth()-2, i+1, unit);
+                    placeOnBoard(getBoardWidth()-2, i+1, guiUnit);
             }else{
                 if(i < getBoardHeight()*2-4){
-                        placeOnBoard(getBoardWidth()-3, i+3-getBoardHeight(), unit);
+                        placeOnBoard(getBoardWidth()-3, i+3-getBoardHeight(), guiUnit);
                     }else{
                     System.out.println("[ WARNING! ] Too many units for 2 rows!");
                     break;
@@ -95,36 +95,36 @@ public class BoardInitializer {
         return (GameCell)currentScene.lookup(id);
     }
 
-    private void placeOnBoard( int X, int Y, Unit unit){
+    private void placeOnBoard( int X, int Y, Gui_Unit guiUnit){
         GameCell gameCell = getGameCell("#"+X+"_"+Y);
-        gameCell.setUnit(unit);
-        gameCell.setGraphic(gameCell.getUnit().getImageView(1.0));
-        gameCell.setPadding(gameCell.getUnit().getInsetsY());
+        gameCell.setGuiUnit(guiUnit);
+        gameCell.setGraphic(gameCell.getGUnit().getImageView(1.0));
+        gameCell.setPadding(gameCell.getGUnit().getInsetsY());
     }
 
-    private Unit getNewUnitSameAsGiven(Unit currentUnit){
-        UnitFactory factory = UnitFactory.getUnitFactory(currentUnit.getUnitClassName());
-        return factory.copy(currentUnit);
+    private Gui_Unit getNewUnitSameAsGiven(Gui_Unit currentGuiUnit){
+        UnitFactory factory = UnitFactory.getUnitFactory(currentGuiUnit.getUnitClassName());
+        return factory.copy(currentGuiUnit);
 
 
 //
-//        Unit unit = null;
-//        if(currentUnit instanceof MeleeInfantry){
-//            unit = new MeleeInfantry(currentUnit.getKey(), currentUnit.getTeam());
+//        Gui_Unit unit = null;
+//        if(currentGuiUnit instanceof MeleeInfantry){
+//            unit = new MeleeInfantry(currentGuiUnit.getKey(), currentGuiUnit.getTeam());
 //        }else
-//        if(currentUnit instanceof Artillery){
-//            unit = new Artillery(currentUnit.getKey(), currentUnit.getTeam());
+//        if(currentGuiUnit instanceof Artillery){
+//            unit = new Artillery(currentGuiUnit.getKey(), currentGuiUnit.getTeam());
 //        }else
-//        if(currentUnit instanceof LightInfantry){
-//            unit = new LightInfantry(currentUnit.getKey(), currentUnit.getTeam());
+//        if(currentGuiUnit instanceof LightInfantry){
+//            unit = new LightInfantry(currentGuiUnit.getKey(), currentGuiUnit.getTeam());
 //        }else
-//        if(currentUnit instanceof HeavyInfantry){
-//            unit = new HeavyInfantry(currentUnit.getKey(), currentUnit.getTeam());
+//        if(currentGuiUnit instanceof HeavyInfantry){
+//            unit = new HeavyInfantry(currentGuiUnit.getKey(), currentGuiUnit.getTeam());
 //        }else
-//        if(currentUnit instanceof Vehicle){
-//            unit = new Vehicle(currentUnit.getKey(), currentUnit.getTeam());
+//        if(currentGuiUnit instanceof Vehicle){
+//            unit = new Vehicle(currentGuiUnit.getKey(), currentGuiUnit.getTeam());
 //        }else{
-//            System.out.println("Wrong Unit Type Detected");
+//            System.out.println("Wrong Gui_Unit Type Detected");
 //        }
 //        return unit;
     }

@@ -1,6 +1,6 @@
 package Units.Factories;
 
-import Units.Unit;
+import Units.Gui_Unit;
 import Units.Vehicle;
 
 /**
@@ -8,13 +8,13 @@ import Units.Vehicle;
  */
 public class VehicleFactory implements UnitFactory {
     @Override
-    public Unit createUnit(String name, int team) {
+    public Gui_Unit createUnit(String name, int team) {
         return new Vehicle(name, team);
     }
 
     @Override
-    public Unit copy(Unit unit) {
+    public Gui_Unit copy(Gui_Unit guiUnit) {
         Vehicle vehicle = new Vehicle();
-        return vehicle.copy(((Vehicle)unit));
+        return vehicle.copy(((Vehicle) guiUnit));
     }
 }

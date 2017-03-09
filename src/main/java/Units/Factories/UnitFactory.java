@@ -1,14 +1,14 @@
 package Units.Factories;
 
 import Units.Enums.UnitClassNames;
-import Units.Unit;
+import Units.Gui_Unit;
 
 /**
  * Created by Dmitriy on 19.02.2017.
  */
 public interface UnitFactory {
-    Unit createUnit(String name, int team);
-    Unit copy(Unit unit);
+    Gui_Unit createUnit(String name, int team);
+    Gui_Unit copy(Gui_Unit guiUnit);
 
     static UnitFactory getUnitFactory(UnitClassNames name){
         UnitFactory factory = null;
