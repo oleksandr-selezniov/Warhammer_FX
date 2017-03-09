@@ -4,6 +4,7 @@ import Size.Size;
 import Units.Gui_Unit;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.effect.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,7 +21,7 @@ import static Board.Utils.GameCellUtils.*;
 /**
  * Created by Dmitriy on 18.10.2016.
  */
-public class GameCell extends Button {
+public class GameCell extends Hyperlink {
     private static GameCell previousGameCell;
     private static Gui_Unit temporaryGuiUnit;
     private int imageNumber = generateRandomNumber(1,25);
