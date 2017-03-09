@@ -53,7 +53,7 @@ public class GameCellUtils {
     }
 
     public static void generateObstacles(double density){
-        Board.getMainBattlefieldGP().getChildren().forEach(p->{
+        Board.getMainBattlefieldGP().getChildren().stream().filter(p->p instanceof GameCell).forEach(p->{
             double chance = Math.random();
             if(((GameCell)p).getUnit()==null && !((GameCell)p).isBlocked()
                     && ((GameCell)p).getxCoord()>1 && ((GameCell)p).getyCoord()>1
@@ -90,7 +90,7 @@ public class GameCellUtils {
         }
 
         if (!(getPreviousGameCell().equals(gc))) {
-            getPreviousGameCell().setCellImage(gc.getDefaultCellImagePath(), 0.6);
+            getPreviousGameCell().setGraphic(null);
             getPreviousGameCell().setPadding(new Insets(1));
 
             if(gc.getUnit() instanceof MeleeInfantry && haveEnemyUnitsInMeleeRange(gc)){
@@ -240,7 +240,7 @@ public class GameCellUtils {
 
     public static void mouseExited(GameCell gc){
         gc.setCursor(Cursor.DEFAULT);
-        gc.getGraphic().setEffect(null);
+        //gc.getGraphic().setEffect(null);
         gc.setTooltip(null);
     }
 
@@ -254,7 +254,7 @@ public class GameCellUtils {
             }
         }
         if (!(gc.getEffect() instanceof InnerShadow)){
-            gc.getGraphic().setEffect(new Glow());
+//            gc.getGraphic().setEffect(new Glow());
 
             if (isAlreadyUsedCurrentTeamUnit(gc))
                 paintUnitWithBlack(gc);

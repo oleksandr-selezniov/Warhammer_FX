@@ -67,6 +67,7 @@ public class Board {
         scrollPane.setMinHeight(Size.getSceneHeight()*0.675);
         scrollPane.setMaxWidth(Size.getSceneWidth()*0.95);
         scrollPane.setMaxHeight(Size.getSceneHeight()*0.675);
+      //  scrollPane.setStyle("-fx-background: rgb(80,80,80);");
         borderPane.setPadding(new Insets(0,15,0,15));
 
         borderPane.setCenter(scrollPane);
@@ -290,19 +291,18 @@ public class Board {
 
     static GridPane generateCellBattleField( int length, int height){
         GridPane gridPane = new GridPane();
+        gridPane.setGridLinesVisible(true);
         gridPane.setId("boardGC");
-        gridPane.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-        gridPane.setPadding(new Insets(1));
-        gridPane.setVgap(0.5);
-        gridPane.setHgap(0.5);
+        gridPane.setPadding(new Insets(15));
 
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < height; j++) {
                 GameCell gameCell = new GameCell();
                 gameCell.setxCoord(i);
                 gameCell.setyCoord(j);
-                gameCell.setText(i + "-" + j);
                 gameCell.setId(i + "_" + j);
+                gameCell.setAlignment(Pos.CENTER);
+                GridPane.setMargin(gameCell, new Insets(1));
                 gridPane.add(gameCell, i, j);
             }
         }

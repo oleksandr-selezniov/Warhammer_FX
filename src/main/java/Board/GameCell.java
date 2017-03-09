@@ -23,15 +23,15 @@ public class GameCell extends SimpleGameCell {
     private static GameCell previousGameCell;
     private static Unit temporaryUnit;
     private int imageNumber = generateRandomNumber(1,25);
-    private String defaultCellImagePath = "cellBackground/LowRes/" + imageNumber + ".jpg";
+ //   private String defaultCellImagePath = "cellBackground/LowRes/" + imageNumber + ".jpg";
     private static String deadCellImagePath = "other/dead.jpg";
     private Unit unit;
 
     public GameCell() {
-        this.setPadding(new Insets(50));
+        //this.setPadding(new Insets(5));
         this.setSize(Size.getCellSize());
-        this.setCellImage(defaultCellImagePath, 0.6);
-        this.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
+        //this.setCellImage(defaultCellImagePath, 0.6);
+        //this.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         actionMode();
         mouseMovementMode();
     }
@@ -149,13 +149,13 @@ public class GameCell extends SimpleGameCell {
         GameCell.previousGameCell = previousGameCell;
     }
 
-    public String getDefaultCellImagePath() {
-        return defaultCellImagePath;
-    }
-
-    public void setDefaultCellImagePath(String defaultCellImagePath) {
-        this.defaultCellImagePath = defaultCellImagePath;
-    }
+//    public String getDefaultCellImagePath() {
+//        return defaultCellImagePath;
+//    }
+//
+//    public void setDefaultCellImagePath(String defaultCellImagePath) {
+//        this.defaultCellImagePath = defaultCellImagePath;
+//    }
 
     public static void setDeadCellImagePath(String deadCellImagePath) {
         GameCell.deadCellImagePath = deadCellImagePath;

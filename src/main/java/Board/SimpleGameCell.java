@@ -2,11 +2,12 @@ package Board;
 
 import Units.SimpleUnit;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 
 /**
  * Created by Glazyrin.D on 2/20/2017.
  */
-public class SimpleGameCell extends Button{
+public class SimpleGameCell extends Hyperlink {
     static SimpleGameCell previousSimpleGameCell;
     static boolean isSelected;
     static int teamTurnValue = 1;
