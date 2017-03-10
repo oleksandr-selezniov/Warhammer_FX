@@ -1,0 +1,7 @@
+/*.scroll-pane .viewport {
+    -fx-background-image: url('background_1.jpg');
+}*/
+
+#boardGC{
+    -fx-background-image: url('background_2.jpg');
+}

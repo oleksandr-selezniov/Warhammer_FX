@@ -37,7 +37,7 @@ public class Board {
     private static int boardHeight = 19;
     private static int boardWidth = 49;
     private static GridPane mainBattlefieldGP;
-    private String defaultBackgroundPath = "backgrounds/background_8.jpg";
+    private static String defaultBackgroundPath = "backgrounds/background_8.jpg";
     private static Scene scene;
     private static Double scaleCoefficient = 1.0;
 
@@ -67,7 +67,6 @@ public class Board {
         scrollPane.setMinHeight(Size.getSceneHeight()*0.675);
         scrollPane.setMaxWidth(Size.getSceneWidth()*0.95);
         scrollPane.setMaxHeight(Size.getSceneHeight()*0.675);
-      //  scrollPane.setStyle("-fx-background: rgb(80,80,80);");
         borderPane.setPadding(new Insets(0,15,0,15));
 
         borderPane.setCenter(scrollPane);
@@ -76,6 +75,8 @@ public class Board {
         borderPane.setBottom(generateBottomMenu());
 
         scene = new Scene(anchorPane, Size.getSceneWidth(), Size.getSceneHeight());
+        scene.getStylesheets().add("style.css");
+       // scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.setMinHeight(Size.getSceneHeight());
         primaryStage.setMinWidth(Size.getSceneWidth());
@@ -291,9 +292,10 @@ public class Board {
 
     static GridPane generateCellBattleField( int length, int height){
         GridPane gridPane = new GridPane();
-        gridPane.setGridLinesVisible(true);
+        //gridPane.setGridLinesVisible(true);
         gridPane.setId("boardGC");
         gridPane.setPadding(new Insets(15));
+     //   gridPane.getChildren().add(new ImageView(new BoardUtils().getImage(defaultBackgroundPath)));
 
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < height; j++) {
