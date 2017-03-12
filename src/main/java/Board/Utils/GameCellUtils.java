@@ -43,7 +43,7 @@ public class GameCellUtils {
         GameCell gameCell = (GameCell) Board.getScene().lookup("#" + x + "_" + y);
         gameCell.setStrategical(true);
         gameCell.setBlocked(true);
-        gameCell.setCellImage("other/strartegical_point.jpg", 1);
+        gameCell.setCellImage("other/strartegical_point.png", 1);
     }
 
     public static void endGame(){
@@ -240,7 +240,7 @@ public class GameCellUtils {
 
     public static void mouseExited(GameCell gc){
         gc.setCursor(Cursor.DEFAULT);
-        if(gc.getGraphic() != null){
+        if(gc.getGraphic() != null && !gc.isBlocked()){
             gc.getGraphic().setEffect(null);
         }
         gc.setTooltip(null);
