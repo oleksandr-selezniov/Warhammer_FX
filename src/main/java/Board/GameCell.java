@@ -2,6 +2,10 @@ package Board;
 
 import Size.Size;
 import Units.Gui_Unit;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
@@ -41,12 +45,10 @@ public class GameCell extends Hyperlink {
     private boolean isStrategical = false;
     private boolean isActivated = false;
     private int owner = 0;
+    SimpleDoubleProperty obstacleSize = new SimpleDoubleProperty(0);
 
     public GameCell() {
-        //this.setPadding(new Insets(5));
         this.setSize(Size.getCellSize());
-        //this.setCellImage(defaultCellImagePath, 0.6);
-        //this.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         actionMode();
         mouseMovementMode();
     }
@@ -83,6 +85,13 @@ public class GameCell extends Hyperlink {
         this.setMinHeight(size);
         this.setMaxWidth(size);
         this.setMinWidth(size);
+        this.minHeightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> ov, Number oldVal,
+                                Number newVal) {
+                obstacleSize.set(newVal.doubleValue() * 1.4);
+            }
+        });
     }
 
     public void actionMode() {
@@ -115,6 +124,19 @@ public class GameCell extends Hyperlink {
         imageView.fitWidthProperty().bindBidirectional(this.minWidthProperty());
         imageView.setOpacity(opacity);
         this.setPadding(new Insets(1));
+        this.setGraphic(imageView);
+    }
+
+    public void setCellObstacle(String path, double opacity){
+        ImageView imageView = new ImageView();
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL urlToImage = classLoader.getResource(path);
+        Image buttonImage = new Image(urlToImage.toString(), false);
+        imageView.setImage(buttonImage);
+        imageView.fitHeightProperty().bindBidirectional(this.obstacleSize);
+        imageView.fitWidthProperty().bindBidirectional(this.obstacleSize);
+        imageView.setOpacity(opacity);
+        this.setPadding(new Insets(1,1,40,1));
         this.setGraphic(imageView);
     }
 

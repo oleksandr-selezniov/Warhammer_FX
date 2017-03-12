@@ -36,7 +36,7 @@ public class GameCellUtils {
 
     public static void placeObstacle(GameCell gameCell, String path){
         gameCell.setBlocked(true);
-        gameCell.setCellImage(path, 1);
+        gameCell.setCellObstacle(path, 1);
     }
 
     public static void makeStrategical(int x, int y){
@@ -56,11 +56,11 @@ public class GameCellUtils {
         Board.getMainBattlefieldGP().getChildren().stream().filter(p->p instanceof GameCell).forEach(p->{
             double chance = Math.random();
             if(((GameCell)p).getGUnit()==null && !((GameCell)p).isBlocked()
-                    && ((GameCell)p).getxCoord()>1 && ((GameCell)p).getyCoord()>1
-                    && ((GameCell)p).getxCoord()<(Board.getBoardWidth()-2)
-                    && ((GameCell)p).getyCoord()<(Board.getBoardHeight()-2)){
+                    && ((GameCell)p).getxCoord()>1 && ((GameCell)p).getyCoord()>=0
+                    && ((GameCell)p).getxCoord()<(Board.getBoardWidth()-3)
+                    && ((GameCell)p).getyCoord()<(Board.getBoardHeight())){
                 if(density > chance){
-                    String obstacleImagePath = "obstacles/"+generateRandomNumber(1,8)+".jpg";
+                    String obstacleImagePath = "obstacles/"+generateRandomNumber(1,18)+".png";
                     placeObstacle(((GameCell)p), obstacleImagePath);
                 }
             }
@@ -240,7 +240,9 @@ public class GameCellUtils {
 
     public static void mouseExited(GameCell gc){
         gc.setCursor(Cursor.DEFAULT);
-        //gc.getGraphic().setEffect(null);
+        if(gc.getGraphic() != null){
+            gc.getGraphic().setEffect(null);
+        }
         gc.setTooltip(null);
     }
 
@@ -254,8 +256,9 @@ public class GameCellUtils {
             }
         }
         if (!(gc.getEffect() instanceof InnerShadow)){
-//            gc.getGraphic().setEffect(new Glow());
-
+            if(gc.getGraphic() != null){
+                gc.getGraphic().setEffect(new Glow());
+            }
             if (isAlreadyUsedCurrentTeamUnit(gc))
                 paintUnitWithBlack(gc);
         }

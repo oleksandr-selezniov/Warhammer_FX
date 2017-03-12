@@ -61,8 +61,23 @@ public class Board {
         borderPane.setMaxHeight(Size.getSceneHeight()*0.915);
 
         anchorPane.getChildren().add(borderPane);
+        HBox hBox = new HBox(mainBattlefieldGP);
 
-        ScrollPane scrollPane = new ScrollPane(mainBattlefieldGP);
+        ImageView topIV = new ImageView();
+        topIV.setFitWidth(Size.getSceneWidth()*0.95);
+        topIV.setFitHeight(Size.getSceneHeight()*0.2);
+        topIV.setImage(new BoardUtils().getImage("top_1.jpg"));
+
+        HBox headerHBox = new HBox(topIV);
+        headerHBox.setId("headerHBox");
+        headerHBox.setMinWidth(Size.getSceneWidth()*0.95);
+        headerHBox.setMinHeight(Size.getSceneHeight()*0.2);
+        headerHBox.setMaxHeight(Size.getSceneHeight()*0.2);
+
+        //hBox.setPadding(new Insets());
+        ScrollPane scrollPane = new ScrollPane(new VBox(headerHBox, hBox));
+
+        scrollPane.setId("mainScrollpane");
         scrollPane.setMinWidth(Size.getSceneWidth()*0.95);
         scrollPane.setMinHeight(Size.getSceneHeight()*0.675);
         scrollPane.setMaxWidth(Size.getSceneWidth()*0.95);
@@ -293,8 +308,9 @@ public class Board {
     static GridPane generateCellBattleField( int length, int height){
         GridPane gridPane = new GridPane();
         //gridPane.setGridLinesVisible(true);
+        //gridPane.setStyle("-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #99FFFF, #703D66)");
         gridPane.setId("boardGC");
-        gridPane.setPadding(new Insets(15));
+     //   gridPane.setPadding(new Insets(35));
      //   gridPane.getChildren().add(new ImageView(new BoardUtils().getImage(defaultBackgroundPath)));
 
         for (int i = 0; i < length; i++) {
@@ -308,6 +324,8 @@ public class Board {
                 gridPane.add(gameCell, i, j);
             }
         }
+  //      gridPane.setPrefSize(100, 50);
+  //      gridPane.setMaxSize(length * Size.getCellSize()*2, height * Size.getCellSize()*2);
         return gridPane;
     }
 
@@ -326,14 +344,23 @@ public class Board {
         slider.valueProperty().addListener(new ChangeListener<Number>() {
             double previousSliderValue = 0.65;
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+
                 if(Math.abs((previousSliderValue - newValue.doubleValue()))>0.1){
+                    GridPane mainGp = getMainBattlefieldGP();
+               //     mainGp.setMaxSize(mainGp.getMaxWidth() * newValue.doubleValue(), mainGp.getMaxHeight() * newValue.doubleValue());
+               //     mainGp.setMinSize(mainGp.getMinWidth() * newValue.doubleValue(), mainGp.getMinHeight() * newValue.doubleValue());
+
                     previousSliderValue = newValue.doubleValue();
-                    for(int i=0; i<getMainBattlefieldGP().getChildren().size();i++){
-                        Node node = getMainBattlefieldGP().getChildren().get(i);
+
+
+                    for(int i=0; i<mainGp.getChildren().size();i++){
+                        Node node = mainGp.getChildren().get(i);
+
                         if(node instanceof GameCell){
                             GameCell gc = (GameCell)node;
                             gc.setSize(Size.getCellSize()*newValue.doubleValue());
                             setScaleCoefficient(newValue.doubleValue());
+
                             if(gc.getGUnit()!=null){
                                 gc.setGraphic(gc.getGUnit().getImageView(1.0));
                                 gc.setPadding(gc.getGUnit().getInsetsY());

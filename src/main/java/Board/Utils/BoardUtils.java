@@ -164,7 +164,7 @@ public class BoardUtils {
     public static synchronized void refreshZOrder() {
         GridPane gridPane = Board.getMainBattlefieldGP();
         ArrayList<Node> nodeList = gridPane.getChildren().stream().filter(p ->
-                (p instanceof GameCell && ((GameCell) p).getGUnit() != null)
+                (p instanceof GameCell && (((GameCell) p).getGUnit() != null || ((GameCell) p).isBlocked()))
         ).collect(Collectors.toCollection(ArrayList::new));
         nodeList.forEach(Node::toFront);
     }
@@ -173,7 +173,7 @@ public class BoardUtils {
         gc.toFront();
         GridPane gridPane = Board.getMainBattlefieldGP();
         ArrayList<Node> nodeList = gridPane.getChildren().stream().filter(p ->
-                (p instanceof GameCell && ((GameCell) p).getGUnit() != null && ((GameCell) p).getyCoord() > gc.getyCoord())
+                (p instanceof GameCell && (((GameCell) p).getGUnit() != null || ((GameCell) p).isBlocked()) && ((GameCell) p).getyCoord() > gc.getyCoord())
         ).collect(Collectors.toCollection(ArrayList::new));
         nodeList.forEach(Node::toFront);
     }
