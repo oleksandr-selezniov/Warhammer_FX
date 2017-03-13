@@ -7,7 +7,6 @@ import Units.Enums.UnitTypeNames;
 import Units.Interfaces.MeleeUnit;
 import Units.Interfaces.RangeUnit;
 import javafx.scene.Node;
-import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 
@@ -80,11 +79,35 @@ public class BoardUtils {
         return (abs(x3 - x1) + abs(y3 - y1) > abs(x2 - x1) + abs(y2 - y1));
     }
 
-    public static synchronized void showFieldPassability(){
+    public static synchronized void showRanges(GameCell currentcell){
         GridPane gridPane = Board.getMainBattlefieldGP();
-        gridPane.getChildren().stream().filter(p->(p instanceof GameCell
-                && ((GameCell) p).isPassable() && ((GameCell) p).getGUnit()==null))
-                .forEach(p->p.setEffect(new InnerShadow()));
+        if(currentcell.getGUnit().getShotRange() <= currentcell.getGUnit().getWalkRange()){
+           gridPane.getChildren().stream().filter(p->(p instanceof GameCell
+                    && ((GameCell) p).isPassable() && ((GameCell) p).getGUnit()==null))
+                    .forEach(p -> {
+                        if (isOnNeighbouringCellPlusDiagonal(currentcell,((GameCell) p))){
+                            p.setStyle("-fx-background-color: #F08080");
+                        }else {
+                            p.setStyle("-fx-background-color: #FFFF99");
+                        }
+                    });
+
+            gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isInShootingRange() && ((GameCell) p).getGUnit()==null) && !((GameCell) p).isBlocked())
+                    .forEach(p -> p.setStyle("-fx-background-color: #00CC33"));
+        }else{
+            gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isInShootingRange() && ((GameCell) p).getGUnit()==null) && !((GameCell) p).isBlocked())
+                    .forEach(p -> p.setStyle("-fx-background-color: #00CC33"));
+
+            gridPane.getChildren().stream().filter(p->(p instanceof GameCell
+                    && ((GameCell) p).isPassable() && ((GameCell) p).getGUnit()==null))
+                    .forEach(p -> {
+                        if (isOnNeighbouringCellPlusDiagonal(currentcell,((GameCell) p))){
+                            p.setStyle("-fx-background-color: #F08080");
+                        }else {
+                            p.setStyle("-fx-background-color: #FFFF99");
+                        }
+                    });
+        }
     }
 
     public static synchronized void setWalkingArea(GameCell currentcell){
@@ -93,7 +116,6 @@ public class BoardUtils {
         gridPane.getChildren().stream().filter(p->(p instanceof GameCell &&
                 isReachable( currentcell, ((GameCell) p), walkrange)) && !((GameCell) p).isBlocked())
                 .forEach(p->{
-                    if (isOnNeighbouringCellPlusDiagonal(currentcell,((GameCell) p))){if(((GameCell) p).getGUnit()==null) p.setStyle("-fx-background-color: #F08080");}
                     ((GameCell) p).setPassable(true);});
     }
 
@@ -102,9 +124,8 @@ public class BoardUtils {
         gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isPassable()) && !((GameCell) p).isBlocked())
                 .forEach(p->{
                     p.setStyle(null);
-                    p.setEffect(null);
                     ((GameCell) p).setPassable(false);
-                    showFieldPassability();
+                    //showRanges();
                 });
     }
 
@@ -114,15 +135,14 @@ public class BoardUtils {
                 .forEach(p->{
                     p.setStyle(null);
                     ((GameCell) p).setInShootingRange(false);
-                    showShootingRange();
+                    //showRanges();
                 });
     }
 
-    public static synchronized void showShootingRange(){
-        GridPane gridPane = Board.getMainBattlefieldGP();
-        gridPane.getChildren().stream().filter(p->(p instanceof GameCell && ((GameCell) p).isInShootingRange() && ((GameCell) p).getGUnit()==null) && !((GameCell) p).isBlocked())
-                .forEach(p -> p.setStyle("-fx-background-color: #00CC33"));
-    }
+//    public static synchronized void showShootingRange(){
+//        GridPane gridPane = Board.getMainBattlefieldGP();
+//
+//    }
 
     public static synchronized void setShootingArea(GameCell currentCell){
         int shotRange = currentCell.getGUnit().getShotRange();
@@ -151,8 +171,8 @@ public class BoardUtils {
     public static synchronized void calculateRanges(GameCell gameCell){
         BoardUtils.setWalkingArea(gameCell);
         BoardUtils.setShootingArea(gameCell);
-        BoardUtils.showFieldPassability();
-        BoardUtils.showShootingRange();
+        BoardUtils.showRanges(gameCell);
+      //  BoardUtils.showShootingRange();
     }
 
     public Image getImage(String imagePath){

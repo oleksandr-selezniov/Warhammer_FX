@@ -11,6 +11,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.effect.*;
 import javafx.scene.paint.Color;
 
+import static Board.Board.getMainBattlefieldGP;
 import static Board.Board.initializeBottomMenu;
 import static Board.BoardInitializer.*;
 import static Board.ChooseBoard.*;
