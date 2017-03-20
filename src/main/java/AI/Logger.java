@@ -28,4 +28,6 @@ public class Logger { //work in progress
     public static final String WENT_TO_SP_LOWER_DISTANCE = " Went to Nearest SP (Enemy is Too Far)";
     public static final String WENT_TO_ENEMY_LOWER_DISTANCE = " Went to Nearest Enemy (SP is Too Far)";
     public static final String RAN_AWAY = " Ran Away";
+    public static final String ELSA_STRATEGY = "[Elsa STRATEGY]: ";
+    public static final String ELSA_AI_EXECUTION_THREAD = "Elsa_AI EXECUTION THREAD";
 }

@@ -251,7 +251,5 @@ public class TacticalAnalyzer {
         } catch (InterruptedException exc) {
             throw new Error("Unexpected interruption");
         }
-
-
     }
 }

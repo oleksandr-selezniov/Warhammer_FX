@@ -1,7 +1,5 @@
 package Size;
 
-import javafx.beans.property.SimpleDoubleProperty;
-
 /**
  * Created by Dmitriy on 28.10.2016.
  */

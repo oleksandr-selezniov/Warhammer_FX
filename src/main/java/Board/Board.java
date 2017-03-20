@@ -74,7 +74,6 @@ public class Board {
         headerHBox.setMinHeight(Size.getSceneHeight()*0.2);
         headerHBox.setMaxHeight(Size.getSceneHeight()*0.2);
 
-        //hBox.setPadding(new Insets());
         ScrollPane scrollPane = new ScrollPane(new VBox(headerHBox, hBox));
 
         scrollPane.setId("mainScrollpane");
@@ -91,7 +90,6 @@ public class Board {
 
         scene = new Scene(anchorPane, Size.getSceneWidth(), Size.getSceneHeight());
         scene.getStylesheets().add("style.css");
-       // scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.setMinHeight(Size.getSceneHeight());
         primaryStage.setMinWidth(Size.getSceneWidth());

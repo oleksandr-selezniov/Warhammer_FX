@@ -1,6 +1,9 @@
 package AI;
 
 import Board.GameCell;
+
+import static AI.Logger.ELSA_AI_EXECUTION_THREAD;
+import static AI.Logger.ELSA_STRATEGY;
 import static Board.Utils.BoardUtils.*;
 
 /**
@@ -21,15 +24,14 @@ public class Elsa_AI {
     public void doAction(){
         Thread thread = new Thread(() -> {
             StrategyType turnStrategy = strategicalAnalyzer.getStrategy();
-            System.out.println("[Elsa STRATEGY]: " + turnStrategy.toString());
-
+            System.out.println(ELSA_STRATEGY + turnStrategy.toString());
 
             for(GameCell gc : getActiveUnitCellList(2)){
                 TacticalAnalyzer tacticalAnalyzer = new TacticalAnalyzer(gc);
                 tacticalAnalyzer.applyTactic(turnStrategy);
             }
         });
-        thread.setName("Elsa_AI EXECUTION THREAD");
+        thread.setName(ELSA_AI_EXECUTION_THREAD);
         thread.start();
     }
 }

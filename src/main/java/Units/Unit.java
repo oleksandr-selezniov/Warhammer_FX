@@ -37,34 +37,6 @@ public class Unit {
 
     public Unit(){}
 
-//    public Unit(Gui_Unit unit){
-//        this.unitClassName = unit.getUnitClassName();
-//        this.name = unit.getName();
-//        this.key = unit.getKey();
-//        this.accuracy = unit.getAccuracy();
-//        this.rangeEfficiency = getRangeEfficiency();
-//        this.maxHealth = unit.getMaxHealth();
-//        this.maxAmmo = unit.getMaxAmmo();
-//        this.minRangeDamage = unit.getMinRangeDamage();
-//        this.maxRangeDamage = unit.getMaxRangeDamage();
-//        this.minCloseDamage = unit.getMinCloseDamage();
-//        this.maxCloseDamage = unit.getMaxCloseDamage();
-//        this.walkRange = unit.getWalkRange();
-//        this.shotRange = unit.getShotRange();
-//        this.team = unit.getTeam();
-//        this.cost = unit.getCost();
-//        this.armor = unit.getArmor();
-//        this.heightCoeff = unit.getHeightCoeff();
-//        this.widthCoeff = unit.getWidthCoeff();
-//        this.isActive = unit.isActive();
-//        this.health = unit.healthProperty();
-//        this.ammo = unit.ammoProperty();
-//        this.healthPercentage = unit.healthPercentageProperty();
-//        this.ammoPercentage = unit.ammoPercentageProperty();
-//        this.insetsY = unit.getInsetsY();
-//        this.picturePath = unit.getPicturePath();
-//    }
-
     public String getInfo(){
         return "Name: "+name+"\n"+"Efficiency "+rangeEfficiency+"\n"+"Health "+getHealth()+"/"+maxHealth+"\n"+"Accuracy "+accuracy+
                 "\n"+"Ammo "+getAmmo()+"/"+maxAmmo+"\n"+"Close Damage "+ minCloseDamage +"-"+maxCloseDamage +"\n"
