@@ -37,7 +37,7 @@ public class BoardInitializer {
                 if(i < getBoardHeight()*2-4){
                     placeOnBoard(2, i+3-getBoardHeight(), guiUnit);
                 }else{
-                    System.out.println("[ WARNING! ] Too many units for 2 rows!");
+                    System.out.println("[ ERROR! ] Too many units for 2 rows!");
                     break;
                 }
             } //18 14
@@ -52,7 +52,7 @@ public class BoardInitializer {
                 if(i < getBoardHeight()*2-4){
                         placeOnBoard(getBoardWidth()-3, i+3-getBoardHeight(), guiUnit);
                     }else{
-                    System.out.println("[ WARNING! ] Too many units for 2 rows!");
+                    System.out.println("[ ERROR! ] Too many units for 2 rows!");
                     break;
                 }
             }
@@ -105,28 +105,6 @@ public class BoardInitializer {
     private Gui_Unit getNewUnitSameAsGiven(Gui_Unit currentGuiUnit){
         UnitFactory factory = UnitFactory.getUnitFactory(currentGuiUnit.getUnitClassName());
         return factory.copy(currentGuiUnit);
-
-
-//
-//        Gui_Unit unit = null;
-//        if(currentGuiUnit instanceof MeleeInfantry){
-//            unit = new MeleeInfantry(currentGuiUnit.getKey(), currentGuiUnit.getTeam());
-//        }else
-//        if(currentGuiUnit instanceof Artillery){
-//            unit = new Artillery(currentGuiUnit.getKey(), currentGuiUnit.getTeam());
-//        }else
-//        if(currentGuiUnit instanceof LightInfantry){
-//            unit = new LightInfantry(currentGuiUnit.getKey(), currentGuiUnit.getTeam());
-//        }else
-//        if(currentGuiUnit instanceof HeavyInfantry){
-//            unit = new HeavyInfantry(currentGuiUnit.getKey(), currentGuiUnit.getTeam());
-//        }else
-//        if(currentGuiUnit instanceof Vehicle){
-//            unit = new Vehicle(currentGuiUnit.getKey(), currentGuiUnit.getTeam());
-//        }else{
-//            System.out.println("Wrong Gui_Unit Type Detected");
-//        }
-//        return unit;
     }
 
     public static int getTeam1Score() {

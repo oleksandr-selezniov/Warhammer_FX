@@ -23,6 +23,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static Board.BoardInitializer.getScoreLimit;
 import static Board.ChooseBoard.getElsaThinkingImagePath;
 import static Board.ChooseBoard.isEnableAI;
@@ -200,7 +203,7 @@ public class Board {
         ImageView rightEarIV = new ImageView();
         rightEarIV.setFitWidth(Size.getSceneWidth()*0.18);
         rightEarIV.setFitHeight(Size.getSceneHeight()*0.25);
-        rightEarIV.setImage(new BoardUtils().getImage("gifs/cultistChan.gif"));
+        //rightEarIV.setImage(new BoardUtils().getImage("gifs/cultistChan.gif"));
         rightEarIV.setId("rightImageView");
 
         ScrollPane scrollPane = new ScrollPane(rightEarIV);
@@ -250,6 +253,13 @@ public class Board {
 
     public static GridPane getMainBattlefieldGP(){
         return mainBattlefieldGP;
+    }
+
+    public static List<GameCell> getGameCellList(){
+        return mainBattlefieldGP.getChildren().stream().map(p-> {
+            if (p instanceof GameCell) return (GameCell)p;
+            else return null;
+        }).filter(p->p!=null).collect(Collectors.toList());
     }
 
 //    public static GridPane getSimpleBattlefieldGP(){
@@ -344,26 +354,23 @@ public class Board {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 
                 if(Math.abs((previousSliderValue - newValue.doubleValue()))>0.1){
-                    GridPane mainGp = getMainBattlefieldGP();
-               //     mainGp.setMaxSize(mainGp.getMaxWidth() * newValue.doubleValue(), mainGp.getMaxHeight() * newValue.doubleValue());
-               //     mainGp.setMinSize(mainGp.getMinWidth() * newValue.doubleValue(), mainGp.getMinHeight() * newValue.doubleValue());
+                    //GridPane mainGp = getMainBattlefieldGP();
+                    //     mainGp.setMaxSize(mainGp.getMaxWidth() * newValue.doubleValue(), mainGp.getMaxHeight() * newValue.doubleValue());
+                    //     mainGp.setMinSize(mainGp.getMinWidth() * newValue.doubleValue(), mainGp.getMinHeight() * newValue.doubleValue());
 
                     previousSliderValue = newValue.doubleValue();
+                    List<GameCell> gameCells = getGameCellList();
 
+                    for(int i=0; i<gameCells.size();i++){
+                        GameCell gc = gameCells.get(i);
+                        gc.setSize(Size.getCellSize()*newValue.doubleValue());
+                        setScaleCoefficient(newValue.doubleValue());
 
-                    for(int i=0; i<mainGp.getChildren().size();i++){
-                        Node node = mainGp.getChildren().get(i);
-
-                        if(node instanceof GameCell){
-                            GameCell gc = (GameCell)node;
-                            gc.setSize(Size.getCellSize()*newValue.doubleValue());
-                            setScaleCoefficient(newValue.doubleValue());
-
-                            if(gc.getGUnit()!=null){
-                                gc.setGraphic(gc.getGUnit().getImageView(1.0));
-                                gc.setPadding(gc.getGUnit().getInsetsY());
-                            }
+                        if(gc.getGUnit()!=null){
+                            gc.setGraphic(gc.getGUnit().getImageView(1.0));
+                            gc.setPadding(gc.getGUnit().getInsetsY());
                         }
+
                     }
                 }
             }

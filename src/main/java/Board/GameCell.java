@@ -29,7 +29,6 @@ public class GameCell extends Hyperlink {
     private static GameCell previousGameCell;
     private static Gui_Unit temporaryGuiUnit;
     private int imageNumber = generateRandomNumber(1,25);
- //   private String defaultCellImagePath = "cellBackground/LowRes/" + imageNumber + ".jpg";
     private static String deadCellImagePath = "other/dead.png";
     private Gui_Unit guiUnit;
     private static boolean isSelected;
@@ -45,7 +44,7 @@ public class GameCell extends Hyperlink {
     private boolean isStrategical = false;
     private boolean isActivated = false;
     private int owner = 0;
-    SimpleDoubleProperty obstacleSize = new SimpleDoubleProperty(0);
+    private SimpleDoubleProperty obstacleSize = new SimpleDoubleProperty(0);
 
     public GameCell() {
         this.setSize(Size.getCellSize());
@@ -53,44 +52,13 @@ public class GameCell extends Hyperlink {
         mouseMovementMode();
     }
 
-//    public GameCell(SimpleGameCell gc){
-//        if(gc.getUnit() != null){
-//            this.guiUnit = new Gui_Unit(gc.getUnit());
-//        }
-//        if(getTemporaryUnit() != null){
-//            temporaryGuiUnit = new Gui_Unit(getTemporaryUnit());
-//        }
-//        if(getPreviousSimpleGameCell() != null){
-//            previousGameCell = new GameCell(getPreviousSimpleGameCell());
-//        }
-//
-//        isSelected = SimpleGameCell.isSelected();
-//        teamTurnValue = SimpleGameCell.getTeamTurnValue();
-//        this.name = gc.getText();
-//        this.imageNumber = gc.getImageNumber();
-//        this.xCoord = gc.getxCoord();
-//        this.yCoord = gc.getyCoord();
-//        this.isBlocked = gc.isBlocked();
-//        this.isPassable = gc.isPassable();
-//        this.isInShootingRange = gc.isInShootingRange();
-//        this.isSafe = gc.isSafe();
-//        this.isDangerous = gc.isDangerous();
-//        this.isStrategical = gc.isStrategical();
-//        this.isActivated = gc.isActivated();
-//        this.owner = gc.getOwner();
-//    }
-
     public void setSize(Double size){
         this.setMaxHeight(size);
         this.setMinHeight(size);
         this.setMaxWidth(size);
         this.setMinWidth(size);
-        this.minHeightProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number oldVal,
-                                Number newVal) {
-                obstacleSize.set(newVal.doubleValue() * 1.4);
-            }
+        this.minHeightProperty().addListener((ov, oldVal, newVal) -> {
+            obstacleSize.set(newVal.doubleValue() * 1.4);
         });
     }
 
@@ -185,14 +153,6 @@ public class GameCell extends Hyperlink {
     public static void setPreviousGameCell(GameCell previousGameCell) {
         GameCell.previousGameCell = previousGameCell;
     }
-
-//    public String getDefaultCellImagePath() {
-//        return defaultCellImagePath;
-//    }
-//
-//    public void setDefaultCellImagePath(String defaultCellImagePath) {
-//        this.defaultCellImagePath = defaultCellImagePath;
-//    }
 
     public static void setDeadCellImagePath(String deadCellImagePath) {
         GameCell.deadCellImagePath = deadCellImagePath;

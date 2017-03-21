@@ -28,10 +28,10 @@ public class Unit {
     double heightCoeff;
     double widthCoeff;
     boolean isActive;
-    SimpleIntegerProperty health = new SimpleIntegerProperty(0);
-    SimpleIntegerProperty ammo = new SimpleIntegerProperty(0);
-    SimpleDoubleProperty healthPercentage = new SimpleDoubleProperty(0);
-    SimpleDoubleProperty ammoPercentage = new SimpleDoubleProperty(0);
+    private SimpleIntegerProperty health = new SimpleIntegerProperty(0);
+    private SimpleIntegerProperty ammo = new SimpleIntegerProperty(0);
+    private SimpleDoubleProperty healthPercentage = new SimpleDoubleProperty(0);
+    private SimpleDoubleProperty ammoPercentage = new SimpleDoubleProperty(0);
     Insets insetsY;
     String picturePath;
 

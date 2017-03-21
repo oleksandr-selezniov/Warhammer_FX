@@ -56,8 +56,7 @@ public class LoggerUtils {
         double currentMemory = (((double) (Runtime.getRuntime().totalMemory() / 1024) / 1024)) - (((double) (Runtime.getRuntime().freeMemory() / 1024) / 1024));
         DecimalFormat myFormatter = new DecimalFormat("###.#");
         String output = myFormatter.format(currentMemory);
-        String memoryInMB = "Used amount of RAM: " + output + " MB ";
-        return memoryInMB;
+        return "Used amount of RAM: " + output + " MB ";
     }
 
 }

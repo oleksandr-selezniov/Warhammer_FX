@@ -76,7 +76,7 @@ public class MusicPlayerLogic {
     return play;
     }
 
-    private static Button getPauseButton(){
+    private Button getPauseButton(){
         Button pause =new Button("Pause");
         pause.setMinWidth(50);
         pause.setPadding(new Insets(5));

@@ -11,7 +11,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.effect.*;
 import javafx.scene.paint.Color;
 
-import static Board.Board.getMainBattlefieldGP;
+import static Board.Board.getGameCellList;
 import static Board.Board.initializeBottomMenu;
 import static Board.BoardInitializer.*;
 import static Board.ChooseBoard.*;
@@ -54,15 +54,15 @@ public class GameCellUtils {
     }
 
     public static void generateObstacles(double density){
-        Board.getMainBattlefieldGP().getChildren().stream().filter(p->p instanceof GameCell).forEach(p->{
+        getGameCellList().stream().forEach(p->{
             double chance = Math.random();
-            if(((GameCell)p).getGUnit()==null && !((GameCell)p).isBlocked()
-                    && ((GameCell)p).getxCoord()>1 && ((GameCell)p).getyCoord()>=0
-                    && ((GameCell)p).getxCoord()<(Board.getBoardWidth()-3)
-                    && ((GameCell)p).getyCoord()<(Board.getBoardHeight())){
+            if(p.getGUnit()==null && !p.isBlocked()
+                    && p.getxCoord()>1 && p.getyCoord()>=0
+                    && p.getxCoord()<(Board.getBoardWidth()-3)
+                    && p.getyCoord()<(Board.getBoardHeight())){
                 if(density > chance){
                     String obstacleImagePath = "obstacles/"+generateRandomNumber(1,18)+".png";
-                    placeObstacle(((GameCell)p), obstacleImagePath);
+                    placeObstacle(p, obstacleImagePath);
                 }
             }
         });
@@ -103,7 +103,7 @@ public class GameCellUtils {
             checkTeamTurn();
         }
         setIsSelected(false);
-        abortRangesAndPassability();
+        abortRanges();
         refreshZOrder();
         refreshZOrderUnderGC(gc);
     }
@@ -115,7 +115,7 @@ public class GameCellUtils {
         if (gc.isInShootingRange() || (isOnNeighbouringCellPlusDiagonal(getPreviousGameCell(), gc))) {
             performGeneralAttack(getPreviousGameCell(), gc);
         }
-        abortRangesAndPassability();
+        abortRanges();
         setTemporaryGuiUnit(null);
         checkTeamTurn();
     }
@@ -124,7 +124,7 @@ public class GameCellUtils {
         if(gc.getGUnit() instanceof RangeUnit){
             if(!BoardUtils.canWalkSomewhere(gc) && !BoardUtils.canShootSomebody(gc) && !BoardUtils.canHitSomebody(gc)){
                 setIsSelected(false);
-                abortRangesAndPassability();
+                abortRanges();
                 checkTeamTurn();
                 System.out.println(gc.getGUnit().getName() + " Skipped Turn");
                 return true;
@@ -133,7 +133,7 @@ public class GameCellUtils {
         else{
             if(!BoardUtils.canWalkSomewhere(gc) && !BoardUtils.canHitSomebody(gc)){
                 setIsSelected(false);
-                abortRangesAndPassability();
+                abortRanges();
                 checkTeamTurn();
                 System.out.println(gc.getGUnit().getName() + " Skipped Turn");
                 return true;
@@ -152,15 +152,16 @@ public class GameCellUtils {
                 getTemporaryGuiUnit().setActive(false);
             }
         }
-        abortRangesAndPassability();
+        abortRanges();
         checkTeamTurn();
     }
 
-    public static void abortRangesAndPassability(){
-        //BoardUtils.refreshZOrder();
-        BoardUtils.abortFieldPassability();
-        BoardUtils.abortShootingRange();
-    }
+//    public static void abortRangesAndPassability(){
+//        //BoardUtils.refreshZOrder();
+//        abortRanges();
+//        BoardUtils.abortFieldPassability();
+//        BoardUtils.abortShootingRange();
+//    }
 
     public static void checkTeamTurn(){
         if(getTeam1Score() >= BoardInitializer.getScoreLimit() | getTeam2Score() >= BoardInitializer.getScoreLimit()) {
