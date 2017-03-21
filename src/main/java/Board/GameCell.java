@@ -30,7 +30,7 @@ public class GameCell extends Hyperlink {
     private static Gui_Unit temporaryGuiUnit;
     private int imageNumber = generateRandomNumber(1,25);
  //   private String defaultCellImagePath = "cellBackground/LowRes/" + imageNumber + ".jpg";
-    private static String deadCellImagePath = "other/dead.jpg";
+    private static String deadCellImagePath = "other/dead.png";
     private Gui_Unit guiUnit;
     private static boolean isSelected;
     private static int teamTurnValue = 1;

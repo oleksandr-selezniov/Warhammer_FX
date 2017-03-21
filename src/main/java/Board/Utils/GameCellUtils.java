@@ -209,7 +209,7 @@ public class GameCellUtils {
         if (victim_CG.getGUnit().getHealth() <= 0) {
             victim_CG.getGUnit().setHealth(0);
             LoggerUtils.writeDeadLog(killer, victim_CG.getGUnit());
-            victim_CG.setCellImage(getDeadCellImagePath(), 0.6);
+            victim_CG.setCellImage(getDeadCellImagePath(), 0.8);
             victim_CG.setGuiUnit(null);
             //  checkTeamTurn();
         }
