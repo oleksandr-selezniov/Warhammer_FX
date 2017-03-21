@@ -81,8 +81,9 @@ public class BoardUtils {
     public static synchronized void showRanges(GameCell currentcell){
         List<GameCell> gameCells = getGameCellList();
         if(currentcell.getGUnit().getShotRange() <= currentcell.getGUnit().getWalkRange()){
-           gameCells.stream().filter(p->(p.isPassable() && p.getGUnit()==null))
-                    .forEach(p -> {
+           gameCells.stream()
+                   .filter(p->(p.isPassable() && p.getGUnit()==null))
+                   .forEach(p -> {
                         if (isOnNeighbouringCellPlusDiagonal(currentcell, p)){
                             p.setStyle("-fx-background-color: #F08080");
                         }else {
@@ -90,13 +91,16 @@ public class BoardUtils {
                         }
                     });
 
-            gameCells.stream().filter(p->(p.isInShootingRange() && p.getGUnit()==null) && !p.isBlocked())
+            gameCells.stream()
+                    .filter(p->(p.isInShootingRange() && p.getGUnit()==null) && !p.isBlocked())
                     .forEach(p -> p.setStyle("-fx-background-color: #00CC33"));
         }else{
-            gameCells.stream().filter(p->(p.isInShootingRange() && p.getGUnit()==null) && !p.isBlocked())
+            gameCells.stream()
+                    .filter(p->(p.isInShootingRange() && p.getGUnit()==null) && !p.isBlocked())
                     .forEach(p -> p.setStyle("-fx-background-color: #00CC33"));
 
-            gameCells.stream().filter(p->(p.isPassable() && p.getGUnit()==null))
+            gameCells.stream()
+                    .filter(p->(p.isPassable() && p.getGUnit()==null))
                     .forEach(p -> {
                         if (isOnNeighbouringCellPlusDiagonal(currentcell,p)){
                             p.setStyle("-fx-background-color: #F08080");
@@ -109,7 +113,8 @@ public class BoardUtils {
 
     public static synchronized void setWalkingArea(GameCell currentcell){
         int walkrange = currentcell.getGUnit().getWalkRange();
-        getGameCellList().stream().filter(p->(isReachable( currentcell, p, walkrange)) && !p.isBlocked())
+        getGameCellList().stream()
+                .filter(p->(isReachable( currentcell, p, walkrange)) && !p.isBlocked())
                 .forEach(p -> p.setPassable(true));
     }
 
@@ -130,10 +135,10 @@ public class BoardUtils {
 
     public static synchronized void setShootingArea(GameCell currentCell){
         int shotRange = currentCell.getGUnit().getShotRange();
-
         if(currentCell.getGUnit() instanceof Artillery){
             int deadZone =((Artillery)currentCell.getGUnit()).getDeadZone();
-            getGameCellList().stream().forEach(p->{
+            getGameCellList()
+                    .forEach(p->{
                 if (isOnNeighbouringCellPlusDiagonal(currentCell, p)){if(p.getGUnit() == null) return;}
                 if (isReachable(currentCell, p, deadZone)) return;
                 if (isReachable(currentCell, p, shotRange)){
@@ -141,8 +146,8 @@ public class BoardUtils {
                 }
             });
         } else {
-            getGameCellList().stream().filter(p ->
-                    isReachable(currentCell, p, shotRange))
+            getGameCellList().stream()
+                    .filter(p -> isReachable(currentCell, p, shotRange))
                     .forEach(p -> {
                         if (isOnNeighbouringCellPlusDiagonal(currentCell, p)){if(p.getGUnit() == null) return;}
                         p.setInShootingRange(true);
@@ -163,50 +168,51 @@ public class BoardUtils {
     }
 
     public static synchronized void refreshZOrder() {
-        ArrayList<Node> nodeList = getGameCellList().stream().filter(p ->
-                (p.getGUnit() != null || p.isBlocked())
-        ).collect(Collectors.toCollection(ArrayList::new));
-        nodeList.forEach(Node::toFront);
+        getGameCellList().stream()
+                .filter(p -> p.getGUnit() != null || p.isBlocked())
+                .forEach(Node::toFront);
     }
 
     public static synchronized void refreshZOrderUnderGC(GameCell gc) {
         gc.toFront();
-        ArrayList<Node> nodeList = getGameCellList().stream().filter(p ->
-                (p.getGUnit() != null || p.isBlocked() && p.getyCoord() > gc.getyCoord()))
-                .collect(Collectors.toCollection(ArrayList::new));
-        nodeList.forEach(Node::toFront);
+        getGameCellList().stream()
+                .filter(p -> p.getGUnit() != null || p.isBlocked() && p.getyCoord() > gc.getyCoord())
+                .collect(Collectors.toCollection(ArrayList::new))
+                .forEach(Node::toFront);
     }
 
     public static synchronized ArrayList<GameCell> getUnitCellList(int team) {
-        return getGameCellList().stream().filter(p ->
-                (p.getGUnit() != null && p.getGUnit().getTeam() == team)
-        ).collect(Collectors.toCollection(ArrayList::new));
+        return getGameCellList().stream()
+                .filter(p -> p.getGUnit() != null && p.getGUnit().getTeam() == team)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public static synchronized ArrayList<GameCell> getActiveUnitCellList(int team) {
-        return getGameCellList().stream().filter(p ->
-                (p.getGUnit() != null && p.getGUnit().getTeam()==team
-                        && p.getGUnit().isActive())
-        ).collect(Collectors.toCollection(ArrayList::new));
+        return getGameCellList().stream()
+                .filter(p -> p.getGUnit() != null && p.getGUnit().getTeam()==team && p.getGUnit().isActive())
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public static synchronized ArrayList<Gui_Unit> getUnitList(int team) {
         ArrayList<Gui_Unit> guiUnitList = new ArrayList<>();
-        getUnitCellList(team).forEach(p-> guiUnitList.add( p.getGUnit()));
+        getUnitCellList(team)
+                .forEach(p-> guiUnitList.add( p.getGUnit()));
         return guiUnitList;
     }
 
     public static synchronized int getTotalUnitCost(int team) {
         int unitCost = 0;
-        for(Object u : getUnitCellList(team)){
-            unitCost+=((GameCell)u).getGUnit().getCost();
+        for(GameCell u : getUnitCellList(team)){
+            unitCost += u.getGUnit().getCost();
         }
         return unitCost;
     }
 
     public static synchronized int getEnemyUnitsInRangeNumber(GameCell gc, int range) {
-        return (int)getGameCellList().stream().filter(p->(isReachable(gc, p, range)) && !p.isBlocked())
-                .filter(p-> p.getGUnit()!=null && p.getGUnit().getTeam()!=gc.getGUnit().getTeam()).count();
+        return (int)getGameCellList().stream()
+                .filter(p->(isReachable(gc, p, range)) && !p.isBlocked())
+                .filter(p-> p.getGUnit()!=null && p.getGUnit().getTeam()!=gc.getGUnit().getTeam())
+                .count();
     }
 
     public static synchronized boolean haveEnemyUnitsInShootingRange(GameCell gc) {
@@ -217,7 +223,9 @@ public class BoardUtils {
         if(haveEnemyUnitsInShootingRange(gc)){
             if(getTotalUnitNumber(gc.getGUnit().getTeam()) > 4) {
                 ArrayList<GameCell> targetList = getEnemyUnitCellsInSRange(gc, gc.getGUnit().getShotRange());
-                long targetNumber = targetList.stream().filter(p -> gc.getGUnit().getCurrentRangeEfficiency(p.getGUnit()) > 0.5 && gc.getGUnit().getCurrentAccuracy(p.getGUnit()) > 0.5).count();
+                long targetNumber = targetList.stream()
+                        .filter(p -> gc.getGUnit().getCurrentRangeEfficiency(p.getGUnit()) > 0.5 && gc.getGUnit().getCurrentAccuracy(p.getGUnit()) > 0.5)
+                        .count();
                 return targetNumber > 0;
             }
             return true;
@@ -226,15 +234,15 @@ public class BoardUtils {
     }
 
     public static synchronized boolean haveEnemyUnitsInMeleeRange(GameCell gc) {
-        return (getEnemyUnitsInRangeNumber(gc, 2) > 0);
+        return getEnemyUnitsInRangeNumber(gc, 2) > 0;
     }
 
     public static synchronized boolean haveSPInActivationRange(GameCell gc) {
-        return (getStrategicalCellsInSRange(gc, 2) > 0);
+        return getStrategicalCellsInSRange(gc, 2) > 0;
     }
 
     public static synchronized boolean haveEnemyUnitsInRange(GameCell gc, int range) {
-        return (getEnemyUnitsInRangeNumber(gc, range) > 0);
+        return getEnemyUnitsInRangeNumber(gc, range) > 0;
     }
 
     public static synchronized ArrayList<GameCell> getEnemyUnitCellsInSRange(GameCell gc, int range) {
@@ -247,13 +255,15 @@ public class BoardUtils {
     public static synchronized ArrayList getUnitsInSRange(GameCell gc, int range, int team) {
         return getGameCellList().stream()
                 .filter(p->(isReachable(gc, p, range)) && !p.isBlocked())
-                .filter(p-> p.getGUnit()!=null && p.getGUnit().getTeam()==team).collect(Collectors.toCollection(ArrayList::new));
+                .filter(p-> p.getGUnit()!=null && p.getGUnit().getTeam()==team)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public static synchronized int getUnitsInSRangeNumber(GameCell gc, int range, int team) {
         return (int)getGameCellList().stream()
                 .filter(p-> isReachable(gc, p, range) && !p.isBlocked())
-                .filter(p-> p.getGUnit()!=null && p.getGUnit().getTeam()==team).count();
+                .filter(p-> p.getGUnit()!=null && p.getGUnit().getTeam()==team)
+                .count();
     }
 
     public static GameCell getBestTargetInAttackRange(GameCell source){
@@ -262,8 +272,8 @@ public class BoardUtils {
         if (source.getGUnit() instanceof RangeUnit && haveEnemyUnitsInShootingRange(source)){
             ArrayList<GameCell> targetList = getEnemyUnitCellsInSRange(source, source.getGUnit().getShotRange());
             bestTarget[0] = targetList.get(0);
-            targetList.forEach(p->{
-
+            targetList
+                    .forEach(p->{
                 if(isOnNeighbouringCellPlusDiagonal(p, source)){
                     if(p.getGUnit().getHealth() < ((RangeUnit) source.getGUnit()).getCloseDamage()){
                         bestTarget[0]=p;
@@ -293,7 +303,8 @@ public class BoardUtils {
             if (haveEnemyUnitsInMeleeRange(source)) {
                 ArrayList<GameCell> targetList = getEnemyUnitCellsInSRange(source, 2);
                 bestTarget[0] = targetList.get(0);
-                targetList.forEach(p -> {
+                targetList
+                        .forEach(p -> {
                     if (p.getGUnit().getHealth() < ((MeleeUnit) source.getGUnit()).getCloseDamage(p.getGUnit())
                             && p.getGUnit().getMaxHealth() > ((MeleeUnit) source.getGUnit()).getCloseDamage(p.getGUnit())) {
                         bestTarget[0] = p;
@@ -407,10 +418,9 @@ public class BoardUtils {
     public static synchronized boolean canWalkSomewhere(GameCell gc){
         final GameCell[] nearestGC = {gc};
 
-       getGameCellList().stream().filter(p->(isReachable(gc, p, gc.getGUnit().getWalkRange()))
-                && !p.isBlocked() && p.getGUnit()==null)
-                .forEach(p -> nearestGC[0] = p);  // костыль чтобы запихнуть а лямбду НЕ final переменную
-
+       getGameCellList().stream()
+               .filter(p->(isReachable(gc, p, gc.getGUnit().getWalkRange())) && !p.isBlocked() && p.getGUnit()==null)
+               .forEach(p -> nearestGC[0] = p);  // костыль чтобы запихнуть а лямбду НЕ final переменную
         if(nearestGC[0].equals(gc)){
             System.out.println("Gui_Unit on X="+ nearestGC[0].getxCoord() + " Y=" +nearestGC[0].getyCoord() + " Can't walk anywhere!");
         }
@@ -429,31 +439,19 @@ public class BoardUtils {
 
     public static synchronized GameCell getNearestPassableCell(GameCell sourceCell, GameCell targetCell){
         final GameCell[] nearestGC = {sourceCell};
-        getGameCellList().stream().filter(p -> (isReachable(sourceCell, p, sourceCell.getGUnit().getWalkRange()))
-                && !p.isBlocked() && p.getGUnit()==null).forEach(p->{
-            if(isTargetCloserToEtalonThanSource(targetCell, nearestGC[0], p)){
-                nearestGC[0] = p;  // костыль чтобы запихнуть а лямбду НЕ final переменную
-            }
-        });
-        if(!nearestGC[0].equals(sourceCell)){
-            //System.out.println("Nearest Passable cell equals X="+ nearestGC[0].getxCoord() + " Y=" +nearestGC[0].getyCoord());
-            return nearestGC[0];
-        }
+        getGameCellList().stream()
+                .filter(p -> (isReachable(sourceCell, p, sourceCell.getGUnit().getWalkRange())) && !p.isBlocked() && p.getGUnit()==null)
+                .forEach(p -> { if(isTargetCloserToEtalonThanSource(targetCell, nearestGC[0], p)) nearestGC[0] = p;});
+        if(!nearestGC[0].equals(sourceCell)) return nearestGC[0];
         return null;
     }
 
     public static synchronized GameCell getFurtherPassableCell(GameCell sourceCell, GameCell targetCell){
         final GameCell[] nearestGC = {sourceCell};
-        getGameCellList().stream().filter(p -> (isReachable(sourceCell, p, sourceCell.getGUnit().getWalkRange()))
-                && !p.isBlocked() && p.getGUnit()==null).forEach(p->{
-            if(isTargetFurtherToEtalonThanSource(targetCell, nearestGC[0], p)){
-                nearestGC[0] = p;  // костыль чтобы запихнуть а лямбду НЕ final переменную
-            }
-        });
-        if(!nearestGC[0].equals(sourceCell)){
-            //System.out.println("Nearest Passable cell equals X="+ nearestGC[0].getxCoord() + " Y=" +nearestGC[0].getyCoord());
-            return nearestGC[0];
-        }
+        getGameCellList().stream()
+                .filter(p -> (isReachable(sourceCell, p, sourceCell.getGUnit().getWalkRange()))  && !p.isBlocked() && p.getGUnit()==null)
+                .forEach(p -> { if(isTargetFurtherToEtalonThanSource(targetCell, nearestGC[0], p)) nearestGC[0] = p;});
+        if(!nearestGC[0].equals(sourceCell)) return nearestGC[0];
         return null;
     }
 
@@ -462,32 +460,25 @@ public class BoardUtils {
             final GameCell[] nearestGC = {sourceCell};
             List<GameCell> gameCells = getGameCellList();
 
-            gameCells.stream().filter(p -> (isReachable(sourceCell, p, sourceCell.getGUnit().getWalkRange()))
-                    && !p.isBlocked() && p.getGUnit() == null).forEach(p -> {
-                if (isTargetCloserToEtalonThanSource(targetCell, nearestGC[0], p)) {
-                    nearestGC[0] = p;  // костыль чтобы запихнуть а лямбду НЕ final переменную
-                }
-            });
+            gameCells.stream()
+                    .filter(p -> (isReachable(sourceCell, p, sourceCell.getGUnit().getWalkRange())) && !p.isBlocked() && p.getGUnit() == null)
+                    .forEach(p -> { if (isTargetCloserToEtalonThanSource(targetCell, nearestGC[0], p)) nearestGC[0] = p; });  // костыль чтобы запихнуть а лямбду НЕ final переменную
 
             GameCell nearGC = nearestGC[0]; // ближайшая к врагу ячейка
             if (!nearGC.equals(sourceCell)) {
                 if (getUnitsInSRangeNumber(nearGC, sourceCell.getGUnit().getShotRange(), 1) > 0) {
                     final GameCell[] furtherGC = {nearGC};
 
-                    gameCells.stream().filter(p -> (isReachable(nearGC, p, sourceCell.getGUnit().getWalkRange()))
-                            && !p.isBlocked() && p.getGUnit() == null).forEach(p -> {
+                    gameCells.stream()
+                            .filter(p -> (isReachable(nearGC, p, sourceCell.getGUnit().getWalkRange())) && !p.isBlocked() && p.getGUnit() == null)
+                            .forEach(p -> { if (isTargetFurtherToEtalonThanSource(targetCell, furtherGC[0], p) &&
+                                    (isReachable(targetCell, p, sourceCell.getGUnit().getShotRange()))) furtherGC[0] = p; });  // костыль чтобы запихнуть а лямбду НЕ final переменную
 
-                        if (isTargetFurtherToEtalonThanSource(targetCell, furtherGC[0], p) &&
-                                (isReachable(targetCell, p, sourceCell.getGUnit().getShotRange()))) {
-                            furtherGC[0] = p;  // костыль чтобы запихнуть а лямбду НЕ final переменную
-                        }
-                    });
                     System.out.println(sourceCell.getGUnit().getName() + " is going to attack "+ targetCell.getGUnit().getName());
                     //System.out.println("Further Shootable cell equals X=" + furtherGC[0].getxCoord() + " Y=" + furtherGC[0].getyCoord());
                     return furtherGC[0];
                 }
             }
-
             if (!nearGC.equals(sourceCell)) {
                 //System.out.println("Nearest (RANGE)Passable cell equals X=" + nearGC.getxCoord() + " Y=" + nearGC.getyCoord());
                 return nearGC;
@@ -501,24 +492,22 @@ public class BoardUtils {
 
     public static synchronized GameCell getAnyPassableCell(GameCell sourceCell){
         ArrayList<GameCell> anyPassableGC = new ArrayList<>();
-
-        getGameCellList().stream().filter(p->(isReachable(sourceCell, p, sourceCell.getGUnit().getWalkRange()))
-                && !p.isBlocked() && p.getGUnit()==null).forEach(anyPassableGC::add);
-
+        getGameCellList().stream()
+                .filter(p->(isReachable(sourceCell, p, sourceCell.getGUnit().getWalkRange())) && !p.isBlocked() && p.getGUnit()==null)
+                .forEach(anyPassableGC::add);
         final GameCell[] anyGameCell = {anyPassableGC.get(0)};
-        anyPassableGC.forEach(p->{
-            if (getPotentialDamage(sourceCell, p) < getPotentialDamage(sourceCell, anyGameCell[0])){
-                anyGameCell[0] = p;
-            }
-        });
+        anyPassableGC
+                .forEach(p->{ if (getPotentialDamage(sourceCell, p) < getPotentialDamage(sourceCell, anyGameCell[0])) anyGameCell[0] = p;});
         return anyGameCell[0];
     }
 
     public static synchronized int getStrategicalCellsInSRange(GameCell gc, int range) {
         int x = gc.getxCoord();
         int y = gc.getyCoord();
-        return (int)getGameCellList().stream().filter(p -> (isReachable( x,y, p.getxCoord(), p.getyCoord(), range)))
-                .filter(p-> p.isStrategical() && p.getOwner()!=gc.getGUnit().getTeam()).count();
+        return (int)getGameCellList().stream()
+                .filter(p -> (isReachable( x,y, p.getxCoord(), p.getyCoord(), range)))
+                .filter(p-> p.isStrategical() && p.getOwner()!=gc.getGUnit().getTeam())
+                .count();
     }
 
     public static synchronized GameCell getNearestStrategicalCell(GameCell yourCell, int maxRange){
@@ -528,20 +517,22 @@ public class BoardUtils {
 
         for(int i=0; i<maxRange; i++){
             if(getStrategicalCellsInSRange(yourCell, i)>0){
-                getGameCellList().stream().filter(p -> isReachable( x,y, p.getxCoord(), p.getyCoord(), maxRange))
+                getGameCellList().stream()
+                        .filter(p -> isReachable( x,y, p.getxCoord(), p.getyCoord(), maxRange))
                         .filter(p-> p.isStrategical() && p.getOwner()!=yourCell.getGUnit().getTeam())
                         .forEach(strategicalGCList::add);
             }
         }
         if(strategicalGCList.size() > 0) {
             final GameCell[] nearestSP = {strategicalGCList.get(0)};
-            strategicalGCList.forEach(p->{
-                if(isTargetCloserToEtalonThanSource(yourCell, nearestSP[0], p)
-                        && (getUnitsInSRange(p, 2, yourCell.getGUnit().getTeam()).size() == 0
-                        || ((getUnitsInSRange(p, 2, yourCell.getGUnit().getTeam()).contains(yourCell))))){
-                    nearestSP[0] = p;
-                }
-            });
+            strategicalGCList
+                    .forEach(p->{
+                        if(isTargetCloserToEtalonThanSource(yourCell, nearestSP[0], p)
+                                && (getUnitsInSRange(p, 2, yourCell.getGUnit().getTeam()).size() == 0
+                                || ((getUnitsInSRange(p, 2, yourCell.getGUnit().getTeam()).contains(yourCell))))){
+                            nearestSP[0] = p;
+                        }
+                    });
             //System.out.println("Nearest SP equals X=" + nearestSP[0].getxCoord() + " Y=" + nearestSP[0].getyCoord());
             return nearestSP[0];
         }
@@ -573,13 +564,14 @@ public class BoardUtils {
         Map<UnitTypeNames, Integer> unitPopularityMap = new HashMap<>();
         ArrayList<UnitTypeNames> unitTypeList = new ArrayList<>();
 
-        getUnitList(team).forEach(p->{
-            if(p instanceof RangeUnit){
-                unitTypeList.add(RANGE);
-            }else{
-                unitTypeList.add(MELEE);
-            }
-        });
+        getUnitList(team)
+                .forEach(p->{
+                    if(p instanceof RangeUnit){
+                        unitTypeList.add(RANGE);
+                    }else{
+                        unitTypeList.add(MELEE);
+                    }
+                });
 
         long RAcount = unitTypeList.stream().filter(RANGE::equals).count();
         long MEcount = unitTypeList.stream().filter("Melee"::equals).count();
@@ -593,7 +585,8 @@ public class BoardUtils {
     public static synchronized int getTotalUnitNumber(int team){
         return (int)(getGameCellList().stream()
                 .filter(p -> p.getGUnit() != null)
-                .filter(p -> p.getGUnit().getTeam() == team).count());
+                .filter(p -> p.getGUnit().getTeam() == team)
+                .count());
     }
 
     public static synchronized int getTotalUnitNumber(){
@@ -604,17 +597,21 @@ public class BoardUtils {
 
     public static synchronized int getStrategicalPoints(int team){
         return (int)(getGameCellList().stream()
-                .filter(p->(p.isStrategical() && p.getOwner() == team)).count());
+                .filter(p->(p.isStrategical() && p.getOwner() == team))
+                .count());
     }
 
     public static synchronized int getStrategicalPoints(){
-        return (int)(getGameCellList().stream().filter(p->(p.isStrategical())).count());
+        return (int)(getGameCellList().stream()
+                .filter(p->(p.isStrategical()))
+                .count());
     }
 
     public static synchronized int getActiveUnitNumber(int team){
         return (int)(getGameCellList().stream()
                 .filter(p -> p.getGUnit() != null)
-                .filter(p -> p.getGUnit().getTeam()==team && p.getGUnit().isActive()).count());
+                .filter(p -> p.getGUnit().getTeam()==team && p.getGUnit().isActive())
+                .count());
     }
 
     public static synchronized void setActiveTeamUnits(int team, boolean state){
