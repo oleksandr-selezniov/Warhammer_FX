@@ -74,24 +74,14 @@ public class Gui_Unit extends Unit implements Serializable{
     }
 
     public  ImageView getImageView(double opacity, double scaleCoeff){
-        ImageView imageView = new ImageView();
-        ClassLoader classLoader = getClass().getClassLoader();
-        URL urlToImage = classLoader.getResource(this.picturePath);
-        Image image = new Image(urlToImage.toString(), false);
-        imageView.setImage(image);
-        imageView.setOpacity(opacity);
+        ImageView imageView = getBasicImageView(opacity);
         imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff * scaleCoeff);
         imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff * scaleCoeff);
         return imageView;
     }
 
     public ImageView getImageView(double opacity){
-        ImageView imageView = new ImageView();
-        ClassLoader classLoader = getClass().getClassLoader();
-        URL urlToImage = classLoader.getResource(this.picturePath);
-        Image image = new Image(urlToImage.toString(), false);
-        imageView.setImage(image);
-        imageView.setOpacity(opacity);
+        ImageView imageView = getBasicImageView(opacity);
         if (Board.getScaleCoefficient() != null) {
             imageView.setFitHeight(Size.getUnitHeight() * this.heightCoeff * Board.getScaleCoefficient());
             imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff * Board.getScaleCoefficient());
@@ -101,6 +91,16 @@ public class Gui_Unit extends Unit implements Serializable{
             imageView.setFitWidth(Size.getUnitWidth() * this.widthCoeff);
         }
         return imageView;
+    }
+
+    protected ImageView getBasicImageView(double opacity){
+        ImageView imageView = new ImageView();
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL urlToImage = classLoader.getResource(this.picturePath);
+        Image image = new Image(urlToImage.toString(), false);
+        imageView.setImage(image);
+        imageView.setOpacity(opacity);
+        return  imageView;
     }
 
     public GridPane getRightInfoGridPane(){

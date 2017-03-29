@@ -549,6 +549,17 @@ public class ChooseBoard {
         return gridPane;
     }
 
+    public void setTeamTotalCost(int team, int teamTotalCost) {
+        if(team == 1){
+            this.teamOneTotalCost = teamTotalCost;
+            Label label = (Label) scene.lookup("#costOne");
+            label.setText(Integer.toString(teamOneTotalCost));
+        }else{
+            this.teamTwoTotalCost = teamTotalCost;
+            Label label = (Label) scene.lookup("#costTwo");
+            label.setText(Integer.toString(teamTwoTotalCost));
+        }
+    }
 
     public static  ArrayList<Gui_Unit> getCurrentHumanList() {
         return currentHumanList;
@@ -564,18 +575,6 @@ public class ChooseBoard {
 
     public static void setCurrentOrkList(ArrayList<Gui_Unit> list) {
         currentOrkList = list;
-    }
-
-    public void setTeamTotalCost(int team, int teamTotalCost) {
-        if(team == 1){
-            this.teamOneTotalCost = teamTotalCost;
-            Label label = (Label) scene.lookup("#costOne");
-            label.setText(Integer.toString(teamOneTotalCost));
-        }else{
-            this.teamTwoTotalCost = teamTotalCost;
-            Label label = (Label) scene.lookup("#costTwo");
-            label.setText(Integer.toString(teamTwoTotalCost));
-        }
     }
 
     public int getTeamTotalCost(int team) {

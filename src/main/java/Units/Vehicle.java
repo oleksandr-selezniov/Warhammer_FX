@@ -58,12 +58,7 @@ public class Vehicle extends Gui_Unit implements RangeUnit {
 
     @Override
     public ImageView getImageView(double opacity){
-        ImageView imageView = new ImageView();
-        ClassLoader classLoader = getClass().getClassLoader();
-        URL urlToImage = classLoader.getResource(this.picturePath);
-        Image image = new Image(urlToImage.toString(), false);
-        imageView.setImage(image);
-        imageView.setOpacity(opacity);
+        ImageView imageView = getBasicImageView(opacity);
         if (Board.getScaleCoefficient() != null) {
             imageView.setFitHeight(Size.getVehicleSize() * this.heightCoeff * Board.getScaleCoefficient());
             imageView.setFitWidth(Size.getVehicleSize() * this.widthCoeff * Board.getScaleCoefficient());
@@ -77,12 +72,7 @@ public class Vehicle extends Gui_Unit implements RangeUnit {
 
     @Override
     public ImageView getImageView(double opacity, double scaleCoeff){
-        ImageView imageView = new ImageView();
-        ClassLoader classLoader = getClass().getClassLoader();
-        URL urlToImage = classLoader.getResource(this.picturePath);
-        Image image = new Image(urlToImage.toString(), false);
-        imageView.setImage(image);
-        imageView.setOpacity(opacity);
+        ImageView imageView = getBasicImageView(opacity);
         imageView.setFitHeight(Size.getVehicleSize() * this.heightCoeff * scaleCoeff * 0.7);
         imageView.setFitWidth(Size.getVehicleSize() * this.widthCoeff * scaleCoeff * 0.7);
         return imageView;

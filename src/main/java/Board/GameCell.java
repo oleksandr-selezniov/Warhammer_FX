@@ -83,29 +83,29 @@ public class GameCell extends Hyperlink {
     }
 
     public void setCellImage(String path, double opacity){
-        ImageView imageView = new ImageView();
-        ClassLoader classLoader = getClass().getClassLoader();
-        URL urlToImage = classLoader.getResource(path);
-        Image buttonImage = new Image(urlToImage.toString(), false);
-        imageView.setImage(buttonImage);
+        ImageView imageView = getBasicImageView(path, opacity);
         imageView.fitHeightProperty().bindBidirectional(this.minHeightProperty());
         imageView.fitWidthProperty().bindBidirectional(this.minWidthProperty());
-        imageView.setOpacity(opacity);
         this.setPadding(new Insets(1));
         this.setGraphic(imageView);
     }
 
     public void setCellObstacle(String path, double opacity){
+        ImageView imageView = getBasicImageView(path, opacity);
+        imageView.fitHeightProperty().bindBidirectional(this.obstacleSize);
+        imageView.fitWidthProperty().bindBidirectional(this.obstacleSize);
+        this.setPadding(new Insets(1,1,40,1));
+        this.setGraphic(imageView);
+    }
+
+    private ImageView getBasicImageView(String path, double opacity){
         ImageView imageView = new ImageView();
         ClassLoader classLoader = getClass().getClassLoader();
         URL urlToImage = classLoader.getResource(path);
         Image buttonImage = new Image(urlToImage.toString(), false);
         imageView.setImage(buttonImage);
-        imageView.fitHeightProperty().bindBidirectional(this.obstacleSize);
-        imageView.fitWidthProperty().bindBidirectional(this.obstacleSize);
         imageView.setOpacity(opacity);
-        this.setPadding(new Insets(1,1,40,1));
-        this.setGraphic(imageView);
+        return imageView;
     }
 
     public void activate(Gui_Unit activator){
