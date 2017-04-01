@@ -39,7 +39,7 @@ public class Board {
     private static int boardHeight = 19;
     private static int boardWidth = 49;
     private static GridPane mainBattlefieldGP;
-    private static String defaultBackgroundPath = "backgrounds/background_8.jpg";
+    private static String defaultBackgroundPath = "backgrounds/background_7.jpg";
     private static Scene scene;
     private static Double scaleCoefficient = 1.0;
 
@@ -383,12 +383,14 @@ public class Board {
         hbox.setMinWidth(Size.getSceneWidth()*0.18);
         hbox.setMinHeight(Size.getSceneHeight()*0.25);
         if(direction.equals("left")){
-            hbox.setStyle("-fx-background-color: linear-gradient(from 25% 100% to 100% 25%, #703D66, #99FFFF)");
+            //hbox.setStyle("-fx-background-color: linear-gradient(from 25% 100% to 100% 25%, #703D66, #99FFFF)");
+            hbox.setId("leftUnitHbox");
             VBox vBox = (VBox)scene.lookup("#leftVBox");
             vBox.getChildren().clear();
             vBox.getChildren().add(gameCell.getGUnit().getBattleInfoGridPane());
         }else{
-            hbox.setStyle("-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #99FFFF, #703D66)");
+            //hbox.setStyle("-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #99FFFF, #703D66)");
+            hbox.setId("rightUnitHbox");
             VBox vBox = (VBox)scene.lookup("#rightVBox");
             vBox.getChildren().clear();
             vBox.getChildren().add(gameCell.getGUnit().getBattleInfoGridPane());

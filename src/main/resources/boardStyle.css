@@ -6,6 +6,65 @@
 #boardGC{
     -fx-background-image: url('background_9.jpg');
 }
+
+#leftUnitHbox{
+ -fx-background-color: linear-gradient(from 25% 100% to 100% 25%, #CB451F, #fceaa7);
+}
+
+#rightUnitHbox{
+ -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #fceaa7, #CB451F);
+}
+
+.scroll-pane {
+ -fx-background-color: black;
+}
+
+.scroll-pane > .viewport {
+ -fx-background-color: #FEB87C;
+}
+
+#centerTextArea .content {
+    -fx-background-color: #fceaa7;
+}
+
+.text-field {
+-fx-background-color:
+         #ecebe9,
+                rgba(0,0,0,0.05),
+                linear-gradient(#dcca8a, #c7a740),
+                linear-gradient(#f9f2d6 0%, #f4e5bc 20%, #e6c75d 80%, #e2c045 100%),
+                linear-gradient(#f6ebbe, #e6c34d);
+}
+
+.combo-box{
+ -fx-background-color:
+         #ecebe9,
+                rgba(0,0,0,0.05),
+                linear-gradient(#dcca8a, #c7a740),
+                linear-gradient(#f9f2d6 0%, #f4e5bc 20%, #e6c75d 80%, #e2c045 100%),
+                linear-gradient(#f6ebbe, #e6c34d);
+     -fx-background-radius: 30;
+     -fx-background-insets: 0,1,2,3,0;
+     -fx-text-fill: #654b00;
+     -fx-font-weight: bold;
+     -fx-font-size: 10px;
+}
+
+.button{
+ -fx-background-color:
+         #ecebe9,
+                rgba(0,0,0,0.05),
+                linear-gradient(#dcca8a, #c7a740),
+                linear-gradient(#f9f2d6 0%, #f4e5bc 20%, #e6c75d 80%, #e2c045 100%),
+                linear-gradient(#f6ebbe, #e6c34d);
+     -fx-background-radius: 30;
+     -fx-background-insets: 0,1,2,3,0;
+     -fx-text-fill: #654b00;
+     -fx-font-weight: bold;
+     -fx-font-size: 10px;
+}
+
+
 /*
 #centerTextArea{
     -fx-background-color: black
