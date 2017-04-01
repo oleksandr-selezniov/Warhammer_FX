@@ -9,7 +9,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
@@ -92,7 +91,7 @@ public class Board {
         borderPane.setBottom(generateBottomMenu());
 
         scene = new Scene(anchorPane, Size.getSceneWidth(), Size.getSceneHeight());
-        scene.getStylesheets().add("style.css");
+        scene.getStylesheets().add("boardStyle.css");
         primaryStage.setScene(scene);
         primaryStage.setMinHeight(Size.getSceneHeight());
         primaryStage.setMinWidth(Size.getSceneWidth());

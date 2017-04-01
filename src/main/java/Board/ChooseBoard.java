@@ -68,6 +68,7 @@ public class ChooseBoard {
         anchorPane.getChildren().add(borderPane);
 
         scene = new Scene(anchorPane, winWidth, winHeight);
+        scene.getStylesheets().add("chooseBoardStyle.css");
         primaryStage.setScene(scene);
         primaryStage.setMinHeight(winHeight);
         primaryStage.setMinWidth(winWidth);
@@ -82,12 +83,12 @@ public class ChooseBoard {
         gridPane.setMinSize(winWidth, winHeight* 0.5);
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setPadding(new Insets(5));
-        gridPane.setGridLinesVisible(true);
+        gridPane.setGridLinesVisible(false);
 
         ImageView centerImageView = new ImageView();
         centerImageView.setFitWidth(winWidth* 0.7);
         centerImageView.setFitHeight(winHeight* 0.5);
-        centerImageView.setImage(new BoardUtils().getImage("other/Logo.png"));
+        centerImageView.setImage(new BoardUtils().getImage("other/Logo.gif"));
 
         VBox vbox = new VBox(centerImageView);
         vbox.setId("centerImageVbox");

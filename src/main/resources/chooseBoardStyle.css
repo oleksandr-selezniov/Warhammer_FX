@@ -1,0 +1,52 @@
+
+#centerTextArea{
+    -fx-background-color: black
+}
+#centerTextArea .content {
+    -fx-background-color: #FEB87C;
+}
+
+.scroll-pane {
+ -fx-background-color: black;
+}
+
+.scroll-pane > .viewport {
+ -fx-background-color: #FEB87C;
+}
+
+.text-field {
+-fx-background-color:
+         #ecebe9,
+                rgba(0,0,0,0.05),
+                linear-gradient(#dcca8a, #c7a740),
+                linear-gradient(#f9f2d6 0%, #f4e5bc 20%, #e6c75d 80%, #e2c045 100%),
+                linear-gradient(#f6ebbe, #e6c34d);
+}
+
+.combo-box{
+ -fx-background-color:
+         #ecebe9,
+                rgba(0,0,0,0.05),
+                linear-gradient(#dcca8a, #c7a740),
+                linear-gradient(#f9f2d6 0%, #f4e5bc 20%, #e6c75d 80%, #e2c045 100%),
+                linear-gradient(#f6ebbe, #e6c34d);
+     -fx-background-radius: 30;
+     -fx-background-insets: 0,1,2,3,0;
+     -fx-text-fill: #654b00;
+     -fx-font-weight: bold;
+     -fx-font-size: 10px;
+}
+
+.button{
+ -fx-background-color:
+         #ecebe9,
+                rgba(0,0,0,0.05),
+                linear-gradient(#dcca8a, #c7a740),
+                linear-gradient(#f9f2d6 0%, #f4e5bc 20%, #e6c75d 80%, #e2c045 100%),
+                linear-gradient(#f6ebbe, #e6c34d);
+     -fx-background-radius: 30;
+     -fx-background-insets: 0,1,2,3,0;
+     -fx-text-fill: #654b00;
+     -fx-font-weight: bold;
+     -fx-font-size: 10px;
+}

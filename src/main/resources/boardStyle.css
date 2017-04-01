@@ -6,8 +6,15 @@
 #boardGC{
     -fx-background-image: url('background_9.jpg');
 }
-
 /*
-#mainScrollpane{
+#centerTextArea{
+    -fx-background-color: black
+}
+#centerTextArea .content {
+    -fx-background-color: #FEB87C;
+}
+
+#mainScrollpane .content{
     -fx-background-image: url('background_9.jpg');
-}*/
+}
+*/
