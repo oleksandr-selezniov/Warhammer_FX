@@ -289,7 +289,7 @@ public class Board {
 
     private HBox getMainTitle(){
         HBox hbox = new HBox();
-        Label title = new Label("ICEHAMMER GAME");
+        Label title = new Label("WARHAMMER GAME");
         title.setPadding(new Insets(3, 3, 0, 500));
         title.setAlignment(Pos.CENTER);
         title.setFont(Font.font("Verdana", FontWeight.BOLD, 15));

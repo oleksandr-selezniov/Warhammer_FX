@@ -1,6 +1,7 @@
 package Board;
 
 import Board.Utils.BoardUtils;
+import Board.Utils.GameCellUtils;
 import Size.Size;
 import Units.Gui_Unit;
 import javafx.collections.FXCollections;
@@ -88,7 +89,7 @@ public class ChooseBoard {
         ImageView centerImageView = new ImageView();
         centerImageView.setFitWidth(winWidth* 0.7);
         centerImageView.setFitHeight(winHeight* 0.5);
-        centerImageView.setImage(new BoardUtils().getImage("other/Logo.gif"));
+        centerImageView.setImage(new BoardUtils().getImage("logo/logo_" + GameCellUtils.generateRandomNumber(1, 7)  +".gif"));
 
         VBox vbox = new VBox(centerImageView);
         vbox.setId("centerImageVbox");
@@ -119,8 +120,8 @@ public class ChooseBoard {
     private HBox getBottomPart(){
 
         VBox leftVbox = new VBox();
-        leftVbox.setMinWidth(200);
-        leftVbox.setMaxWidth(200);
+        leftVbox.setMinWidth(198);
+        leftVbox.setMaxWidth(198);
         leftVbox.setId("leftUnitVbox");
         leftVbox.setAlignment(Pos.TOP_CENTER);
         ScrollPane leftScrollPane = new ScrollPane(leftVbox);
@@ -140,8 +141,8 @@ public class ChooseBoard {
         centerHBox.setId("centerHbox");
 
         VBox rightVbox = new VBox();
-        rightVbox.setMinWidth(200);
-        rightVbox.setMaxWidth(200);
+        rightVbox.setMinWidth(198);
+        rightVbox.setMaxWidth(198);
         rightVbox.setId("rightUnitVbox");
         rightVbox.setAlignment(Pos.TOP_CENTER);
         ScrollPane rightScrollPane = new ScrollPane(rightVbox);

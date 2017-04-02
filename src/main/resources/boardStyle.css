@@ -7,6 +7,12 @@
     -fx-background-image: url('background_9.jpg');
 }
 
+.hyperlink{
+   -fx-border-color: #fceaa7;
+        -fx-border-width: 1;
+        -fx-border-radius: 5;
+}
+
 #leftUnitHbox{
  -fx-background-color: linear-gradient(from 25% 100% to 100% 25%, #CB451F, #fceaa7);
 }
