@@ -89,7 +89,7 @@ public class ChooseBoard {
         ImageView centerImageView = new ImageView();
         centerImageView.setFitWidth(winWidth* 0.7);
         centerImageView.setFitHeight(winHeight* 0.5);
-        centerImageView.setImage(new BoardUtils().getImage("logo/logo_" + GameCellUtils.generateRandomNumber(1, 7)  +".gif"));
+        centerImageView.setImage(new BoardUtils().getImage("logo/logo_" + GameCellUtils.generateRandomNumber(1, 6)  +".gif"));
 
         VBox vbox = new VBox(centerImageView);
         vbox.setId("centerImageVbox");
