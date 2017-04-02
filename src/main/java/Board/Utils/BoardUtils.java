@@ -80,24 +80,24 @@ public class BoardUtils {
 
     public static synchronized void showRanges(GameCell currentcell){
         List<GameCell> gameCells = getGameCellList();
-        if(currentcell.getGUnit().getShotRange() <= currentcell.getGUnit().getWalkRange()){
+        if(currentcell.getGUnit().getShotRange() < currentcell.getGUnit().getWalkRange()){
            gameCells.stream()
                    .filter(p->(p.isPassable() && p.getGUnit()==null))
                    .forEach(p -> {
-                        if (isOnNeighbouringCellPlusDiagonal(currentcell, p)){
-                            p.setStyle("-fx-background-color: #F08080");
-                        }else {
-                            p.setStyle("-fx-background-color: #FFFF99");
+                        if (isOnNeighbouringCellPlusDiagonal(currentcell, p)){       //#F08080 - red
+                            p.setStyle("-fx-background-color: #F08080");             //#FFFF99 - yellow
+                        }else {                                                      //#00CC33 - green
+                            p.setStyle("-fx-background-color: #00CC33");
                         }
                     });
 
             gameCells.stream()
                     .filter(p->(p.isInShootingRange() && p.getGUnit()==null) && !p.isBlocked())
-                    .forEach(p -> p.setStyle("-fx-background-color: #00CC33"));
+                    .forEach(p -> p.setStyle("-fx-background-color: #FFFF99"));
         }else{
             gameCells.stream()
                     .filter(p->(p.isInShootingRange() && p.getGUnit()==null) && !p.isBlocked())
-                    .forEach(p -> p.setStyle("-fx-background-color: #00CC33"));
+                    .forEach(p -> p.setStyle("-fx-background-color: #FFFF99"));
 
             gameCells.stream()
                     .filter(p->(p.isPassable() && p.getGUnit()==null))
@@ -105,7 +105,7 @@ public class BoardUtils {
                         if (isOnNeighbouringCellPlusDiagonal(currentcell,p)){
                             p.setStyle("-fx-background-color: #F08080");
                         }else {
-                            p.setStyle("-fx-background-color: #FFFF99");
+                            p.setStyle("-fx-background-color: #00CC33");
                         }
                     });
         }

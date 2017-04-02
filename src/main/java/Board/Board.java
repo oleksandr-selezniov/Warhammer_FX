@@ -129,7 +129,21 @@ public class Board {
         leftEarGP.setGridLinesVisible(true);
         leftEarGP.setMinWidth(Size.getSceneWidth()*0.3);
         leftEarGP.setMinHeight(Size.getSceneHeight()*0.25);
-        leftEarGP.add(MusicPlayerLogic.getMusicPlayer(),0,0);
+
+        Button gridButton = new Button("Grid");
+        gridButton.setMinWidth(70);
+        gridButton.setPadding(new Insets(5));
+        gridButton.setOnAction(e -> {
+            if(scene.getStylesheets().get(0).equals("boardStyle.css")){
+                scene.getStylesheets().clear();
+                scene.getStylesheets().add("boardStyleGridlinesVis.css");
+            }else{
+                scene.getStylesheets().clear();
+                scene.getStylesheets().add("boardStyle.css");
+            }
+        });
+
+        leftEarGP.add(new VBox(MusicPlayerLogic.getMusicPlayer(), gridButton),0,0);
 
         ImageView leftEarIV = new ImageView();
         leftEarIV.setFitWidth(Size.getSceneWidth()*0.18);

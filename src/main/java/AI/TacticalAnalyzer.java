@@ -63,22 +63,10 @@ public class TacticalAnalyzer {
 
         switch (strategy){
             case PREFER_CAPTURE:{
-                if(isFast && isWeak){
-                    if(currentGuiUnit instanceof MeleeUnit){
-                        executor.preferCaptureMelee();
-                    }else executor.preferCaptureRange();
-                    break;
-                }else if(isFast || isWeak){
-                    if(currentGuiUnit instanceof MeleeUnit){
-                        executor.preferAttackOrCaptureMelee();
-                    }else executor.preferAttackOrCaptureRange();
-                    break;
-                }else{
-                    if(currentGuiUnit instanceof MeleeUnit){
-                        executor.preferNormalAttackMelee();
-                    }else executor.preferNormalAttackRange();
-                    break;
-                }
+                if(currentGuiUnit instanceof MeleeUnit){
+                    executor.preferCaptureMelee();
+                }else executor.preferCaptureRange();
+                break;
             }
             case PREFER_ATTACK_OR_CAPURE:{
                 if(currentGuiUnit instanceof MeleeUnit){
